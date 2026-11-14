@@ -1,0 +1,134 @@
+# ============================================================
+# .NET / C# build artifacts
+# ============================================================
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+[Ll]og/
+[Ll]ogs/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+artifacts/
+publish/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.tlog
+*.binlog
+*.pdb
+*.nupkg
+*.snupkg
+project.lock.json
+project.fragment.lock.json
+*.nuget.props
+*.nuget.targets
+msbuild.log
+msbuild.err
+msbuild.wrn
+ScaffoldingReadMe.txt
+_ReSharper*/
+*.DotSettings.user
+.vs/
+
+# ============================================================
+# Visual Studio / VS Code local settings
+# ============================================================
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
+!.vscode/settings.json
+*.code-workspace
+.idea/
+*.swp
+*~
+
+# ============================================================
+# Node.js / npm / React / TypeScript
+# ============================================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+.pnpm-store/
+.npm/
+.eslintcache
+.stylelintcache
+.cache/
+.parcel-cache/
+.temp/
+.tmp/
+dist/
+dist-ssr/
+build/
+out/
+next/
+.vite/
+*.tsbuildinfo
+*.local
+
+# ============================================================
+# Test results and coverage reports
+# ============================================================
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+coverage/
+coverage.*
+*.coverage
+*.coveragexml
+*.cobertura.xml
+lcov-report/
+junit*.xml
+TestResults/
+*.trx
+*.VisualState.xml
+TestResult.xml
+
+# ============================================================
+# Local environment variables, secrets, and credentials
+# ============================================================
+.env
+.env.*
+!.env.example
+*.local.env
+appsettings.Local.json
+appsettings.*.Local.json
+secrets.json
+*.pfx
+*.key
+*.pem
+*.cer
+*.crt
+*.snk
+
+# ============================================================
+# Docker local artifacts
+# ============================================================
+docker-compose.override.yml
+.docker/
+*.tar
+*.tar.gz
+
+# ============================================================
+# Operating system temporary files
+# ============================================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+ehthumbs_vista.db
+Thumbs.db
+Thumbs.db:encryptable
+desktop.ini
+$RECYCLE.BIN/
+*.stackdump
+[Tt]humbs.db
