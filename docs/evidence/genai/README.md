@@ -1,0 +1,66 @@
+# GenAI Evidence Records
+
+Evidence of AI-assisted engineering for the Ballast Lane Technical Interview Exercise V5.
+
+Each record captures what the developer actually asked, what the AI actually produced, what was validated, and what was decided. Records are the source material for [GENAI.md](../../../GENAI.md) and for the assessment's Generative AI section.
+
+## How to use this folder
+
+- Create one record per meaningful development activity, or one record for a related group of tasks.
+- Copy [template.md](./template.md) and fill it in during the activity, not afterwards.
+- Name records `EV-<number>-<short-slug>.md`, for example `EV-0002-task-api-scaffold.md`.
+- Reference the record from the related task, commit, and GENAI.md section.
+- Follow the standard in [docs/engineering/genai.md](../../engineering/genai.md).
+
+## Record lifecycle
+
+| Status | Meaning |
+| --- | --- |
+| `Pending` | Record created, evidence not yet captured. |
+| `Captured` | Prompt, context, and artifacts recorded; developer review not yet complete. |
+| `Reviewed` | Review findings and developer decisions recorded. |
+| `Verified` | Final code, tests, and observed validation confirmed; commit references recorded once the commits exist. |
+
+A record moves forward only when the evidence exists. If a later check invalidates an earlier claim, correct the record and its status. The status describes the record, not the repository: capture, developer review, observed validation, and committed artifacts are separate facts, and a commit reference is recorded only after that commit exists.
+
+## What belongs in a record
+
+- The actual prompt as provided by the developer, and the context supplied with it.
+- Representative original AI-generated output, preserved before corrections.
+- Validation performed: architecture, SOLID, TDD, security, and functional checks, scaled to the activity type.
+- Review findings and developer decisions, with technical rationale.
+- Corrections and improvements, or the justification for accepting output unchanged.
+- The commands and observed results that constitute real validation, including failures.
+- References to final files, tests, task identifiers, and commits once those commits exist.
+
+## Proportionality
+
+Record one activity, or one related group of tasks, per record. Do not create records per command or per trivial edit, and do not log routine file reads. Evidence expectations differ by activity:
+
+| Activity type | Required evidence |
+| --- | --- |
+| Documentation and specification | Actual prompt, generated document or representative excerpt, review findings, relevant consistency checks |
+| Code generation | Original generated code, TDD evidence, review findings, corrections, validation results |
+| Testing | Actual commands, observed results, failures and their resolution |
+| Review | Concrete findings, decisions, verified corrections |
+
+Requirements that do not apply are marked `Not Applicable` with a one-line justification.
+
+## What must never be recorded
+
+- Secrets, credentials, tokens, API keys, connection strings, or personal data.
+- Machine-specific absolute paths. Published references use repository-relative paths.
+- Invented or reconstructed prompts, output, defects, corrections, results, commit references, or approvals.
+- Full unrelated chat transcripts, or private model reasoning.
+- Planned work presented as completed work.
+
+If sensitive information must be removed, say explicitly that the content was redacted and what kind of information was removed. Redacted content is never presented as verbatim.
+
+## Index
+
+| ID | Activity | Phase | Status | Record |
+| --- | --- | --- | --- | --- |
+| EV-0001 | Repository GenAI engineering standard and evidence workflow | Documentation and configuration (pre-specification) | Reviewed | [EV-0001-repository-genai-standards.md](./EV-0001-repository-genai-standards.md) |
+| EV-0002 | Refinement of the GenAI standard per developer review feedback | Documentation and configuration (pre-specification) | Captured | [EV-0002-standard-refinement.md](./EV-0002-standard-refinement.md) |
+
+The mandatory REST API generation exercise from the assessment has not started. Its evidence records are pending and will be added when that work begins.
