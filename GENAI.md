@@ -160,7 +160,7 @@ Observations from this work:
 | Spec Kit installation | `.specify/init-options.json`, `.specify/integration.json` | Installed and configured, version 1.4.0, Copilot integration |
 | Constitution | `.specify/memory/constitution.md` | Original template, unratified |
 | Assessment document | [docs/assessment/technical-exercise-v5.md](docs/assessment/technical-exercise-v5.md) | Unmodified |
-| Git history | foundation commit `859b141`; commit for the documentation work `PENDING` - recorded once it exists | `PENDING` |
+| Git history | foundation commit `859b141`; documentation work committed as `b3b6195` | `[VERIFIED]` |
 
 ### Coverage of the assessment's Generative AI questions
 

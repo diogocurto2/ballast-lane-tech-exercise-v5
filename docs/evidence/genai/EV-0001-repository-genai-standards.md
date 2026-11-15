@@ -13,7 +13,7 @@
 | AI tool | GitHub Copilot (VS Code, Copilot SDK) |
 | AI model | `PENDING` - the model identifier was not exposed in the session and is not recorded rather than guessed. |
 | Evidence status | `Reviewed` |
-| Commit references | `PENDING` - this work was not committed at the time of review; the reference is recorded after the commit exists. |
+| Commit references | `b3b6195` - "docs: establish GenAI engineering standard and evidence workflow". Recorded after the commit was created; the commit predates this reference, which is expected. |
 
 ## Actual prompt
 
@@ -348,7 +348,7 @@ The single non-ASCII character is an em dash (U+2014) in the GENAI.md heading th
 - Assessment response: [GENAI.md](../../../GENAI.md)
 - Test files: `Not Applicable` - no test project exists
 - Task identifiers: `PENDING` - no Spec Kit task list exists
-- Commits: foundation commit `859b141` (pre-existing); commit for this activity `PENDING` - recorded after the commit exists
+- Commits: foundation commit `859b141` (pre-existing); commit for this activity `b3b6195`
 
 ## Evidence status rationale
 

@@ -13,7 +13,7 @@
 | AI tool | GitHub Copilot (VS Code, Copilot SDK) |
 | AI model | `PENDING` - the model identifier was not exposed in the session. |
 | Evidence status | `Captured` |
-| Commit references | `PENDING` - recorded after the commit exists. |
+| Commit references | `b3b6195` - "docs: establish GenAI engineering standard and evidence workflow". Recorded after the commit was created. |
 
 ## Actual prompt
 
@@ -387,7 +387,7 @@ Redaction and path review: no secrets, tokens, credentials, personal data, unrel
 - Implementation files: `Not Applicable` - documentation only
 - Test files: `Not Applicable` - no test project exists
 - Task identifiers: `PENDING` - no Spec Kit task list exists
-- Commits: `PENDING` - recorded after the commit exists
+- Commits: `b3b6195`
 
 ## Evidence status rationale
 
