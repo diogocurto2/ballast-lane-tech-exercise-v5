@@ -111,9 +111,9 @@ catch (PostgresException ex) when (ex.SqlState == PostgresErrorCodes.UniqueViola
 **Migration file naming**
 
 ```text
-db/migrations/0001_create_users.sql
-db/migrations/0002_create_tasks.sql
-db/migrations/0003_add_task_due_date_index.sql
+backend/db/migrations/0001_create_users.sql
+backend/db/migrations/0002_create_tasks.sql
+backend/db/migrations/0003_add_task_due_date_index.sql
 ```
 
 **Idempotent seed**

@@ -84,7 +84,7 @@ are `[AI-PROPOSED]` until the developer approves them.
 
 ## R6 - Migration mechanism
 
-- **Decision**: ordered SQL files under `db/migrations/`, applied by a small runner in
+- **Decision**: ordered SQL files under `backend/db/migrations/`, applied by a small runner in
   `BallastLane.Migrator` that records applied versions in a `schema_migrations` table.
 - **Rationale**: `database-standards.md` requires version-controlled, forward-only, apply-once,
   reproducible migrations with seeding kept separate. A ~60-line runner over an allow-listed file

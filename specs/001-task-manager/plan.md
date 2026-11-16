@@ -36,7 +36,7 @@ versions are recorded in the implementation evidence record rather than asserted
 Vite 5.4, React Router 6, Vitest 2 + React Testing Library 16.
 
 **Storage**: PostgreSQL 16 in a container. Access is Npgsql + ADO.NET only. The schema is defined
-by ordered SQL migrations under `db/migrations/`; seeding is a separate idempotent step.
+by ordered SQL migrations under `backend/db/migrations/`; seeding is a separate idempotent step.
 
 **Testing**: xUnit for Domain, Application, Infrastructure (unit), and API controller (unit) tests;
 xUnit against a real PostgreSQL 16 instance for repository, constraint, transaction, and migration
@@ -222,7 +222,7 @@ Also recorded:
     `created_at timestamptz NOT NULL DEFAULT now()`, `updated_at timestamptz NOT NULL DEFAULT now()`.
   - Index `ix_tasks_owner_due_created` on `(owner_id, due_date, created_at)` supporting the ordered
     list query (PDC-05). No further index is created: each one must map to a query that exists.
-  - Migrations: `db/migrations/0001_create_users.sql` and `0002_create_tasks.sql`, applied by an
+  - Migrations: `backend/db/migrations/0001_create_users.sql` and `0002_create_tasks.sql`, applied by an
     apply-once runner that records versions in `schema_migrations`. Forward-only, never edited after
     being applied, and reproducible from an empty database.
   - Transactions: single-statement writes use the implicit transaction; the seed runs in one
@@ -269,38 +269,44 @@ specs/001-task-manager/
 ### Source Code (repository root)
 
 ```text
-BallastLane.sln
+BallastLane.sln                    # stays at the root so every documented command runs from there
+Directory.Build.props              # shared MSBuild settings, resolved by walking up from each project
 
-src/
-├── Domain/                        # BallastLane.Domain - no project dependencies
-├── Application/                   # BallastLane.Application - depends on Domain only
-│   ├── Abstractions/
-│   ├── Users/
-│   ├── Tasks/
-│   └── Outcomes/
-├── Infrastructure/                # BallastLane.Infrastructure - Npgsql adapters
-│   ├── Persistence/
-│   ├── Security/
-│   └── Time/
-├── SharedWeb/                     # BallastLane.SharedWeb - auth wiring + error mapping
-├── UserApi/                       # BallastLane.UserApi - host 1
-├── TaskApi/                       # BallastLane.TaskApi - host 2
-└── Migrator/                      # BallastLane.Migrator - console entry point
-
-tests/
-├── unit/
-│   ├── BallastLane.Domain.Tests/
-│   ├── BallastLane.Application.Tests/
-│   ├── BallastLane.Infrastructure.UnitTests/
-│   ├── BallastLane.Api.UnitTests/
-│   └── BallastLane.Architecture.Tests/
-├── integration/
-│   ├── BallastLane.PostgreSql.Tests/
-│   └── BallastLane.Migrations.Tests/
-└── http/
-    ├── BallastLane.UserApi.HttpTests/
-    └── BallastLane.TaskApi.HttpTests/
-
+backend/
+├── src/
+│   ├── Domain/                     # BallastLane.Domain - no project dependencies
+│   ├── Application/                # BallastLane.Application - depends on Domain only
+│   │   ├── Abstractions/
+│   │   ├── Users/
+│   │   ├── Tasks/
+│   │   └── Outcomes/
+│   ├── Infrastructure/             # BallastLane.Infrastructure - Npgsql adapters
+│   │   ├── Persistence/
+│   │   ├── Security/
+│   │   └── Time/
+│   ├── SharedWeb/                  # BallastLane.SharedWeb - auth wiring + error mapping
+│   ├── UserApi/                    # BallastLane.UserApi - host 1
+│   ├── TaskApi/                    # BallastLane.TaskApi - host 2
+│   └── Migrator/                   # BallastLane.Migrator - console entry point
+├── tests/
+│   ├── unit/
+│   │   ├── BallastLane.Domain.Tests/
+│   │   ├── BallastLane.Application.Tests/
+│   │   ├── BallastLane.Infrastructure.UnitTests/
+│   │   ├── BallastLane.Api.UnitTests/
+│   │   └── BallastLane.Architecture.Tests/
+│   ├── integration/
+│   │   ├── BallastLane.PostgreSql.Tests/
+│   │   └── BallastLane.Migrations.Tests/
+│   └── http/
+│       ├── BallastLane.UserApi.HttpTests/
+│       └── BallastLane.TaskApi.HttpTests/
+└── db/
+    ├── migrations/
+    │   ├── 0001_create_users.sql
+    │   └── 0002_create_tasks.sql
+    └── docker-entrypoint-initdb.d/
+        └── 01-create-test-database.sql
 frontend/
 ├── src/
 │   ├── api/
@@ -313,11 +319,8 @@ frontend/
     ├── components/
     └── flows/
 
-db/migrations/
-├── 0001_create_users.sql
-└── 0002_create_tasks.sql
-
 docker-compose.yml
+.dockerignore
 .env.example
 ```
 
@@ -329,7 +332,11 @@ two API concerns are delivered as **two hosts** because the assessment requires 
 separate host makes that boundary explicit and independently demonstrable; `SharedWeb` holds
 authentication wiring and error mapping used by both without holding business rules. `Migrator` is a
 console entry point so `Infrastructure` contains no entry point and migration stays a deliberate,
-auditable step rather than implicit startup work. The frontend separates API access (`api/`),
+auditable step rather than implicit startup work. Backend code is grouped under `backend/` so the
+repository presents the two halves of the product symmetrically (`backend/`, `frontend/`); the
+solution file stays at the root so `dotnet build BallastLane.sln` and `dotnet test -m:1` run from the
+repository root exactly as documented. The move was applied after implementation and is recorded in
+`EV-0024`. The frontend separates API access (`api/`),
 authentication state (`auth/`), presentation (`components/`, `pages/`), and list-state reduction
 (`state/`), matching the frontend standard's separation rules.
 

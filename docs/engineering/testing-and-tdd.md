@@ -145,7 +145,7 @@ The Spec Kit templates and the constitution are **not** modified by this standar
 **RED, observed as a behavior failure**
 
 ```text
-dotnet test tests/BallastLane.Application.Tests --filter "FullyQualifiedName~CreateTask"
+dotnet test backend/tests/unit/BallastLane.Application.Tests --filter "FullyQualifiedName~CreateTask"
 Failed!  - Failed: 1, Passed: 0
 Error Message: Assert.NotNull() Failure: Value is null
 ```

@@ -1,5 +1,11 @@
 # EV-0022 - Remediation of CRITICAL findings and re-analysis of 001-task-manager
 
+> **Revision note (2026-11-16, after `EV-0024`).** Paths in this record reflect the repository layout
+> at the time of the activity, when the backend lived at the root as `src/`, `tests/`, and `db/`. After
+> the `backend/` restructure recorded in [EV-0024](./EV-0024-backend-folder-restructure.md), those
+> locations are `backend/src/`, `backend/tests/`, and `backend/db/`. Nothing else in this record was
+> altered, so it remains an accurate account of what was observed when it was written.
+
 ## Identification
 
 | Field | Value |

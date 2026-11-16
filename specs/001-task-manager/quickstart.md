@@ -116,7 +116,9 @@ Then, with a valid token for account B:
 ## 7. Run the automated tests
 
 ```bash
-dotnet test                                   # unit, integration, and HTTP tests
+# One test project at a time: the HTTP and PostgreSQL suites share a container, and running them
+# concurrently on a resource-constrained host can produce a spurious connect timeout.
+dotnet test -m:1                              # unit, integration, and HTTP tests
 cd frontend && npm run lint && npm run build && npm test
 ```
 

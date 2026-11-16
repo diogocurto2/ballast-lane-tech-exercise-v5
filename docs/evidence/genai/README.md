@@ -72,5 +72,24 @@ If sensitive information must be removed, say explicitly that the content was re
 | EV-0020 | Pre-implementation analysis of `001-task-manager` (4 blocking findings) | 5 - Analyze | Captured | [EV-0020-analysis-001-task-manager.md](./EV-0020-analysis-001-task-manager.md) |
 | EV-0022 | Remediation of the CRITICAL findings and re-analysis | 5 - Analyze | Captured | [EV-0022-critical-remediation-and-reanalysis.md](./EV-0022-critical-remediation-and-reanalysis.md) |
 | EV-0023 | Final pre-implementation corrections and second re-analysis | 5 - Analyze | Captured | [EV-0023-final-corrections-and-second-reanalysis.md](./EV-0023-final-corrections-and-second-reanalysis.md) |
+| EV-0010 | Setup scaffolding and foundational layer | 6 - Implement | Captured | [EV-0010-setup-and-foundational-tdd.md](./EV-0010-setup-and-foundational-tdd.md) |
+| EV-0011 | US1 registration and authentication | 6 - Implement | Captured | [EV-0011-us1-registration-authentication.md](./EV-0011-us1-registration-authentication.md) |
+| EV-0012 | US2 public and protected access boundary | 6 - Implement | Captured | [EV-0012-us2-access-boundary.md](./EV-0012-us2-access-boundary.md) |
+| EV-0013 | US3 list and view personal tasks | 6 - Implement | Captured | [EV-0013-us3-task-read.md](./EV-0013-us3-task-read.md) |
+| EV-0014 | US4 create a task | 6 - Implement | Captured | [EV-0014-us4-task-create.md](./EV-0014-us4-task-create.md) |
+| EV-0015 | US5 update a task | 6 - Implement | Captured | [EV-0015-us5-task-update.md](./EV-0015-us5-task-update.md) |
+| EV-0016 | US6 delete a task | 6 - Implement | Captured | [EV-0016-us6-task-delete.md](./EV-0016-us6-task-delete.md) |
+| EV-0017 | US7 seeded demonstration environment | 6 - Implement | Captured | [EV-0017-us7-demonstration-environment.md](./EV-0017-us7-demonstration-environment.md) |
+| EV-0018 | Verification and convergence | 7 - Review | Captured | [EV-0018-review-and-convergence.md](./EV-0018-review-and-convergence.md) |
+| EV-0021 | Consolidated evidence for the REST API generation exercise | 8 - Conclude | Captured | [EV-0021-genai-api-exercise.md](./EV-0021-genai-api-exercise.md) |
+| EV-0024 | Backend folder restructure and confirmation of the Docker build context | 9 - Post-implementation follow-up | Captured | [EV-0024-backend-folder-restructure.md](./EV-0024-backend-folder-restructure.md) |
 
-The mandatory REST API generation exercise from the assessment has not started. Its evidence records are pending and will be added when that work begins.
+The mandatory REST API generation exercise has been executed; its evidence is consolidated in
+`EV-0021` from the records above. Developer review and commit references remain `PENDING` for every
+record created during implementation.
+
+`EV-0024` was raised after implementation, at developer request, and required no application behavior
+change. Records `EV-0010` to `EV-0018`, `EV-0020`, `EV-0022`, and `EV-0023` describe the repository
+layout as it was at the time of their activity, when the backend lived at the root as `src/`,
+`tests/`, and `db/`; each carries a dated revision note pointing at `EV-0024` for the current paths.
+`EV-0021` needed no note because it does not cite those locations.
