@@ -20,6 +20,7 @@ publish/
 *.sln.docstates
 *.tlog
 *.binlog
+*.log
 *.pdb
 *.nupkg
 *.snupkg
