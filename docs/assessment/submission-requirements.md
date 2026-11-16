@@ -25,13 +25,13 @@ The original assessment document is preserved unmodified. Where a requirement be
 
 ## 3. Derived obligations
 
-These follow from the requirements above and are owned by the delivery standard:
+These follow from the requirements above. Engineering deliverables are owned by the delivery standard; process obligations are owned by the developer.
 
 - **SUB-01, SUB-02** - the repository must start from a clean public state: no secrets, no local absolute paths, no unrelated personal material. See [delivery-and-ci.md](../engineering/delivery-and-ci.md) section on public repository hygiene.
 - **SUB-03, SUB-04, SUB-05** - `README.md` and `GENAI.md` are submission deliverables, not optional documentation. They must be accurate at submission time and must not describe unimplemented functionality.
 - **SUB-06** - symbolic links are prohibited; directory traversal and tooling must not create them. Spec Kit is configured with `allow_symlinks: false` in `.specify/init-options.json`, which is consistent with this requirement.
 - **SUB-07** - the deadline constrains scope. Engineering standards must remain practical for a small assessment; see the simplicity rules in [docs/engineering/README.md](../engineering/README.md).
-- **SUB-08** - the freeze applies to the repository, not to the interview preparation. Any planned improvement not completed before the deadline is out of scope rather than retrofitted afterwards.
+- **SUB-08** - a **process obligation**, not an engineering rule. The repository is not modified after submission until notified. The developer owns timing and compliance. It is recorded here for reference only: it MUST NOT appear in the project constitution, in the engineering standards, or as an automated gate, hook, or agent restriction.
 
 ## 4. Status at the time of writing
 

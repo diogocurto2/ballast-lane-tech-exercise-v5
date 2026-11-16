@@ -121,12 +121,21 @@ The constitution will be created separately with `/speckit-constitution` after t
 
 Principle VIII exists because several standards deliberately forbid abstraction and infrastructure that a small assessment does not need. Making this explicit prevents "best practice" drift toward unnecessary enterprise complexity.
 
+### Separation of engineering governance and submission process
+
+The constitution governs **software engineering**: principles, architecture, testing, quality, security, and AI-assisted development. Assessment and submission **process** requirements are external obligations and are not constitutional principles.
+
+- The submission deadline and the instruction to stop modifying the project after submission are process requirements owned by the developer. They are recorded for reference in [submission-requirements.md](../assessment/submission-requirements.md) and MUST NOT be ratified as engineering principles.
+- The constitution phase MUST NOT add a post-submission code freeze or any equivalent development restriction.
+- The developer is responsible for submission timing and for complying with the recruiter's instructions. No hook, gate, workflow check, or agent restriction is added to enforce them.
+- Engineering deliverables that support submission, such as tests, README content, and GENAI.md, remain engineering concerns and are covered by the standards above.
+
 ## 7. Established requirements versus proposed choices
 
 | Category | Status | Examples |
 | --- | --- | --- |
 | Assessment requirements | **Established** - authoritative, unmodified | Clean Architecture, TDD, no EF/Dapper/Mediator, CRUD API plus user API, unit tests, frontend, README with seeded data |
-| Submission requirements | **Established** - recorded from recruiter | One public repository, single link, presentation, root `GENAI.md`, no symbolic links, deadline, post-submission freeze |
+| Submission requirements | **Established** - recorded from recruiter | One public repository, single link, presentation, root `GENAI.md`, no symbolic links, deadline. Process obligations such as the post-submission freeze are recorded in [submission-requirements.md](../assessment/submission-requirements.md) but are not engineering rules. |
 | Technology choices | **Proposed** - decided here, revisable in the plan | PostgreSQL with Npgsql, React with TypeScript, Docker Compose, GitHub Actions |
 | Architecture specifics | **Deferred** - planning phase | Project structure, project names, class design, schema, API paths and contracts, .NET version |
 
@@ -142,6 +151,7 @@ Run these checks after any change to the standards:
 4. No standard requires infrastructure without a functional need.
 5. No secrets, personal data, or absolute machine paths are present.
 6. Provenance is honest: proposed choices are labeled proposed, deferred decisions are listed, and no implementation is described as done.
+7. Engineering documents impose only engineering rules. Assessment and submission process obligations, such as the post-submission freeze, remain in [submission-requirements.md](../assessment/submission-requirements.md) and are not restated as engineering requirements or enforced by tooling.
 
 ## 9. Status
 

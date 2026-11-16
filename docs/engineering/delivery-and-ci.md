@@ -85,11 +85,6 @@ Before sending the submission link:
 7. Backend build has no warnings; frontend lint and type check pass.
 8. The repository is public and reachable while signed out.
 
-### 2.9 Freeze after submission
-
-- After the submission link is sent, the repository MUST NOT be modified until the interviewer authorizes changes or the interview completes.
-- Preparation notes outside the repository MAY continue.
-
 ## 3. Mandatory versus quality improvements
 
 | Item | Classification | Basis |
@@ -151,7 +146,6 @@ jobs:
 - Demo credentials that are valid on any real system.
 - Symbolic links in tracked files.
 - Adding infrastructure that no requirement justifies.
-- Tagging a release or editing the repository after submission.
 - Treating a quality improvement as a release blocker at the cost of the deadline.
 
 ## 6. Verification and review criteria

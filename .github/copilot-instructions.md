@@ -5,7 +5,7 @@ This repository is the solution to the Ballast Lane Senior .NET technical assess
 ## Required reading
 
 - Read [docs/assessment/technical-exercise-v5.md](../docs/assessment/technical-exercise-v5.md) before making relevant project decisions.
-- Read [docs/assessment/submission-requirements.md](../docs/assessment/submission-requirements.md) for delivery constraints, including the submission deadline and the post-submission freeze.
+- Read [docs/assessment/submission-requirements.md](../docs/assessment/submission-requirements.md) for the assessment deliverables and delivery constraints, including the submission deadline.
 - Read [docs/engineering/README.md](../docs/engineering/README.md) for the engineering standards index.
 - Consult the relevant engineering standards **before** any specification, planning, implementation, testing, or review activity:
   - Testing and TDD: [testing-and-tdd.md](../docs/engineering/testing-and-tdd.md)

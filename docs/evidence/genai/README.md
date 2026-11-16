@@ -64,5 +64,6 @@ If sensitive information must be removed, say explicitly that the content was re
 | EV-0002 | Refinement of the GenAI standard per developer review feedback | 1 - Constitution and engineering standards | Verified | [EV-0002-standard-refinement.md](./EV-0002-standard-refinement.md) |
 | EV-0003 | Engineering standards, submission requirements, and documentation index | 1 - Constitution and engineering standards | Verified | [EV-0003-engineering-standards.md](./EV-0003-engineering-standards.md) |
 | EV-0004 | TDD enforcement lifecycle across Spec Kit phases | 1 - Constitution and engineering standards | Verified | [EV-0004-tdd-enforcement-lifecycle.md](./EV-0004-tdd-enforcement-lifecycle.md) |
+| EV-0005 | Separation of engineering governance and submission process rules | 1 - Constitution and engineering standards | Captured | [EV-0005-governance-separation.md](./EV-0005-governance-separation.md) |
 
 The mandatory REST API generation exercise from the assessment has not started. Its evidence records are pending and will be added when that work begins.
