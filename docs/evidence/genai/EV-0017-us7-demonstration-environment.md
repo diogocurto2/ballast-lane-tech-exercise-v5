@@ -19,7 +19,7 @@
 | AI tool | GitHub Copilot (VS Code, Copilot SDK) |
 | AI model | Not exposed in this session |
 | Evidence status | `Captured` |
-| Commit references | `PENDING` |
+| Commit references | `2f0844b` - `feat(api): implement the task manager backend with Npgsql and ADO.NET`; `9dfae4d` - `docs: record the implementation evidence and the backend layout`. Recorded after these commits were created, as the standard requires. |
 
 ## Actual prompt
 
@@ -168,7 +168,7 @@ psql: users = 2, tasks = 5      (data intact after restart)
   `db/docker-entrypoint-initdb.d/01-create-test-database.sql`
 - Test files: `tests/integration/BallastLane.Migrations.Tests/{DemonstrationDatasetTests,DemoSeedTests}.cs`
 - Task identifiers: `T091` to `T096`
-- Commits: `PENDING`
+- Commits: `2f0844b` - `feat(api): implement the task manager backend with Npgsql and ADO.NET`; `9dfae4d` - `docs: record the implementation evidence and the backend layout`. Recorded after these commits were created, as the standard requires.
 
 ## Evidence status rationale
 

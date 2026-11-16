@@ -19,7 +19,7 @@
 | AI tool | GitHub Copilot (VS Code, Copilot SDK) |
 | AI model | Not exposed in this session |
 | Evidence status | `Captured` |
-| Commit references | `PENDING` |
+| Commit references | `2f0844b` - `feat(api): implement the task manager backend with Npgsql and ADO.NET`; `9cd6b3a` - `feat(web): implement the React task manager client`; `9dfae4d` - `docs: record the implementation evidence and the backend layout`. Recorded after these commits were created, as the standard requires. |
 
 ## Actual prompt
 
@@ -279,7 +279,7 @@ Passed! - Failed: 0, Passed:  6, Total:  6   BallastLane.Migrations.Tests.dll
   `tests/http/BallastLane.UserApi.HttpTests/{UserApiFactory,TestDatabase,HttpAssertions,RegistrationTests,LoginTests}.cs`,
   `frontend/tests/components/{RegisterForm,LoginForm,auth-context}.test.tsx`
 - Task identifiers: `T025` to `T037`
-- Commits: `PENDING`
+- Commits: `2f0844b` - `feat(api): implement the task manager backend with Npgsql and ADO.NET`; `9cd6b3a` - `feat(web): implement the React task manager client`; `9dfae4d` - `docs: record the implementation evidence and the backend layout`. Recorded after these commits were created, as the standard requires.
 
 ## Evidence status rationale
 

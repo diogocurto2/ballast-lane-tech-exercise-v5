@@ -19,7 +19,7 @@
 | AI tool | GitHub Copilot (VS Code, Copilot SDK) |
 | AI model | Not exposed in this session |
 | Evidence status | `Captured` |
-| Commit references | `PENDING` |
+| Commit references | `2f0844b` - `feat(api): implement the task manager backend with Npgsql and ADO.NET`; `9cd6b3a` - `feat(web): implement the React task manager client`; `9dfae4d` - `docs: record the implementation evidence and the backend layout`. Recorded after these commits were created, as the standard requires. |
 
 ## Actual prompt
 
@@ -183,7 +183,7 @@ cd frontend; npm run lint           -> no findings
   `tests/http/BallastLane.TaskApi.HttpTests/TaskReadTests.cs`,
   `frontend/tests/components/{TaskListStates,TaskDetail}.test.tsx`
 - Task identifiers: `T045` to `T057`
-- Commits: `PENDING`
+- Commits: `2f0844b` - `feat(api): implement the task manager backend with Npgsql and ADO.NET`; `9cd6b3a` - `feat(web): implement the React task manager client`; `9dfae4d` - `docs: record the implementation evidence and the backend layout`. Recorded after these commits were created, as the standard requires.
 
 ## Evidence status rationale
 

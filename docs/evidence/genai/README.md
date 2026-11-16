@@ -85,8 +85,10 @@ If sensitive information must be removed, say explicitly that the content was re
 | EV-0024 | Backend folder restructure and confirmation of the Docker build context | 9 - Post-implementation follow-up | Captured | [EV-0024-backend-folder-restructure.md](./EV-0024-backend-folder-restructure.md) |
 
 The mandatory REST API generation exercise has been executed; its evidence is consolidated in
-`EV-0021` from the records above. Developer review and commit references remain `PENDING` for every
-record created during implementation.
+`EV-0021` from the records above. Every record created during implementation now carries its commit
+references: `2f0844b` for the backend, `9cd6b3a` for the frontend client, and `9dfae4d` for the
+records and documentation themselves. Developer review of the records remains `PENDING`, which is why
+none has advanced past `Captured`.
 
 `EV-0024` was raised after implementation, at developer request, and required no application behavior
 change. Records `EV-0010` to `EV-0018`, `EV-0020`, `EV-0022`, and `EV-0023` describe the repository

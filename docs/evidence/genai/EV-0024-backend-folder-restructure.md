@@ -13,7 +13,7 @@
 | AI tool | GitHub Copilot (VS Code, Copilot SDK) |
 | AI model | Not exposed in this session |
 | Evidence status | `Captured` |
-| Commit references | `PENDING` - nothing has been committed for this change |
+| Commit references | `2f0844b` - `feat(api): implement the task manager backend with Npgsql and ADO.NET`; `9dfae4d` - `docs: record the implementation evidence and the backend layout`. Recorded after these commits were created, as the standard requires. |
 
 ## Actual prompt
 
@@ -266,11 +266,11 @@ none
 - Test files: the nine backend suites listed above and `frontend/tests` were re-run; no test file
   changed behavior, and the only test edits were the path constants and migration-directory lookups.
 - Task identifiers: Not Applicable - post-implementation follow-up outside the task list.
-- Commits: `PENDING`
+- Commits: `2f0844b` - `feat(api): implement the task manager backend with Npgsql and ADO.NET`; `9dfae4d` - `docs: record the implementation evidence and the backend layout`. Recorded after these commits were created, as the standard requires.
 
 ## Evidence status rationale
 
 Status is `Captured`: the prompt, the developer's scope decisions, the defective intermediate output,
-the corrections, and the observed validation results are all recorded. The record stays short of
-`Reviewed` because developer review of this evidence is outstanding, and it has no commit reference
-because nothing has been committed.
+the corrections, and the observed validation results are all recorded, and the commit references are
+now present because the developer explicitly asked for the work to be committed. The record stays
+short of `Reviewed` because the developer has not reviewed this evidence document itself.

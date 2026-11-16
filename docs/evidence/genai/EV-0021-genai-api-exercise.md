@@ -13,7 +13,7 @@
 | AI tool | GitHub Copilot (VS Code, Copilot SDK) |
 | AI model | Not exposed in this session |
 | Evidence status | `Captured` |
-| Commit references | `PENDING` |
+| Commit references | `2f0844b` - `feat(api): implement the task manager backend with Npgsql and ADO.NET`; `9cd6b3a` - `feat(web): implement the React task manager client`; `9dfae4d` - `docs: record the implementation evidence and the backend layout`. Recorded after these commits were created, as the standard requires. |
 
 ## Actual prompt
 
@@ -101,7 +101,7 @@ record was written.
 - Documentation files: `GENAI.md`, `docs/evidence/genai/README.md`
 - Source records: `EV-0010` to `EV-0018`
 - Task identifiers: `T107`
-- Commits: `PENDING`
+- Commits: `2f0844b` - `feat(api): implement the task manager backend with Npgsql and ADO.NET`; `9cd6b3a` - `feat(web): implement the React task manager client`; `9dfae4d` - `docs: record the implementation evidence and the backend layout`. Recorded after these commits were created, as the standard requires.
 
 ## Evidence status rationale
 

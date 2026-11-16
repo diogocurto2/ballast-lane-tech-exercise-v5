@@ -19,7 +19,7 @@
 | AI tool | GitHub Copilot (VS Code, Copilot SDK) |
 | AI model | `PENDING` - the model identifier was not exposed in the session |
 | Evidence status | `Captured` |
-| Commit references | `PENDING` - no commit was requested for this activity |
+| Commit references | `9dfae4d` - `docs: record the implementation evidence and the backend layout`. Recorded after these commits were created, as the standard requires. |
 
 ## Actual prompt
 
@@ -177,7 +177,7 @@ format violations: 0
 - Implementation files: `Not Applicable` - none exist and none were created
 - Test files: `Not Applicable` - none exist
 - Task identifiers: `T001` to `T107`, none executed
-- Commits: `PENDING` - no commit was requested for this activity
+- Commits: `9dfae4d` - `docs: record the implementation evidence and the backend layout`. Recorded after these commits were created, as the standard requires.
 
 ## Evidence status rationale
 

@@ -19,7 +19,7 @@
 | AI tool | GitHub Copilot (VS Code, Copilot SDK) |
 | AI model | Not exposed in this session |
 | Evidence status | `Captured` |
-| Commit references | `PENDING` |
+| Commit references | `2f0844b` - `feat(api): implement the task manager backend with Npgsql and ADO.NET`; `9dfae4d` - `docs: record the implementation evidence and the backend layout`. Recorded after these commits were created, as the standard requires. |
 
 ## Actual prompt
 
@@ -133,7 +133,7 @@ Passed!  - Failed: 0, Passed: 22, Skipped: 0, Total: 22
 - Test files: `tests/http/BallastLane.TaskApi.HttpTests/{TaskApiFactory,TestDatabase,HttpAssertions,AccessBoundaryTests}.cs`,
   `tests/http/BallastLane.UserApi.HttpTests/AuthenticationBoundaryTests.cs`
 - Task identifiers: `T038` to `T044`
-- Commits: `PENDING`
+- Commits: `2f0844b` - `feat(api): implement the task manager backend with Npgsql and ADO.NET`; `9dfae4d` - `docs: record the implementation evidence and the backend layout`. Recorded after these commits were created, as the standard requires.
 
 ## Evidence status rationale
 
