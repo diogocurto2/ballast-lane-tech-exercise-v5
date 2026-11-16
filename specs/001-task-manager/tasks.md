@@ -80,12 +80,12 @@ Repository root, per [plan.md](./plan.md) Project Structure:
 behavior, so they are `Not Applicable` for TDD with the substitute validation named in T007.
 
 - [ ] T001 Create `BallastLane.sln` with `src/Domain/Domain.csproj`, `src/Application/Application.csproj`, `src/Infrastructure/Infrastructure.csproj`, `src/SharedWeb/SharedWeb.csproj`, `src/UserApi/UserApi.csproj`, `src/TaskApi/TaskApi.csproj`, and `src/Migrator/Migrator.csproj`, all targeting `net10.0`, with only the permitted references: Domain none; Application to Domain; Infrastructure to Application and Domain; SharedWeb to Application and Domain; UserApi and TaskApi to Application, Domain, Infrastructure, and SharedWeb; Migrator to Infrastructure. TDD Not Applicable: project scaffolding only. Substitute validation: T007
-- [ ] T002 [P] Configure `Directory.Build.props` with `Nullable=enable`, `TreatWarningsAsErrors=true`, and `LangVersion=14`; add package references compatible with `net10.0` - `Npgsql`, `Microsoft.Extensions.Identity.Core`, and `Microsoft.AspNetCore.Authentication.JwtBearer` to `src/Infrastructure/Infrastructure.csproj`, and `Swashbuckle.AspNetCore` to `src/UserApi/UserApi.csproj` and `src/TaskApi/TaskApi.csproj` - pinning each to its current stable release at implementation time and recording the resolved versions in `docs/evidence/genai/EV-0010-foundational-tdd.md`. TDD Not Applicable: build configuration only. Substitute validation: T007
+- [ ] T002 [P] Configure `Directory.Build.props` with `Nullable=enable`, `TreatWarningsAsErrors=true`, and `LangVersion=14`; add package references aligned with the .NET 10 line - `Microsoft.AspNetCore.Authentication.JwtBearer` 10.0.x, `Microsoft.Extensions.Identity.Core` 10.0.x, `Microsoft.AspNetCore.Mvc.Testing` 10.0.x, `Npgsql` 10.x, `Swashbuckle.AspNetCore` latest stable targeting `net10.0`, and `xunit` 2.x with the current stable `Microsoft.NET.Test.Sdk` - to `src/Infrastructure/Infrastructure.csproj`, `src/UserApi/UserApi.csproj`, `src/TaskApi/TaskApi.csproj`, and the test projects; record the resolved versions in `docs/evidence/genai/EV-0010-foundational-tdd.md` and fail the build on any package that resolves below the .NET 10 line or pulls a prohibited library. TDD Not Applicable: build configuration only. Substitute validation: T007
 - [ ] T003 [P] Create the frontend project in `frontend/package.json` and `frontend/tsconfig.json` with Vite 5.4, React 18.3, TypeScript 5.6 (`strict`, `noImplicitAny`, `strictNullChecks`, `noUnusedLocals`), React Router 6, Vitest 2, and React Testing Library 16. TDD Not Applicable: scaffolding and configuration only. Substitute validation: T007
 - [ ] T004 [P] Configure the seven test projects `tests/unit/BallastLane.Domain.Tests`, `tests/unit/BallastLane.Application.Tests`, `tests/unit/BallastLane.Infrastructure.UnitTests`, `tests/unit/BallastLane.Api.UnitTests`, `tests/unit/BallastLane.Architecture.Tests`, `tests/integration/BallastLane.PostgreSql.Tests`, `tests/integration/BallastLane.Migrations.Tests`, `tests/http/BallastLane.UserApi.HttpTests`, and `tests/http/BallastLane.TaskApi.HttpTests` with xUnit 2.x, `Microsoft.AspNetCore.Mvc.Testing` 8.x for the two HTTP projects, and the shared fixture `tests/integration/BallastLane.PostgreSql.Tests/DatabaseFixture.cs`. TDD Not Applicable: test harness scaffolding only. Substitute validation: T007
 - [ ] T005 [P] Create `docker-compose.yml` with a `postgres:16` service on `5432` carrying a `pg_isready` health check, `db/docker-entrypoint-initdb.d/01-create-test-database.sql` creating `taskmanager_test`, and `migrator`, `user-api` on `5081`, and `task-api` on `5082` services that depend on `postgres` being healthy. TDD Not Applicable: deployment configuration only. Substitute validation: T007
 - [ ] T006 [P] Create `.env.example` with commented placeholders for `POSTGRES_PASSWORD`, `ConnectionStrings__Database`, `ConnectionStrings__TestDatabase`, `Jwt__SigningKey`, and `FrontendOrigin`, and confirm `.env` is covered by `.gitignore`. TDD Not Applicable: configuration only. Substitute validation: T007
-- [ ] T007 [P] Add `.editorconfig`, `frontend/.prettierrc`, and `frontend/eslint.config.js`; then run the substitute validation for T001 to T006: `dotnet build BallastLane.sln` with no warnings, `docker compose -f docker-compose.yml config` parsing cleanly, `docker compose up -d postgres` reaching a healthy status, and `npm run build` plus `npm run lint` in `frontend/`; record all observed output in `docs/evidence/genai/EV-0009-task-generation.md`
+- [ ] T007 Add `.editorconfig`, `frontend/.prettierrc`, and `frontend/eslint.config.js`; then run the substitute validation for T001 to T006: `dotnet build BallastLane.sln` with no warnings, `docker compose -f docker-compose.yml config` parsing cleanly, `docker compose up -d postgres` reaching a healthy status, and `npm run build` plus `npm run lint` in `frontend/`; record all observed output in `docs/evidence/genai/EV-0009-task-generation.md` (depends on T001, T002, T003, T004, T005, T006)
 
 **Checkpoint**: The solution builds, the frontend builds and lints, the database container is
 healthy, and no runtime behavior exists yet.
@@ -110,7 +110,7 @@ seed. All of it changes runtime behavior, so all of it is RED-first.
 
 ### RED checkpoint for Phase 2
 
-- [ ] T014 Create the compile-only contracts required by the Phase 2 tests - `IPasswordHasher`, `ITimeProvider`, `IUserReader`, `IUserWriter`, and `ITokenIssuer` in `src/Application/Abstractions/`, the outcome types in `src/Application/Outcomes/OperationResult.cs`, and `NotImplementedException` bodies for `src/Infrastructure/Persistence/SchemaMigrator.cs`, `src/Infrastructure/Persistence/NpgsqlConnectionFactory.cs`, and `src/Infrastructure/Persistence/DemoSeeder.cs` - then run the Phase 2 tests in `tests/unit/BallastLane.Infrastructure.UnitTests/`, `tests/unit/BallastLane.Api.UnitTests/`, and `tests/integration/BallastLane.Migrations.Tests/`, and record each observed RED failure in `docs/evidence/genai/EV-0010-foundational-tdd.md`, confirming every failure is a behavioural assertion failure rather than a compilation or environment failure (depends on T008, T009, T010, T011, T012, T013)
+- [ ] T014 Create the compile-only contracts required by the Phase 2 tests - `IPasswordHasher`, `ITimeProvider`, `IUserReader`, `IUserWriter`, and `ITokenIssuer` in `src/Application/Abstractions/`, `src/Domain/Users/AuthenticatedUser.cs`, the outcome types in `src/Application/Outcomes/OperationResult.cs`, and `NotImplementedException` bodies for `src/Infrastructure/Persistence/SchemaMigrator.cs`, `src/Infrastructure/Persistence/NpgsqlConnectionFactory.cs`, `src/Infrastructure/Security/IdentityPasswordHasher.cs`, and `src/Infrastructure/Persistence/DemoSeeder.cs` - then run the Phase 2 tests in `tests/unit/BallastLane.Infrastructure.UnitTests/`, `tests/unit/BallastLane.Api.UnitTests/`, and `tests/integration/BallastLane.Migrations.Tests/`, and record each observed RED failure in `docs/evidence/genai/EV-0010-foundational-tdd.md`, confirming every failure is a behavioural assertion failure rather than a compilation or environment failure (depends on T008, T009, T010, T011, T012, T013)
 
 ### Implementation for Phase 2
 
@@ -118,8 +118,8 @@ seed. All of it changes runtime behavior, so all of it is RED-first.
 - [ ] T016 Implement `src/Infrastructure/Persistence/SchemaMigrator.cs` and `src/Infrastructure/Persistence/NpgsqlConnectionFactory.cs` with parameterized SQL only, `await using` disposal, and async calls carrying the token (depends on T015; RED via T014)
 - [ ] T017 Implement `src/Application/Outcomes/OperationResult.cs` and `src/SharedWeb/OperationResultMapping.cs` producing the ProblemDetails shape asserted in `tests/unit/BallastLane.Api.UnitTests/OperationResultMappingTests.cs` (depends on T016; RED via T014)
 - [ ] T018 Implement `src/SharedWeb/AuthenticationSetup.cs` with explicit `TokenValidationParameters` (`ValidateIssuer`, `ValidateAudience`, `ValidateIssuerSigningKey`, `ValidateLifetime` all true, `ClockSkew = TimeSpan.Zero`, issuer `ballastlane-user-api`, audience `ballastlane-clients`, HS256 key from `Jwt__SigningKey`) and a default-deny fallback policy, plus claim mapping in `src/SharedWeb/ClaimsPrincipalExtensions.cs` (depends on T017; RED via T014)
-- [ ] T019 Implement `src/Migrator/Program.cs` with a `migrate` action by default and a `--seed` action, returning a non-zero exit code on failure (depends on T018; RED via T014)
-- [ ] T020 Implement `src/Infrastructure/Persistence/DemoSeeder.cs` with idempotent upserts (`ON CONFLICT (email) DO NOTHING`), seeded passwords hashed through `IPasswordHasher` inside one explicit transaction (depends on T019; RED via T014)
+- [ ] T019 Implement the concrete adapters `src/Infrastructure/Security/IdentityPasswordHasher.cs` (established `PasswordHasher<T>`, unique salt, constant-time verification) and `src/Infrastructure/Time/SystemTimeProvider.cs`, so password hashing exists before the seeder consumes it (depends on T018; RED via T014)
+- [ ] T020 Implement `src/Infrastructure/Persistence/DemoSeeder.cs` with idempotent upserts using `ON CONFLICT (lower(email)) DO NOTHING`, matching the unique expression index created by T015 rather than a non-existent plain `email` constraint, hashing seeded passwords through the `IdentityPasswordHasher` implemented in T019 inside one explicit transaction; then implement `src/Migrator/Program.cs` with a `migrate` default action that applies pending migrations and a `--seed` action that applies migrations first and only then seeds, returning a non-zero exit code on failure (depends on T019; RED via T014)
 - [ ] T021 Author `tests/unit/BallastLane.Architecture.Tests/DependencyDirectionTests.cs` asserting the permitted project references, that `Domain` and `Application` reference no ASP.NET Core or Npgsql assembly, and that no `EntityFrameworkCore`, `Dapper`, `MediatR`, or `Mediator` package is referenced directly or transitively; establish its RED by temporarily adding a prohibited reference to `src/Application/Application.csproj`, observing and recording the failure, then reverting
 - [ ] T022 Run the Phase 2 suite across `tests/unit/` and `tests/integration/` and record the observed GREEN results in `docs/evidence/genai/EV-0010-foundational-tdd.md` (depends on T020, T021)
 - [ ] T023 Refactor the Phase 2 code in `src/Infrastructure/Persistence/`, `src/SharedWeb/`, and `src/Migrator/`, rerun the suite, and record the result in `docs/evidence/genai/EV-0010-foundational-tdd.md` (depends on T022)
@@ -148,13 +148,13 @@ present.
 
 ### RED checkpoint for User Story 1
 
-- [ ] T029 [US1] Run the US1 tests in `tests/unit/BallastLane.Domain.Tests/UserTests.cs`, `tests/unit/BallastLane.Application.Tests/`, `tests/http/BallastLane.UserApi.HttpTests/`, and `frontend/tests/`, and record each observed RED failure in `docs/evidence/genai/EV-0011-us1-registration-authentication.md`, confirming each is an assertion failure rather than a compilation failure (depends on T025, T026, T027, T028)
+- [ ] T029 [US1] Create the compile-only contracts this story's tests require - `src/Domain/Users/User.cs`, `src/Application/Users/{UserValidator,RegisterUserUseCase,LoginUseCase,GetCurrentUserUseCase}.cs`, `src/UserApi/Controllers/{UsersController,PublicController}.cs` with `NotImplementedException` bodies, and minimal `frontend/src/api/users.ts`, `frontend/src/auth/AuthContext.tsx`, and `frontend/src/pages/{RegisterPage,LoginPage}.tsx` - so the suite compiles, then run the US1 tests in `tests/unit/BallastLane.Domain.Tests/UserTests.cs`, `tests/unit/BallastLane.Application.Tests/`, `tests/http/BallastLane.UserApi.HttpTests/`, and `frontend/tests/`, and record each observed RED failure in `docs/evidence/genai/EV-0011-us1-registration-authentication.md`, confirming each is an assertion failure rather than a compilation failure (depends on T025, T026, T027, T028)
 
 ### Implementation for User Story 1
 
 - [ ] T030 [US1] Implement `src/Domain/Users/User.cs` with `UserId`, `Email`, and password-hash handling, including email normalization asserted by `tests/unit/BallastLane.Domain.Tests/UserTests.cs` (depends on T029 RED)
 - [ ] T031 [US1] Implement `src/Application/Users/UserValidator.cs`, `RegisterUserUseCase.cs`, `LoginUseCase.cs`, and `GetCurrentUserUseCase.cs` against the boundary interfaces declared in T014, applying the PDC-01 minimum of 8 characters (depends on T030; RED via T029)
-- [ ] T032 [US1] Implement `src/Infrastructure/Persistence/NpgsqlUserRepository.cs` (lookup by `lower(email)`, unique-violation translation to a conflict outcome), `src/Infrastructure/Security/IdentityPasswordHasher.cs`, `src/Infrastructure/Security/JwtTokenIssuer.cs` (60-minute lifetime, distinct `jti` per token), and `src/Infrastructure/Time/SystemTimeProvider.cs` (depends on T031; RED via T029)
+- [ ] T032 [US1] Implement `src/Infrastructure/Persistence/NpgsqlUserRepository.cs` (lookup by `lower(email)`, unique-violation translation to a conflict outcome) and `src/Infrastructure/Security/JwtTokenIssuer.cs` (60-minute lifetime, distinct `jti` per token), reusing the hasher and time provider from T019 (depends on T031; RED via T029)
 - [ ] T033 [US1] Implement `src/UserApi/Controllers/UsersController.cs` and `src/UserApi/Controllers/PublicController.cs` with explicit `[AllowAnonymous]` on register, login, and public info, plus `src/UserApi/Contracts/RegisterRequest.cs`, `LoginRequest.cs`, `UserResponse.cs`, and `LoginResponse.cs`, and dependency registration in `src/UserApi/Program.cs` (depends on T032; RED via T029)
 - [ ] T034 [US1] Implement `frontend/src/api/client.ts` with centralized 401 handling, `frontend/src/api/users.ts`, `frontend/src/auth/AuthContext.tsx`, `useAuth.ts`, `RequireAuth.tsx`, `frontend/src/pages/RegisterPage.tsx`, and `frontend/src/pages/LoginPage.tsx` with labelled inputs and field-associated error messages (depends on T033; RED via T029)
 - [ ] T035 [US1] Run the US1 tests in `tests/unit/`, `tests/http/BallastLane.UserApi.HttpTests/`, and `frontend/tests/components/` and record the observed GREEN results in `docs/evidence/genai/EV-0011-us1-registration-authentication.md` (depends on T034)
@@ -179,7 +179,7 @@ protected endpoint with no, malformed, and expired credentials, and call one wit
 
 ### RED checkpoint for User Story 2
 
-- [ ] T039 [US2] Scaffold `src/TaskApi/Program.cs` minimally so the tests in `tests/http/BallastLane.TaskApi.HttpTests/AccessBoundaryTests.cs` compile, then run them and record the observed assertion-based RED failures in `docs/evidence/genai/EV-0012-us2-access-boundary.md` (depends on T038)
+- [ ] T039 [US2] Create the compile-only contracts this story's tests require - `src/TaskApi/Program.cs` and `src/TaskApi/Controllers/ProbeController.cs` (a route with no explicit authorization attribute, and a protected route) with `NotImplementedException` bodies - so the tests in `tests/http/BallastLane.TaskApi.HttpTests/AccessBoundaryTests.cs` compile, then run them and record the observed assertion-based RED failures in `docs/evidence/genai/EV-0012-us2-access-boundary.md` (depends on T038)
 
 ### Implementation for User Story 2
 
@@ -210,7 +210,7 @@ none, list and retrieve for both and confirm isolation and the empty result.
 
 ### RED checkpoint for User Story 3
 
-- [ ] T049 [US3] Run the US3 tests in `tests/unit/BallastLane.Infrastructure.UnitTests/`, `tests/integration/BallastLane.PostgreSql.Tests/TaskReadTests.cs`, `tests/http/BallastLane.TaskApi.HttpTests/TaskReadTests.cs`, and `frontend/tests/components/`, and record each observed RED failure in `docs/evidence/genai/EV-0013-us3-task-read.md` (depends on T045, T046, T047, T048)
+- [ ] T049 [US3] Create the compile-only contracts this story's tests require - `src/Domain/Tasks/{TaskItem,TaskId,TaskStatus}.cs`, `src/Application/Tasks/{ListTasksUseCase,GetTaskUseCase}.cs`, `src/Application/Abstractions/ITaskReader.cs`, `src/Infrastructure/Persistence/NpgsqlTaskRepository.cs`, `src/TaskApi/Controllers/TasksController.cs`, and minimal `frontend/src/api/tasks.ts`, `frontend/src/pages/{TasksPage,TaskDetailPage}.tsx`, and `frontend/src/components/{Spinner,EmptyState,ErrorMessage,TaskList}.tsx` with `NotImplementedException` bodies - so the suite compiles, then run the US3 tests in `tests/unit/BallastLane.Infrastructure.UnitTests/`, `tests/integration/BallastLane.PostgreSql.Tests/TaskReadTests.cs`, `tests/http/BallastLane.TaskApi.HttpTests/TaskReadTests.cs`, and `frontend/tests/components/`, and record each observed RED failure in `docs/evidence/genai/EV-0013-us3-task-read.md` (depends on T045, T046, T047, T048)
 
 ### Implementation for User Story 3
 
@@ -243,7 +243,7 @@ case, then verify only accepted tasks exist and all are owned by the caller.
 
 ### RED checkpoint for User Story 4
 
-- [ ] T061 [US4] Run the US4 tests in `tests/unit/BallastLane.Domain.Tests/TaskValidationTests.cs`, `tests/unit/BallastLane.Application.Tests/CreateTaskUseCaseTests.cs`, `tests/http/BallastLane.TaskApi.HttpTests/TaskCreateTests.cs`, and `frontend/tests/components/TaskFormCreate.test.tsx`, and record each observed RED failure in `docs/evidence/genai/EV-0014-us4-task-create.md` (depends on T058, T059, T060)
+- [ ] T061 [US4] Create the compile-only contracts this story's tests require - `src/Domain/Tasks/TaskDraft.cs`, `src/Application/Tasks/{TaskValidator,CreateTaskUseCase}.cs`, `src/Application/Abstractions/ITaskWriter.cs`, `src/TaskApi/Contracts/CreateTaskRequest.cs`, and a minimal `frontend/src/components/TaskForm.tsx` with `NotImplementedException` bodies - so the suite compiles, then run the US4 tests in `tests/unit/BallastLane.Domain.Tests/TaskValidationTests.cs`, `tests/unit/BallastLane.Application.Tests/CreateTaskUseCaseTests.cs`, `tests/http/BallastLane.TaskApi.HttpTests/TaskCreateTests.cs`, and `frontend/tests/components/TaskFormCreate.test.tsx`, and record each observed RED failure in `docs/evidence/genai/EV-0014-us4-task-create.md` (depends on T058, T059, T060)
 
 ### Implementation for User Story 4
 
@@ -276,7 +276,7 @@ attempt invalid updates, and attempt to update another user's task.
 
 ### RED checkpoint for User Story 5
 
-- [ ] T073 [US5] Run the US5 tests in `tests/unit/BallastLane.Application.Tests/UpdateTaskUseCaseTests.cs`, `tests/http/BallastLane.TaskApi.HttpTests/TaskUpdateTests.cs`, and `frontend/tests/components/TaskFormEdit.test.tsx`, and record each observed RED failure in `docs/evidence/genai/EV-0015-us5-task-update.md` (depends on T070, T071, T072)
+- [ ] T073 [US5] Create the compile-only contracts this story's tests require - `src/Application/Tasks/UpdateTaskUseCase.cs` and `src/TaskApi/Contracts/UpdateTaskRequest.cs` with `NotImplementedException` bodies, plus an edit-mode stub in `frontend/src/components/TaskForm.tsx` - so the suite compiles, then run the US5 tests in `tests/unit/BallastLane.Application.Tests/UpdateTaskUseCaseTests.cs`, `tests/http/BallastLane.TaskApi.HttpTests/TaskUpdateTests.cs`, and `frontend/tests/components/TaskFormEdit.test.tsx`, and record each observed RED failure in `docs/evidence/genai/EV-0015-us5-task-update.md` (depends on T070, T071, T072)
 
 ### Implementation for User Story 5
 
@@ -307,7 +307,7 @@ attempt to delete another user's task.
 
 ### RED checkpoint for User Story 6
 
-- [ ] T083 [US6] Run the US6 tests in `tests/http/BallastLane.TaskApi.HttpTests/TaskDeleteTests.cs` and `frontend/tests/components/TaskDelete.test.tsx`, and record each observed RED failure in `docs/evidence/genai/EV-0016-us6-task-delete.md` (depends on T081, T082)
+- [ ] T083 [US6] Create the compile-only contracts this story's tests require - `src/Application/Tasks/DeleteTaskUseCase.cs` and `frontend/src/components/ConfirmDialog.tsx` with `NotImplementedException` bodies - so the suite compiles, then run the US6 tests in `tests/http/BallastLane.TaskApi.HttpTests/TaskDeleteTests.cs` and `frontend/tests/components/TaskDelete.test.tsx`, and record each observed RED failure in `docs/evidence/genai/EV-0016-us6-task-delete.md` (depends on T081, T082)
 
 ### Implementation for User Story 6
 
@@ -337,7 +337,7 @@ the documented credentials, see seeded tasks; restart and confirm data is intact
 
 ### RED checkpoint for User Story 7
 
-- [ ] T092 [US7] Run the US7 tests in `tests/integration/BallastLane.Migrations.Tests/DemonstrationDatasetTests.cs` and record the observed RED failures in `docs/evidence/genai/EV-0017-us7-demonstration-environment.md` (depends on T091)
+- [ ] T092 [US7] Declare the demonstration dataset constants this story's tests assert on in `src/Infrastructure/Persistence/DemoSeeder.cs` so the suite compiles, then run the US7 tests in `tests/integration/BallastLane.Migrations.Tests/DemonstrationDatasetTests.cs` and record the observed RED failures in `docs/evidence/genai/EV-0017-us7-demonstration-environment.md` (depends on T091)
 
 ### Implementation for User Story 7
 
@@ -364,7 +364,7 @@ the documented credentials, see seeded tasks; restart and confirm data is intact
 - [ ] T104 Complete `README.md` with the user story, architecture overview, dependency direction, setup steps, test commands, demonstration credentials labeled demonstration-only, API surface summary, engineering rationale, known limitations, and pointers to `GENAI.md` and `docs/evidence/genai/`
 - [ ] T105 Run `/speckit-analyze` against the implemented artifacts and record its report in `docs/evidence/genai/EV-0018-review-and-convergence.md`, resolving any blocking finding before claiming readiness
 - [ ] T106 Verify repository hygiene - no secrets, no machine-specific absolute paths, no tracked symbolic links - and record final evidence and commit references in `docs/evidence/genai/EV-0018-review-and-convergence.md`
-- [ ] T107 Perform the mandatory Generative AI REST API generation exercise required by the assessment: record the actual prompt, capture representative original generated output before correction, document the validation performed, the corrections or justified acceptance, and how authentication, authorization, validation rules, and edge cases were handled, in `GENAI.md` and `docs/evidence/genai/EV-0021-genai-api-exercise.md`; then verify every `GENAI.md` claim is backed by recorded observed output. TDD Not Applicable: documentation-only deliverable that changes no runtime behavior; substitute validation is the recorded build and test output it cites (depends on T106)
+- [ ] T107 Consolidate the Generative AI REST API generation evidence in `GENAI.md`: the actual prompt and representative original generated output are captured during the API implementation tasks themselves (T033 for the user endpoints, T053 for the read endpoints, T065 for create, T076 for update, T086 for delete) and preserved in the implementation evidence records before any correction; this task assembles them into `GENAI.md` and `docs/evidence/genai/EV-0021-genai-api-exercise.md`, documenting the validation performed, the corrections or justified acceptance, and how authentication, authorization, validation rules, and edge cases were handled, then verifies every `GENAI.md` claim against observed output. TDD Not Applicable: documentation-only deliverable that changes no runtime behavior; substitute validation is the recorded build and test output it cites (depends on T106)
 
 ---
 
@@ -437,14 +437,19 @@ T060  frontend/tests/components/TaskFormCreate.test.tsx
 
 ## Implementation Strategy
 
-### MVP first
+### First increment: P1
 
 1. Phase 1 Setup.
 2. Phase 2 Foundational (blocks everything).
 3. Phase 3 US1, then Phase 4 US2 - both P1. Together they deliver registration, login, logout,
-   persistence, and the security boundary: the minimum defensible increment and the base of the
-   assessment's user API requirement.
-4. Stop and validate US1 and US2 independently.
+   persistence, and the security boundary.
+4. Validate US1 and US2 independently.
+
+**P1 is the first implementation increment, not the complete assessment.** User stories US3 to US6
+(task CRUD and the frontend task-management flows), US7 (seeded demonstration users and data), and
+T107 (`GENAI.md` with the Generative AI API-generation exercise) remain **mandatory deliverables**.
+Completing P1 does not reduce the obligation to deliver them; it only fixes the order in which they
+are built.
 
 ### Incremental delivery
 
@@ -458,10 +463,11 @@ Each step leaves the previous steps working.
 
 ### Scope honesty
 
-If time or review constrains delivery, the priority order above determines what is delivered. Any
-story or individual scenario not delivered must be reported as not delivered in `README.md`,
-`GENAI.md`, and the evidence record. It must not be described as complete, and no test may be
-skipped or removed to make a suite appear green.
+The priority order decides build order, not delivery scope. CRUD (US3 to US6), frontend task
+management, seeded demonstration data (US7), and `GENAI.md` (T107) are mandatory assessment
+deliverables and cannot be dropped silently. If any of them is not delivered, it must be reported as
+not delivered in `README.md`, `GENAI.md`, and the evidence record, and no test may be skipped or
+removed to make a suite appear green.
 
 ---
 
@@ -473,4 +479,53 @@ skipped or removed to make a suite appear green.
   and the substitute validation task T007, because no runtime behavior is created there.
 - Constraints from [data-model.md](./data-model.md) are quoted in the task that implements them so
   they are not left to implementation-time discretion.
+- The Generative AI API-generation prompt and the representative original generated code are captured
+  **during** the API implementation tasks (T033, T053, T065, T076, T086), before any correction, and
+  stored in that implementation activity's evidence record. T107 consolidates them into `GENAI.md`;
+  it does not reconstruct them afterwards.
 - Commit after each logical group; do not commit without the evidence that supports it.
+
+---
+
+## Requirement Traceability
+
+Every requirement has at least one task. This table makes the mapping machine-checkable rather than
+inferred from the `[USn]` label alone.
+
+| Requirement | Tasks |
+|---|---|
+| FR-001 registration | T026, T027 |
+| FR-002 authentication | T026, T027 |
+| FR-003 persisted users | T032, T046, T091 |
+| FR-004 logout | T028, T034 |
+| FR-005 task CRUD | T047, T053, T059, T065, T071, T076, T081, T086 |
+| FR-006 task fields | T046, T050, T058 |
+| FR-007 cross-user denial | T051, T071, T081 |
+| FR-008 two API surfaces | T027, T033, T038, T040 |
+| FR-009 ownership from claims | T059, T063 |
+| FR-010 frontend flows | T028, T034, T054, T066, T077, T087 |
+| FR-011 frontend states | T048, T054, T060, T072, T082 |
+| FR-012 seeded demo data | T013, T020, T091, T093 |
+| FR-013 statuses | T050, T058, T059, T070 |
+| FR-014 field rules | T058, T059, T062, T070 |
+| FR-015 password policy | T026, T027 |
+| FR-016 delete semantics | T081, T084, T085 |
+| FR-017 error categories | T011, T017, T059, T071 |
+| NFR-001 security | T012, T018, T027, T099 |
+| NFR-002 accessibility | T034, T048, T102 |
+| NFR-003 responsiveness | T102 |
+| NFR-004 reproducible startup | T005, T095, T104 |
+| NFR-005 durability | T046, T095 |
+| NFR-006 test levels | T008 to T013, T045 to T048, T058 to T060, T070 to T072, T081, T082 |
+| DO-01 README | T104 |
+| DO-02 GENAI.md and the API-generation exercise | capture in T033, T053, T065, T076, T086; consolidated in T107 |
+| DO-03 user story and presentation | T104 |
+| DO-04 single public repository | T106 |
+| DO-05 no symbolic links | T106 |
+| SC-001, SC-002 journey timing | T102 (timed manual recording), with SC-002 also exercised by the frontend flow test T028 and the create/update flows T066, T077 |
+| SC-003 cross-user denial | T099 |
+| SC-004 credential rejection | T012, T038, T099 |
+| SC-005 UI states | T048, T060, T072, T082, T102 |
+| SC-006 clean-start demo | T095 |
+| SC-007 restart durability | T095 |
+| SC-008 clean console | T102 |

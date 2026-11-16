@@ -27,12 +27,13 @@ stories: authentication (US1), the public/protected access boundary (US2), read 
 **Language/Version**: C# 14 on **.NET 10** (`net10.0`, SDK 10.0.404, LTS); TypeScript 5.6 with React
 18.3 on Node 25.9.0 (the build tooling requires Node 20 or newer).
 
-**Primary Dependencies**: ASP.NET Core 10 (`Microsoft.AspNetCore.Mvc`), `Npgsql`,
-`Microsoft.AspNetCore.Authentication.JwtBearer`, `Microsoft.Extensions.Identity.Core`
-(`PasswordHasher<T>`), `Swashbuckle.AspNetCore` (OpenAPI), `Microsoft.AspNetCore.Mvc.Testing`
-(HTTP integration tests), and `xunit`; each pinned to its current stable release at implementation
-time and recorded in the evidence record. Frontend: Vite 5.4, React Router 6, Vitest 2 + React
-Testing Library 16.
+**Primary Dependencies**: ASP.NET Core 10 - `Microsoft.AspNetCore.Mvc`,
+`Microsoft.AspNetCore.Authentication.JwtBearer` 10.0.x, `Microsoft.Extensions.Identity.Core` 10.0.x
+(`PasswordHasher<T>`), `Microsoft.AspNetCore.Mvc.Testing` 10.0.x, and `Swashbuckle.AspNetCore` (latest
+stable targeting `net10.0`) - plus `Npgsql` 10.x and `xunit` with the current stable
+`Microsoft.NET.Test.Sdk`. Every backend and test package MUST resolve on the .NET 10 line; resolved
+versions are recorded in the implementation evidence record rather than asserted here. Frontend:
+Vite 5.4, React Router 6, Vitest 2 + React Testing Library 16.
 
 **Storage**: PostgreSQL 16 in a container. Access is Npgsql + ADO.NET only. The schema is defined
 by ordered SQL migrations under `db/migrations/`; seeding is a separate idempotent step.

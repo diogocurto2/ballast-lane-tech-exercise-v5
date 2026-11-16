@@ -71,5 +71,6 @@ If sensitive information must be removed, say explicitly that the content was re
 | EV-0009 | Task generation with RED-first ordering | 4 - Tasks | Captured | [EV-0009-task-generation-001-task-manager.md](./EV-0009-task-generation-001-task-manager.md) |
 | EV-0020 | Pre-implementation analysis of `001-task-manager` (4 blocking findings) | 5 - Analyze | Captured | [EV-0020-analysis-001-task-manager.md](./EV-0020-analysis-001-task-manager.md) |
 | EV-0022 | Remediation of the CRITICAL findings and re-analysis | 5 - Analyze | Captured | [EV-0022-critical-remediation-and-reanalysis.md](./EV-0022-critical-remediation-and-reanalysis.md) |
+| EV-0023 | Final pre-implementation corrections and second re-analysis | 5 - Analyze | Captured | [EV-0023-final-corrections-and-second-reanalysis.md](./EV-0023-final-corrections-and-second-reanalysis.md) |
 
 The mandatory REST API generation exercise from the assessment has not started. Its evidence records are pending and will be added when that work begins.
