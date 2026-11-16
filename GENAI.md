@@ -171,7 +171,7 @@ Observations from this work:
 | `EV-0001` - repository GenAI standards and evidence workflow | [docs/evidence/genai/EV-0001-repository-genai-standards.md](docs/evidence/genai/EV-0001-repository-genai-standards.md) | `Verified` - committed in `b3b6195`, `0439fbb` |
 | `EV-0002` - refinement per developer review | [docs/evidence/genai/EV-0002-standard-refinement.md](docs/evidence/genai/EV-0002-standard-refinement.md) | `Verified` - committed in `b3b6195`, `0439fbb` |
 | `EV-0003` - engineering standards and submission requirements | [docs/evidence/genai/EV-0003-engineering-standards.md](docs/evidence/genai/EV-0003-engineering-standards.md) | `Verified` - committed in `9906b6a` |
-| `EV-0004` - TDD enforcement lifecycle across Spec Kit phases | [docs/evidence/genai/EV-0004-tdd-enforcement-lifecycle.md](docs/evidence/genai/EV-0004-tdd-enforcement-lifecycle.md) | `Captured` - review and commit `PENDING` |
+| `EV-0004` - TDD enforcement lifecycle across Spec Kit phases | [docs/evidence/genai/EV-0004-tdd-enforcement-lifecycle.md](docs/evidence/genai/EV-0004-tdd-enforcement-lifecycle.md) | `Verified` - committed in `ba92121` |
 | Generative AI engineering standard | [docs/engineering/genai.md](docs/engineering/genai.md) | `Verified` - committed |
 | Engineering standards index and nine standards | [docs/engineering/README.md](docs/engineering/README.md) | Established; developer review `PENDING` |
 | Submission requirements | [docs/assessment/submission-requirements.md](docs/assessment/submission-requirements.md) | Recorded; developer review `PENDING` |

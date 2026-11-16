@@ -12,8 +12,8 @@
 | Related task identifiers | `PENDING` - no Spec Kit task list exists. Work is identified by the developer instruction below. |
 | AI tool | GitHub Copilot (VS Code, Copilot SDK) |
 | AI model | `PENDING` - the model identifier was not exposed in the session. |
-| Evidence status | `Captured` |
-| Commit references | `PENDING` - recorded after the commit exists; the change is not committed. |
+| Evidence status | `Verified` |
+| Commit references | `ba92121` - "docs: enforce TDD across all Spec Kit phases". Recorded after the commit was created, per the standard. |
 
 ## Actual prompt
 
@@ -149,11 +149,13 @@ Originally generated numbering attempt, which produced duplicate and non-sequent
 | Decision | Rationale | Approval |
 | --- | --- | --- |
 | Dictated section content | Developer instruction | `Approved` - content specified verbatim by the developer |
-| Number the new section 3 and renumber the remainder | Keeps mandatory content contiguous and numbering sequential | `Pending` |
-| Mark `testing-and-tdd.md` primary for phases 2-7 in the applicability table | The new section makes TDD governing, not supporting, in those phases | `Pending` |
-| Add phase-enforcement and task-dependency verification rows | Makes the new rule objectively checkable | `Pending` |
+| Number the new section 3 and renumber the remainder | Keeps mandatory content contiguous and numbering sequential | `Approved` - committed in `ba92121` at developer instruction |
+| Mark `testing-and-tdd.md` primary for phases 2-7 in the applicability table | The new section makes TDD governing, not supporting, in those phases | `Approved` - committed in `ba92121` at developer instruction |
+| Add phase-enforcement and task-dependency verification rows | Makes the new rule objectively checkable | `Approved` - committed in `ba92121` at developer instruction |
 | Defer template and constitution changes to the constitution phase | Developer instruction; also avoids modifying Spec Kit artifacts | `Approved` - explicit instruction |
-| Commit this change | Developer has not yet instructed a commit for it | `Pending` |
+| Commit this change | Developer directed the commit on `2026-11-16` | `Approved` - published in `ba92121` |
+
+Approval basis, stated precisely: the developer dictated the content, directed the commit, and the change is published in `ba92121`. That covers the dictated rules and their publication. The formatting and placement choices were not separately debated but were accepted by publishing them.
 
 ## Corrections and improvements
 
@@ -241,10 +243,10 @@ git status --porcelain -- .specify   -> empty (Spec Kit templates and constituti
 - Implementation files: `Not Applicable` - documentation only
 - Test files: `Not Applicable` - no test project exists
 - Task identifiers: `PENDING` - no Spec Kit task list exists
-- Commits: `PENDING` - not committed
+- Commits: `ba92121`
 
 ## Evidence status rationale
 
-Status is `Captured`: the instruction, the dictated content, the generated integration, the two detected defects with their corrections, and the executed validation results are recorded.
+Status is `Verified`: the instruction, the dictated content, the generated integration, the two detected defects with their corrections, and the executed validation results are recorded; the developer directed the commit on `2026-11-16` and the change is published in `ba92121`.
 
-It is not `Reviewed` or `Verified` because the developer has not reviewed this change and it is not committed.
+Approval covers the dictated rules and their publication in the repository. The Spec Kit template and Constitution Check changes remain deferred to the constitution phase, as the instruction requires.
