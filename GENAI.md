@@ -4,7 +4,7 @@ Living response to the Generative AI section of the Ballast Lane Senior .NET tec
 
 This document records what was actually asked, what the AI tool actually produced, how it was validated, and what was decided. It is not a generic AI policy and not a chat transcript. Detailed evidence lives in [docs/evidence/genai/](docs/evidence/genai/README.md).
 
-**Current status: the Task Management REST API exercise and its evidence are pending. No API prompt has been written, no application code has been generated, and no tests have been executed. The specification work recorded as `EV-0001` through `EV-0007` is complete through the Specify phase; the implementation plan, task list, and application code do not exist yet.**
+**Current status: the Task Management REST API exercise and its evidence are pending. No API prompt has been written, no application code has been generated, and no tests have been executed. Specification, plan, and task list (`EV-0001` through `EV-0009`) are complete through the Tasks phase; no task has been executed and application code does not exist yet.**
 
 Provenance labels used throughout: `[AI-PROPOSED]`, `[DEVELOPER DECISION]`, `[VERIFIED]`, `[PENDING]`. Only `[VERIFIED]` marks an observed result. Labels describe provenance, not approval: design choices introduced by the AI in these artifacts are marked `[AI-PROPOSED]` until the developer approves them, and approval status is tracked in the evidence records, where it currently reads `Pending` for final approval. A choice becomes `[DEVELOPER DECISION]` only once the developer has directed or approved it.
 
@@ -12,7 +12,7 @@ Provenance labels used throughout: `[AI-PROPOSED]`, `[DEVELOPER DECISION]`, `[VE
 
 - **Primary AI coding tool:** GitHub Copilot in VS Code.
 - **Specification-driven development:** GitHub Spec Kit 1.4.0, installed and configured in this repository with the Copilot integration, PowerShell scripts, and sequential feature numbering. See `.specify/init-options.json` and `.specify/integration.json`.
-- **Constitution state:** `.specify/memory/constitution.md` is **ratified** at version 1.0.0 (2026-11-16) with six non-negotiable principles, and committed in `ac604af`. Spec Kit 1.4.0 is installed and configured with the Copilot integration. One feature specification exists, `specs/001-task-manager/spec.md`; no implementation plan, task list, or application code exists yet.
+- **Constitution state:** `.specify/memory/constitution.md` is **ratified** at version 1.0.0 (2026-11-16) with six non-negotiable principles, and committed in `ac604af`. Spec Kit 1.4.0 is installed and configured with the Copilot integration. Feature `001-task-manager` has a specification, an implementation plan, and a RED-first task list under `specs/001-task-manager/`; no task has been executed and no application code exists yet.
 - **Spec Kit enforcement:** project overrides in `.specify/templates/overrides/` replace the plan, tasks, and spec templates so the Constitution Check, dependency analysis, test strategy, and mandatory RED-first task ordering are enforced by the effective templates rather than by convention.
 - **Evidence standard:** [docs/engineering/genai.md](docs/engineering/genai.md) defines the mandatory workflow, evidence capture rules, proportionality rules by activity type, provenance labels, evidence lifecycle, and completion gate.
 - **Engineering standards:** [docs/engineering/README.md](docs/engineering/README.md) indexes the testing/TDD, SOLID, Clean Architecture, coding, API, security, database, frontend, and delivery standards, plus their applicability per Spec Kit phase and a proposed constitutional mapping.
@@ -160,6 +160,34 @@ Recording intentions here would misrepresent them as results, so nothing is clai
 
 `[VERIFIED]` These are actual observed results from this session.
 
+### Implementation plan and Phase 1 design (`EV-0008`)
+
+| Command or check | Observed result |
+| --- | --- |
+| Template setup (`setup-plan.ps1 -Json`) | Copied plan template to `specs/001-task-manager/plan.md`; copied content identical to the project override |
+| Toolchain observation | .NET SDKs 5.0.408, 8.0.428, 9.0.304, 10.0.404 (default 10.0.404); Node v25.9.0; npm 11.12.1; Docker 28.3.3; Compose v2.39.2 |
+| Requirement traceability scan, first draft | 17 FRs and 6 NFRs declared, but 10 identifiers absent from the plan: FR-003, FR-004, FR-005, FR-008, FR-010, NFR-002, NFR-003, NFR-004, NFR-005, NFR-006 |
+| Requirement traceability scan, after correction | 23 requirement IDs, 0 absent, 23 coverage rows |
+| Artifact links | 17 links checked, 0 broken |
+| Plan structure | All required sections present: Constitution Check with six principles, dependency matrix, SOLID table, seven test layers plus an architecture test, security and persistence design, GenAI capture points, complexity tracking, post-design re-check |
+| Scope | No application code, solution, migration SQL, or test project created; constitution and original assessment unmodified |
+
+`[VERIFIED]` These are actual observed results from this session. The first-draft traceability gap is
+the notable one: the plan asserted complete requirement coverage that a scan disproved.
+
+### Task generation (`EV-0009`)
+
+| Command or check | Observed result |
+| --- | --- |
+| Template provenance (`setup-tasks.ps1 -Json`) | `TASKS_TEMPLATE` resolved to `.specify/templates/overrides/tasks-template.md`, 9,836 characters |
+| First-list validation | 107 task lines, 33 missing a file path, duplicate identifier from an inserted `T005a`, 36 tasks with non-explicit RED dependencies |
+| Final-list validation | 106 task lines, 0 format violations, 106 unique sequential identifiers, no gaps, no duplicates |
+| Per-story counts | US1 13, US2 7, US3 13, US4 12, US5 11, US6 10, US7 6; 34 Setup/Foundational/Polish |
+| RED lineage | 8 direct RED dependencies plus 24 inherited lineage statements; 0 implementation tasks without a documented RED checkpoint |
+| Parallel markers | 34 `[P]` tasks, all test-authoring or independent verification; none crosses a test/implementation pair |
+
+`[VERIFIED]` These are actual observed results from this session.
+
 ### API implementation
 
 `[PENDING]` No build or test command has been executed for application code, because no solution, project, or test project exists. This section will record the actual `dotnet build` and `dotnet test` commands, their observed output, failures encountered, and how each failure was resolved.
@@ -202,6 +230,7 @@ Observations from this work:
 - `[VERIFIED]` Evidence discipline is easier to satisfy when validation is automated. Each defect above surfaced from a script or a review, not from reading the documents again.
 - `[VERIFIED]` On 2026-11-16 the same pattern repeated at a larger scale: all three specification defects were found by scripted checks (placeholder scan, identifier definition check, keyword coverage scan), not by re-reading the generated document. Writing an identifier in a traceability table does not mean it exists.
 - `[VERIFIED]` A governance rule expressed in a template can still leak through the skill that generates the artifact, because the skill is the instruction source. Correcting only the template would have left "tests (if requested)" in the effective workflow.
+- `[VERIFIED]` The same traceability failure recurred at the plan phase: the plan claimed full requirement coverage while ten requirement identifiers were absent. The lesson is that a coverage claim is only credible when a mechanical scan can enumerate every requirement and point to where it is verified.
 - `[PENDING]` That Copilot automatically selects the `genai-evidence` skill has not been observed and is not claimed. Per vendor documentation, skill selection is advisory; the repository instructions exist partly as a backstop, but this has not been tested here. Whether the directory name must equal the frontmatter `name` is likewise documented behavior, not a locally verified finding.
 
 `[PENDING]` Lessons from implementing and testing the API, and from reviewing generated code.
@@ -217,6 +246,8 @@ Observations from this work:
 | `EV-0005` - separation of engineering governance and submission process rules | [docs/evidence/genai/EV-0005-governance-separation.md](docs/evidence/genai/EV-0005-governance-separation.md) | `Verified` - committed in `f59bc6b` |
 | `EV-0006` - constitution ratification and Spec Kit integration | [docs/evidence/genai/EV-0006-constitution-ratification.md](docs/evidence/genai/EV-0006-constitution-ratification.md) | `Reviewed` - committed in `ac604af`; seven review findings applied under `EV-0007` |
 | `EV-0007` - targeted governance corrections and feature specification `001-task-manager` | [docs/evidence/genai/EV-0007-specification-001-task-manager.md](docs/evidence/genai/EV-0007-specification-001-task-manager.md) | `Captured` - committed in `3e8d0c9`; developer review `PENDING` |
+| `EV-0008` - implementation plan, research, and Phase 1 design | [docs/evidence/genai/EV-0008-implementation-plan-001-task-manager.md](docs/evidence/genai/EV-0008-implementation-plan-001-task-manager.md) | `Captured` - developer review `PENDING` |
+| `EV-0009` - task generation with RED-first ordering | [docs/evidence/genai/EV-0009-task-generation-001-task-manager.md](docs/evidence/genai/EV-0009-task-generation-001-task-manager.md) | `Captured` - developer review `PENDING` |
 | Generative AI engineering standard | [docs/engineering/genai.md](docs/engineering/genai.md) | `Verified` - committed |
 | Engineering standards index and nine standards | [docs/engineering/README.md](docs/engineering/README.md) | Established and accepted as the project foundation on 2026-11-16; targeted corrections recorded in `EV-0007` |
 | Submission requirements | [docs/assessment/submission-requirements.md](docs/assessment/submission-requirements.md) | Recorded and accepted; constitution status synchronized 2026-11-16 |

@@ -67,5 +67,7 @@ If sensitive information must be removed, say explicitly that the content was re
 | EV-0005 | Separation of engineering governance and submission process rules | 1 - Constitution and engineering standards | Verified | [EV-0005-governance-separation.md](./EV-0005-governance-separation.md) |
 | EV-0006 | Constitution ratification and Spec Kit enforcement integration | 1 - Constitution and engineering standards | Reviewed | [EV-0006-constitution-ratification.md](./EV-0006-constitution-ratification.md) |
 | EV-0007 | Targeted governance corrections and feature specification `001-task-manager` | 2 - Specify | Captured | [EV-0007-specification-001-task-manager.md](./EV-0007-specification-001-task-manager.md) |
+| EV-0008 | Implementation plan, research, and Phase 1 design | 3 - Plan | Captured | [EV-0008-implementation-plan-001-task-manager.md](./EV-0008-implementation-plan-001-task-manager.md) |
+| EV-0009 | Task generation with RED-first ordering | 4 - Tasks | Captured | [EV-0009-task-generation-001-task-manager.md](./EV-0009-task-generation-001-task-manager.md) |
 
 The mandatory REST API generation exercise from the assessment has not started. Its evidence records are pending and will be added when that work begins.
