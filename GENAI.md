@@ -4,7 +4,7 @@ Living response to the Generative AI section of the Ballast Lane Senior .NET tec
 
 This document records what was actually asked, what the AI tool actually produced, how it was validated, and what was decided. It is not a generic AI policy and not a chat transcript. Detailed evidence lives in [docs/evidence/genai/](docs/evidence/genai/README.md).
 
-**Current status: the Task Management REST API exercise and its evidence are pending. No API prompt has been written, no application code has been generated, and no tests have been executed. The only work completed so far is the documentation and configuration recorded as `EV-0001` and `EV-0002`.**
+**Current status: the Task Management REST API exercise and its evidence are pending. No API prompt has been written, no application code has been generated, and no tests have been executed. The only work completed so far is the documentation and configuration recorded as `EV-0001`, `EV-0002`, and `EV-0003`.**
 
 Provenance labels used throughout: `[AI-PROPOSED]`, `[DEVELOPER DECISION]`, `[VERIFIED]`, `[PENDING]`. Only `[VERIFIED]` marks an observed result. Labels describe provenance, not approval: design choices introduced by the AI in these artifacts are marked `[AI-PROPOSED]` until the developer approves them, and approval status is tracked in the evidence records, where it currently reads `Pending` for final approval. A choice becomes `[DEVELOPER DECISION]` only once the developer has directed or approved it.
 
@@ -14,8 +14,9 @@ Provenance labels used throughout: `[AI-PROPOSED]`, `[DEVELOPER DECISION]`, `[VE
 - **Specification-driven development:** GitHub Spec Kit 1.4.0, installed and configured in this repository with the Copilot integration, PowerShell scripts, and sequential feature numbering. See `.specify/init-options.json` and `.specify/integration.json`.
 - **Constitution state:** `.specify/memory/constitution.md` exists but is still the original template and has not been ratified. No feature specification, implementation plan, or task list exists yet.
 - **Evidence standard:** [docs/engineering/genai.md](docs/engineering/genai.md) defines the mandatory workflow, evidence capture rules, proportionality rules by activity type, provenance labels, evidence lifecycle, and completion gate.
+- **Engineering standards:** [docs/engineering/README.md](docs/engineering/README.md) indexes the testing/TDD, SOLID, Clean Architecture, coding, API, security, database, frontend, and delivery standards, plus their applicability per Spec Kit phase and a proposed constitutional mapping.
 - **Evidence skill:** [.github/skills/genai-evidence/SKILL.md](.github/skills/genai-evidence/SKILL.md) defines the three checkpoints before, during, and before completion of each meaningful activity.
-- **Repository-wide instructions:** [.github/copilot-instructions.md](.github/copilot-instructions.md) states the evidence obligations that apply in every Copilot session in this repository.
+- **Repository-wide instructions:** [.github/copilot-instructions.md](.github/copilot-instructions.md) states the evidence obligations and requires consulting the relevant engineering standard before each activity.
 
 `[DEVELOPER DECISION]` The workflow order is fixed: constitution and engineering standards, specify and clarify, plan, tasks, analyze the specification, plan, tasks, and constitutional compliance, implement with TDD and the evidence checkpoints, review and converge, then conclude. Analysis may be repeated after implementation, but the pre-implementation analysis is mandatory. The rationale is that inconsistencies are cheapest to fix before code exists.
 
@@ -120,6 +121,22 @@ Recording intentions here would misrepresent them as results, so nothing is clai
 
 `[VERIFIED]` These are actual observed results from this session. `[PENDING]` Copilot skill discovery and automatic invocation, which have not been observed.
 
+### Documentation work: engineering standards (`EV-0003`)
+
+| Command or check | Observed result |
+| --- | --- |
+| Deadline verification | `2026-11-16` is a Monday; `08:00 -03:00`; approximately 13.8 hours remained when the documentation was written |
+| Git history verification | `origin/main` contains `859b141`, `b3b6195`, `0439fbb`; `rev-list --left-right --count` returned `0 0`, so local and remote agree |
+| Required sections in the nine standards | All nine contain purpose, mandatory rules, practical examples, prohibited practices, verification criteria, and references |
+| Section numbering | Sequential in every standard after inserting the missing example sections |
+| Internal links and anchors | 159 links checked, 0 broken; 1 internal anchor checked, valid |
+| Cross-document rule consistency | 15 targeted assertions pass, including dependency direction, PostgreSQL integration tests, security test linkage, two-API requirement, and absence of extra infrastructure |
+| Prohibited technologies | Entity Framework, EF Core, Dapper, MediatR, and Mediator appear only as prohibitions or assessment statements |
+| Scope restrictions | No `.cs`, `.csproj`, `.sln`, `.ts`, `.tsx`, or `package.json` outside Spec Kit tooling; no tracked symbolic links; assessment and constitution unchanged (`git diff --exit-code` returned `0`) |
+| Defects found and corrected | Two standards lacked the required practical-examples section; the index used a non-ASCII section sign with now-stale numbers |
+
+`[VERIFIED]` These are actual observed results from this session. No application test was executed, because no application exists.
+
 ### API implementation
 
 `[PENDING]` No build or test command has been executed for application code, because no solution, project, or test project exists. This section will record the actual `dotnet build` and `dotnet test` commands, their observed output, failures encountered, and how each failure was resolved.
@@ -151,16 +168,19 @@ Observations from this work:
 
 | Evidence | Location | Status |
 | --- | --- | --- |
-| `EV-0001` - repository GenAI standards and evidence workflow | [docs/evidence/genai/EV-0001-repository-genai-standards.md](docs/evidence/genai/EV-0001-repository-genai-standards.md) | `Reviewed` - developer review complete, final approval and commit `PENDING` |
-| `EV-0002` - refinement per developer review | [docs/evidence/genai/EV-0002-standard-refinement.md](docs/evidence/genai/EV-0002-standard-refinement.md) | `Captured` - review and commit `PENDING` |
-| Generative AI engineering standard | [docs/engineering/genai.md](docs/engineering/genai.md) | Corrected per review; approval `PENDING` |
-| Evidence skill | [.github/skills/genai-evidence/SKILL.md](.github/skills/genai-evidence/SKILL.md) | Corrected per review; discovery and invocation unverified |
-| Evidence index and template | [docs/evidence/genai/README.md](docs/evidence/genai/README.md), [template.md](docs/evidence/genai/template.md) | Corrected per review |
-| Repository Copilot instructions | [.github/copilot-instructions.md](.github/copilot-instructions.md) | Corrected per review |
+| `EV-0001` - repository GenAI standards and evidence workflow | [docs/evidence/genai/EV-0001-repository-genai-standards.md](docs/evidence/genai/EV-0001-repository-genai-standards.md) | `Verified` - committed in `b3b6195`, `0439fbb` |
+| `EV-0002` - refinement per developer review | [docs/evidence/genai/EV-0002-standard-refinement.md](docs/evidence/genai/EV-0002-standard-refinement.md) | `Verified` - committed in `b3b6195`, `0439fbb` |
+| `EV-0003` - engineering standards and submission requirements | [docs/evidence/genai/EV-0003-engineering-standards.md](docs/evidence/genai/EV-0003-engineering-standards.md) | `Captured` - developer review `PENDING` |
+| Generative AI engineering standard | [docs/engineering/genai.md](docs/engineering/genai.md) | `Verified` - committed |
+| Engineering standards index and nine standards | [docs/engineering/README.md](docs/engineering/README.md) | Established; developer review `PENDING` |
+| Submission requirements | [docs/assessment/submission-requirements.md](docs/assessment/submission-requirements.md) | Recorded; developer review `PENDING` |
+| Evidence skill | [.github/skills/genai-evidence/SKILL.md](.github/skills/genai-evidence/SKILL.md) | `Verified` - committed; discovery and invocation unverified |
+| Evidence index and template | [docs/evidence/genai/README.md](docs/evidence/genai/README.md), [template.md](docs/evidence/genai/template.md) | `Verified` - committed |
+| Repository Copilot instructions | [.github/copilot-instructions.md](.github/copilot-instructions.md) | Updated with the standards index; review `PENDING` |
 | Spec Kit installation | `.specify/init-options.json`, `.specify/integration.json` | Installed and configured, version 1.4.0, Copilot integration |
 | Constitution | `.specify/memory/constitution.md` | Original template, unratified |
 | Assessment document | [docs/assessment/technical-exercise-v5.md](docs/assessment/technical-exercise-v5.md) | Unmodified |
-| Git history | foundation commit `859b141`; documentation work committed as `b3b6195` | `[VERIFIED]` |
+| Git history | `859b141` foundation, `b3b6195` standards and workflow, `0439fbb` commit references; all present on `origin/main` | `[VERIFIED]` |
 
 ### Coverage of the assessment's Generative AI questions
 

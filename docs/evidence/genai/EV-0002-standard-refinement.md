@@ -12,8 +12,8 @@
 | Related task identifiers | `PENDING` - no Spec Kit task list exists. The work is identified by the six numbered items in the prompt below. |
 | AI tool | GitHub Copilot (VS Code, Copilot SDK) |
 | AI model | `PENDING` - the model identifier was not exposed in the session. |
-| Evidence status | `Captured` |
-| Commit references | `b3b6195` - "docs: establish GenAI engineering standard and evidence workflow". Recorded after the commit was created. |
+| Evidence status | `Verified` |
+| Commit references | `b3b6195` - "docs: establish GenAI engineering standard and evidence workflow"; `0439fbb` - "docs: record commit reference in GenAI evidence records". Both verified present on `origin/main`. |
 
 ## Actual prompt
 
@@ -206,7 +206,7 @@ Developer findings from the feedback, with resolution:
 | Scale evidence to the activity type, marking inapplicable requirements `Not Applicable` | Developer direction: keep the workflow practical for a small assessment | `Approved` (directive in feedback item 3) |
 | Record commit references only after the commit exists | Developer direction: remove the circular requirement | `Approved` (directive in feedback item 4) |
 | Add redaction disclosure and repository-relative path rules | Developer direction: protect a public repository | `Approved` (directive in feedback item 5) |
-| Final approval of the corrected artifacts | Required before commit | `Pending` |
+| Final approval of the corrected artifacts | Required before commit | `Approved` - developer directed the commit on `2026-11-15`; artifacts published in `b3b6195` and `0439fbb` on `origin/main` |
 
 ## Corrections and improvements
 
@@ -387,10 +387,10 @@ Redaction and path review: no secrets, tokens, credentials, personal data, unrel
 - Implementation files: `Not Applicable` - documentation only
 - Test files: `Not Applicable` - no test project exists
 - Task identifiers: `PENDING` - no Spec Kit task list exists
-- Commits: `b3b6195`
+- Commits: `b3b6195`, `0439fbb`
 
 ## Evidence status rationale
 
-Status is `Captured`: the prompt, the observed repository state, the original defective excerpts, the six findings, the corrections, and the executed validation results are all recorded. A second review pass on `2026-11-15` re-verified the same six items and required no further correction.
+Status is `Verified`: the prompt, the observed repository state, the original defective excerpts, the six findings, the corrections, and the executed validation results are all recorded. A second review pass on `2026-11-15` re-verified the same six items and required no further correction. The developer directed the commit and the artifacts are published in `b3b6195` and `0439fbb` on `origin/main`.
 
-It is not `Reviewed` or `Verified` because the developer has not yet reviewed these corrected artifacts or granted final approval, and no commit exists for this activity. Final approval is the outstanding item; nothing in this record is presented as approved.
+Approval covers inclusion and publication of the corrected artifacts, not separate debate of every internal decision. On `2026-11-15` the developer stated the standard had already been committed and moved on to establishing the remaining engineering standards (see `EV-0003`).

@@ -60,7 +60,8 @@ If sensitive information must be removed, say explicitly that the content was re
 
 | ID | Activity | Phase | Status | Record |
 | --- | --- | --- | --- | --- |
-| EV-0001 | Repository GenAI engineering standard and evidence workflow | Documentation and configuration (pre-specification) | Reviewed | [EV-0001-repository-genai-standards.md](./EV-0001-repository-genai-standards.md) |
-| EV-0002 | Refinement of the GenAI standard per developer review feedback | Documentation and configuration (pre-specification) | Captured | [EV-0002-standard-refinement.md](./EV-0002-standard-refinement.md) |
+| EV-0001 | Repository GenAI engineering standard and evidence workflow | 1 - Constitution and engineering standards | Verified | [EV-0001-repository-genai-standards.md](./EV-0001-repository-genai-standards.md) |
+| EV-0002 | Refinement of the GenAI standard per developer review feedback | 1 - Constitution and engineering standards | Verified | [EV-0002-standard-refinement.md](./EV-0002-standard-refinement.md) |
+| EV-0003 | Engineering standards, submission requirements, and documentation index | 1 - Constitution and engineering standards | Captured | [EV-0003-engineering-standards.md](./EV-0003-engineering-standards.md) |
 
 The mandatory REST API generation exercise from the assessment has not started. Its evidence records are pending and will be added when that work begins.

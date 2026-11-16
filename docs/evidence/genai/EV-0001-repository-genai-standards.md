@@ -12,8 +12,8 @@
 | Related task identifiers | `PENDING` - no Spec Kit task list exists. The work is identified by the six numbered items in the prompt below. |
 | AI tool | GitHub Copilot (VS Code, Copilot SDK) |
 | AI model | `PENDING` - the model identifier was not exposed in the session and is not recorded rather than guessed. |
-| Evidence status | `Reviewed` |
-| Commit references | `b3b6195` - "docs: establish GenAI engineering standard and evidence workflow". Recorded after the commit was created; the commit predates this reference, which is expected. |
+| Evidence status | `Verified` |
+| Commit references | `b3b6195` - "docs: establish GenAI engineering standard and evidence workflow"; `0439fbb` - "docs: record commit reference in GenAI evidence records". Both verified present on `origin/main`. Recorded after the commits were created, as the standard requires. |
 
 ## Actual prompt
 
@@ -243,11 +243,13 @@ Representative excerpt of the generated `copilot-instructions.md` section that w
 
 | Decision | Rationale | Approval |
 | --- | --- | --- |
-| Adopt provenance labels `[AI-PROPOSED]`, `[DEVELOPER DECISION]`, `[VERIFIED]`, `[PENDING]` | Keeps AI proposals, human decisions, and executed checks distinguishable in every record and in GENAI.md | `Pending` |
-| Lifecycle `Pending` -> `Captured` -> `Reviewed` -> `Verified` | Requires evidence to exist before status advances; prevents unverified claims | `Pending` |
-| One record per meaningful activity or related task group | Matches the template requirement and avoids fragmentation of a single activity | `Pending` |
-| Store the skill in `.github/skills/genai-evidence/` | Copilot project skill discovery path; directory name must equal the skill `name` | `Pending` |
-| Record the documentation task as `EV-0001`, separate from the future API exercise | The prompt requires distinguishing existing evidence from the mandatory API generation exercise | `Pending` |
+| Adopt provenance labels `[AI-PROPOSED]`, `[DEVELOPER DECISION]`, `[VERIFIED]`, `[PENDING]` | Keeps AI proposals, human decisions, and executed checks distinguishable in every record and in GENAI.md | `Approved` - committed and published in `b3b6195` at developer instruction |
+| Lifecycle `Pending` -> `Captured` -> `Reviewed` -> `Verified` | Requires evidence to exist before status advances; prevents unverified claims | `Approved` - committed and published in `b3b6195` at developer instruction |
+| One record per meaningful activity or related task group | Matches the template requirement and avoids fragmentation of a single activity | `Approved` - committed and published in `b3b6195` at developer instruction |
+| Store the skill in `.github/skills/genai-evidence/` | Copilot project skill discovery path; directory name must equal the skill `name` | `Approved` - committed and published in `b3b6195` at developer instruction |
+| Record the documentation task as `EV-0001`, separate from the future API exercise | The prompt requires distinguishing existing evidence from the mandatory API generation exercise | `Approved` - committed and published in `b3b6195` at developer instruction |
+
+Approval basis, stated precisely: the developer directed the commit on `2026-11-15` and the commits were pushed to `origin/main`. On `2026-11-15` the developer also described the "Generative AI engineering standard" as already committed and moved to the next objective. That is approval to accept and publish these artifacts. It is not a record of every internal design decision being separately debated.
 
 `[DEVELOPER DECISION]` The developer reviewed the initial structure and approved it as a proposal, subject to the six corrections tracked in `EV-0002`. This is a review outcome, not final approval.
 
@@ -348,10 +350,10 @@ The single non-ASCII character is an em dash (U+2014) in the GENAI.md heading th
 - Assessment response: [GENAI.md](../../../GENAI.md)
 - Test files: `Not Applicable` - no test project exists
 - Task identifiers: `PENDING` - no Spec Kit task list exists
-- Commits: foundation commit `859b141` (pre-existing); commit for this activity `b3b6195`
+- Commits: foundation commit `859b141` (pre-existing); activity commits `b3b6195` and `0439fbb`
 
 ## Evidence status rationale
 
-Status is `Reviewed`: the prompt, context, generated artifacts, validation results, and confirmed defects with their corrections are recorded, and on `2026-11-14` the developer reviewed the artifacts and returned six specific correction items, which are tracked in `EV-0002`.
+Status is `Verified`: the prompt, context, generated artifacts, validation results, and confirmed defects with their corrections are recorded; the developer reviewed the artifacts on `2026-11-14` and again on `2026-11-15` (six correction items, tracked in `EV-0002`); the artifacts are committed in `b3b6195` and `0439fbb`, both present on `origin/main`.
 
-It is not `Verified`: developer approval of the corrected artifacts has not been granted, and no commit exists for this activity. Both states are tracked separately rather than collapsed into one status.
+The approval covers inclusion and publication of these artifacts, not separate debate of every internal decision. Later work may still revise them, in which case this record is corrected rather than left stale.
