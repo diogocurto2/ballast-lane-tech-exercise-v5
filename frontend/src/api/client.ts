@@ -1,13 +1,12 @@
+import { invalidateSession } from "./authToken";
 import type { ApiFailure, ApiResult } from "./types";
 
 const USER_API_BASE_URL = import.meta.env.VITE_USER_API_URL ?? "http://localhost:5081";
 const TASK_API_BASE_URL = import.meta.env.VITE_TASK_API_URL ?? "http://localhost:5082";
 
-export class SessionExpiredError extends Error {
-  constructor() {
-    super("The session has expired. Log in again.");
-    this.name = "SessionExpiredError";
-  }
+/** True when a failure means the credential is no longer usable, so the caller must not report it. */
+export function isSessionExpired(failure: ApiFailure): boolean {
+  return failure.status === 401;
 }
 
 type RequestOptions = {
@@ -90,7 +89,15 @@ async function request<T>(baseUrl: string, path: string, options: RequestOptions
   }
 
   if (!response.ok) {
-    return { ok: false, failure: await toFailure(response) };
+    const failure = await toFailure(response);
+
+    // One place decides that an authenticated credential is no longer usable, so every consumer
+    // observes the same session end instead of each screen inventing its own redirect.
+    if (failure.status === 401 && options.accessToken) {
+      invalidateSession();
+    }
+
+    return { ok: false, failure };
   }
 
   return { ok: true, data: (await response.json()) as T };

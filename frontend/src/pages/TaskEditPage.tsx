@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { TaskForm } from "../components/TaskForm";
 import { ErrorMessage, Spinner } from "../components/Feedback";
+import { isSessionExpired } from "../api/client";
 import { tasksApi } from "../api/tasks";
 import type { TaskItem } from "../api/types";
 
@@ -29,6 +30,11 @@ export function TaskEditPage() {
 
       if (result.ok) {
         setTask(result.data);
+        return;
+      }
+
+      // A rejected credential is handled centrally; a stale form must not be reported as a load error.
+      if (isSessionExpired(result.failure)) {
         return;
       }
 

@@ -13,20 +13,22 @@ export function RegisterPage() {
       <main className="page">
         <h1>Account created</h1>
         <p role="status">You can now log in as {registeredEmail}.</p>
-        <Link to="/login">Go to login</Link>
+        <p className="page-note">
+          <Link to="/login">Go to login</Link>
+        </p>
       </main>
     );
   }
 
   return (
     <main className="page">
-      <RegisterForm api={usersApi} onRegistered={(user) => setRegisteredEmail(user.email)} />
       {auth.error && (
-        <p className="form-error" role="alert">
+        <p className="notice" role="alert">
           {auth.error}
         </p>
       )}
-      <p>
+      <RegisterForm api={usersApi} onRegistered={(user) => setRegisteredEmail(user.email)} />
+      <p className="page-note">
         Already have an account? <Link to="/login">Log in</Link>
       </p>
     </main>

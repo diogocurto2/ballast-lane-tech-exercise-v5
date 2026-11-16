@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { isSessionExpired } from "../api/client";
 import type { TaskDraft, TaskItem, TaskStatus, TasksApi } from "../api/types";
 
 type TaskFormProps = {
@@ -92,6 +93,11 @@ export function TaskForm({ api, mode, onSaved, onCancel }: TaskFormProps) {
 
       if (result.ok) {
         onSaved(result.data);
+        return;
+      }
+
+      // A rejected credential is handled centrally, so the form must not report it as its own error.
+      if (isSessionExpired(result.failure)) {
         return;
       }
 

@@ -17,13 +17,13 @@ export function LoginPage() {
 
   return (
     <main className="page">
-      <LoginForm api={api} onAuthenticated={() => navigate("/tasks")} />
       {auth.error && (
-        <p className="form-error" role="alert">
+        <p className="notice" role="alert">
           {auth.error}
         </p>
       )}
-      <p>
+      <LoginForm api={api} onAuthenticated={() => navigate("/tasks")} />
+      <p className="page-note">
         Need an account? <Link to="/register">Register</Link>
       </p>
     </main>

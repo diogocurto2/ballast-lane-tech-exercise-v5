@@ -40,7 +40,9 @@ export function TaskList({ state, onSelect, onCreate, onRetry }: TaskListProps) 
         <li key={task.id}>
           <button type="button" className="task-row" onClick={() => onSelect(task)}>
             <span className="task-title">{task.title}</span>
-            <span className="task-status">{task.status}</span>
+            <span className="task-status" data-status={task.status}>
+              {task.status}
+            </span>
             <span className="task-due">{task.dueDate}</span>
           </button>
         </li>

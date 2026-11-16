@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { TaskDetail } from "../components/TaskDetail";
 import { TaskDelete } from "../components/TaskDelete";
 import { ErrorMessage, Spinner } from "../components/Feedback";
+import { isSessionExpired } from "../api/client";
 import { tasksApi } from "../api/tasks";
 import type { TaskItem } from "../api/types";
 
@@ -29,8 +30,8 @@ export function TaskDetailPage() {
         return;
       }
 
-      if (result.failure.status === 401) {
-        navigate("/login");
+      // A rejected credential is handled centrally; "not found" would misdescribe the failure.
+      if (isSessionExpired(result.failure)) {
         return;
       }
 
@@ -40,7 +41,7 @@ export function TaskDetailPage() {
     return () => {
       cancelled = true;
     };
-  }, [id, navigate]);
+  }, [id]);
 
   if (error) {
     return (

@@ -11,7 +11,8 @@ type ConfirmDialogProps = {
 };
 
 /**
- * A modal confirmation. The dialog role and focusable buttons keep it operable by keyboard.
+ * A modal confirmation. The dialog role, the initial focus on the safe action, and Escape to cancel
+ * keep it operable by keyboard without a focus-trap dependency.
  */
 export function ConfirmDialog({
   title,
@@ -24,14 +25,25 @@ export function ConfirmDialog({
 }: ConfirmDialogProps) {
   return (
     <div className="confirm-dialog-backdrop">
-      <div role="dialog" aria-modal="true" aria-labelledby="confirm-dialog-title" className="confirm-dialog">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="confirm-dialog-title"
+        className="confirm-dialog"
+        onKeyDown={(event) => {
+          if (event.key === "Escape" && !isBusy) {
+            event.stopPropagation();
+            onCancel();
+          }
+        }}
+      >
         <h2 id="confirm-dialog-title">{title}</h2>
         <p>{message}</p>
         <div className="form-actions">
           <button type="button" onClick={onConfirm} disabled={isBusy}>
             {confirmLabel}
           </button>
-          <button type="button" onClick={onCancel} disabled={isBusy}>
+          <button type="button" onClick={onCancel} disabled={isBusy} autoFocus>
             {cancelLabel}
           </button>
         </div>

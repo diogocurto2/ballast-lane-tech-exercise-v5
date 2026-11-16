@@ -13,5 +13,8 @@ export default defineConfig({
     setupFiles: ["./vitest.setup.ts"],
     css: false,
     restoreMocks: true,
+    // The suite renders whole routes in jsdom; on a loaded machine a single flow can exceed the
+    // 5 s default even though it is not hanging.
+    testTimeout: 15000,
   },
 });

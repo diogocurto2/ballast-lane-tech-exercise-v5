@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { isSessionExpired } from "../api/client";
 import type { TaskItem, TasksApi } from "../api/types";
 import { ConfirmDialog } from "./ConfirmDialog";
 
@@ -26,6 +27,11 @@ export function TaskDelete({ api, task, onDeleted }: TaskDeleteProps) {
       if (result.ok) {
         setIsConfirming(false);
         onDeleted(task.id);
+        return;
+      }
+
+      // A rejected credential ends the session centrally; reporting a delete failure would be wrong.
+      if (isSessionExpired(result.failure)) {
         return;
       }
 

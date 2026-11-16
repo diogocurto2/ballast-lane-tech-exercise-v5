@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useReducer, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { TaskList } from "../components/TaskList";
+import { isSessionExpired } from "../api/client";
 import { tasksApi } from "../api/tasks";
 import { initialTaskStore, tasksReducer } from "../state/tasksReducer";
 import { useAuth } from "../auth/useAuth";
@@ -58,9 +59,9 @@ export function TasksPage() {
         return;
       }
 
-      if (result.failure.status === 401) {
-        auth.logout();
-        navigate("/login");
+      // A rejected credential already ended the session centrally; the route guard redirects, so
+      // this page must not also report a load failure.
+      if (isSessionExpired(result.failure)) {
         return;
       }
 
@@ -70,7 +71,7 @@ export function TasksPage() {
     return () => {
       cancelled = true;
     };
-  }, [requestKey, auth, navigate]);
+  }, [requestKey]);
 
   const handleSelect = useCallback(
     (task: TaskItem) => navigate(`/tasks/${task.id}`),
@@ -83,7 +84,7 @@ export function TasksPage() {
     <main className="page">
       <header className="page-header">
         <h1>Your tasks</h1>
-        <button type="button" onClick={handleCreate}>
+        <button type="button" className="button-primary" onClick={handleCreate}>
           New task
         </button>
         <button type="button" onClick={auth.logout}>
