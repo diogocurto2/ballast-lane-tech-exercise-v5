@@ -195,7 +195,7 @@ docker compose up -d postgres
 | `backend/tests/integration/BallastLane.Migrations.Tests` | integration | Schema from an empty schema, seed idempotency, demonstration dataset |
 | `backend/tests/http/BallastLane.UserApi.HttpTests` | HTTP | Registration, login, token failures, access boundary |
 | `backend/tests/http/BallastLane.TaskApi.HttpTests` | HTTP | CRUD, ownership isolation, validation, injection payloads |
-| `frontend/tests` | component | Form validation, auth state, list states, delete confirmation |
+| `frontend/tests` | component and flow | Form validation, auth state, list states, delete confirmation, dialog keyboard operation, session expiry and logout token clearing |
 
 ## Engineering rationale
 

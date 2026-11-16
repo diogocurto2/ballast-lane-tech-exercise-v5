@@ -4,7 +4,7 @@ Living response to the Generative AI section of the Ballast Lane Senior .NET tec
 
 This document records what was actually asked, what the AI tool actually produced, how it was validated, and what was decided. It is not a generic AI policy and not a chat transcript. Detailed evidence lives in [docs/evidence/genai/](docs/evidence/genai/README.md).
 
-**Current status: the Task Management REST API is implemented and verified.** The backend (two API hosts over a shared domain core, PostgreSQL through Npgsql and ADO.NET) and the React frontend are complete. `dotnet test` passes 211 tests across nine assemblies with no skips, and `npm test` passes 27 frontend tests; `npm run lint`, `tsc --noEmit`, and the production build all pass. Every evidence record from `EV-0010` to `EV-0021` is `Captured` and now carries its commit references; developer review of the records themselves remains outstanding, so nothing here is claimed as `Verified` at the record level. Two post-implementation follow-ups requested by the developer are recorded in `EV-0024`: the backend now lives under `backend/` for symmetry with `frontend/`, and the Docker build context was measured rather than estimated.
+**Current status: the Task Management REST API is implemented and verified.** The backend (two API hosts over a shared domain core, PostgreSQL through Npgsql and ADO.NET) and the React frontend are complete. `dotnet test` passes 211 tests across nine assemblies with no skips, and `npm test` passes 40 frontend tests across ten files; `npm run lint`, `tsc --noEmit`, and the production build all pass. Every evidence record from `EV-0010` to `EV-0021` is `Captured` and now carries its commit references; developer review of the records themselves remains outstanding, so nothing here is claimed as `Verified` at the record level. Two post-implementation follow-ups requested by the developer are recorded in `EV-0024`: the backend now lives under `backend/` for symmetry with `frontend/`, and the Docker build context was measured rather than estimated. A second developer-requested review produced five findings, remediated and recorded in `EV-0025`: logout left the in-memory JWT live, login could report success without a resolved identity, five screens handled session expiry inconsistently, two evidence records mislabelled a post-implementation mutation check as a test-first RED cycle, and the interface was effectively unstyled.
 
 Provenance labels used throughout: `[AI-PROPOSED]`, `[DEVELOPER DECISION]`, `[VERIFIED]`, `[PENDING]`. Only `[VERIFIED]` marks an observed result. Labels describe provenance, not approval: design choices introduced by the AI in these artifacts are marked `[AI-PROPOSED]` until the developer approves them, and approval status is tracked in the evidence records, where it currently reads `Pending` for final approval. A choice becomes `[DEVELOPER DECISION]` only once the developer has directed or approved it.
 
@@ -153,7 +153,7 @@ activity rather than asserted here:
 | --- | --- | --- |
 | Clean Architecture | Dependency direction, separation of concerns | An architecture test reads every `.csproj`; `Domain`/`Application` reference no ASP.NET Core or Npgsql assembly; `Infrastructure` is declared only by the three composition roots (`EV-0018`) |
 | SOLID | Single responsibility, interface segregation, dependency inversion | One use case per operation; boundaries exist only where there is a seam; `ITaskWriter` was narrowed when it demanded behaviour belonging to a later story (`EV-0014`) |
-| TDD | A test exists, it fails without the change, it asserts meaningful outcomes | Every story recorded an observed RED before implementation; several first-attempt passes were rejected and their RED re-established (`EV-0011`, `EV-0012`, `EV-0015`, `EV-0017`) |
+| TDD | A test exists, it fails without the change, it asserts meaningful outcomes | Every backend story recorded an observed RED before its implementation. Four stories produced first-attempt passes because the behavior already existed (US1 domain/application, US2, US5, US7); for those, the failure was produced afterwards by removing the behavior, which is a post-implementation **mutation check**, not a RED checkpoint. `EV-0015` and this document were relabelled to say so (`EV-0025`) |
 | Security | Authentication and authorization placement, validation, secrets, no leakage | Cross-user access, ownership-field tampering, SQL-injection payloads, token failures, and credential secrecy are automated HTTP tests (`EV-0018`) |
 | Functional requirements | Behaviour matches the specification | Requirement mapping in the plan plus the executed quickstart, sections 4 and 5 (`EV-0018`) |
 
@@ -173,7 +173,8 @@ prompted it:
 
 | Correction | Failure that prompted it | Record |
 | --- | --- | --- |
-| Added `net10.0` to all 15 project files; regenerated `BallastLane.sln` | `NETSDK1013`; `dotnet new sln` emitted `.slnx` while the plan names `.sln` | `EV-0010` || Replaced data-annotation validation with the application validator | `400` bodies used `Email`/`Password` keys instead of the documented lowercase ones | `EV-0011` |
+| Added `net10.0` to all 15 project files; regenerated `BallastLane.sln` | `NETSDK1013`; `dotnet new sln` emitted `.slnx` while the plan names `.sln` | `EV-0010` |
+| Replaced data-annotation validation with the application validator | `400` bodies used `Email`/`Password` keys instead of the documented lowercase ones | `EV-0011` |
 | Added a JWT challenge handler writing ProblemDetails | `401` responses had no body and no content type | `EV-0011` |
 | Moved the token contract into `Application.Abstractions` | The compiler rejected `Infrastructure → SharedWeb` | `EV-0011` |
 | Rewrote `AuthProvider` and `LoginPage` | The generated pair could never establish a session | `EV-0011` |
@@ -185,6 +186,9 @@ prompted it:
 | Schema per test instead of a database per test; `Max Pool Size` 10; documented `dotnet test -m:1` | Parallel runs intermittently failed with `Exception while reading from stream` | `EV-0018` |
 | Installed `libgssapi-krb5-2` in the runtime images | `libgssapi_krb5.so.2: cannot open shared object file` on every run | `EV-0017` |
 | Enabled the Router v7 future flags | Two console warnings during ordinary use | `EV-0018` |
+| `logout` clears the in-memory token, and one `401` on an authenticated request invalidates the session for every screen | Review findings 1 and 3: the new regression tests failed with `expected 'token-value' to be null` and produced no session notice | `EV-0025` |
+| `login` clears the session and returns a failure when `/api/users/me` does not resolve | Review finding 2: the probe recorded `success` where `failure:0`, `failure:401`, and `failure:500` were expected | `EV-0025` |
+| Stylesheet rewritten with tokens, light/dark palettes, and responsive rules; the dialog gains initial focus and Escape-to-cancel | Review finding 5: `styles.css` held 22 lines and no component used its only layout class | `EV-0025` |
 
 `[VERIFIED]` Corrections to the *process*, not the code, are recorded with the same prominence:
 
@@ -194,7 +198,11 @@ prompted it:
   failures before restoring them.
 - `EV-0012`, `EV-0015`, `EV-0017`: three stories passed at first attempt because the behaviour already
   existed. In each case the protecting behaviour was temporarily removed, the tests were observed
-  failing, and it was restored. A first-attempt pass proves nothing about the tests.
+  failing, and it was restored. That observation is a **mutation check**: it proves the test can fail,
+  not that it was written first. A first-attempt pass proves nothing about the tests.
+- `EV-0025`: `EV-0015` and an earlier version of section 5 described those post-hoc failures as "RED
+  re-established". The chronology was accurate but the label was not, so both were corrected to call
+  them mutation checks, with the original observed output preserved unchanged.
 
 `[VERIFIED]` One test was corrected rather than the code: a native `type="date"` input cannot hold a
 non-calendar value, so the frontend assertion for an "invalid date" covered unreachable code. The test
@@ -277,9 +285,13 @@ BallastLane.UserApi.HttpTests        22
 cd frontend
 npm run lint      -> no findings
 npx tsc --noEmit  -> exit 0
-npm run build     -> built in 1.82s
-npx vitest run    -> 8 files, 27 tests passed
+npm run build     -> built in 1.81s
+npx vitest run    -> 10 files, 40 tests passed
 ```
+
+The frontend suite grew from 27 to 40 tests in `EV-0025`: six full-application session tests, three
+dialog keyboard tests, and four authentication-context regression tests. Superseded earlier figures
+remain described in `EV-0018` rather than being rewritten here.
 
 `[VERIFIED]` Quickstart sections 4 and 5 were executed request by request against the running
 containers and every documented expectation was observed, including the `409` duplicate, the
@@ -288,13 +300,22 @@ indistinguishable `401`s, calendar-date rejection, all six status transitions, c
 create, view, edit, and delete with confirmation, plus the empty and loading states, field-level
 validation, and a 375-pixel viewport with no horizontal scrolling (`EV-0018`).
 
-`[PENDING]` Two checks were not performed and are not claimed:
+`[VERIFIED]` The two checks that were `[PENDING]` when `EV-0018` was written were performed against the
+running application in the Chromium-based VS Code integrated browser during `EV-0025`:
 
-- **Keyboard-only traversal and focus visibility.** The headless harness used here could not perform
-  trusted Tab input; focus remained on `body`. The automated tests assert semantic controls and labels,
-  which is not the same evidence.
-- **Expired-token redirect in the browser.** It is covered by an automated frontend test and by the
-  `401` handling tests, but no 60-minute wait was performed.
+- **Keyboard-only traversal and focus visibility.** On the login page the Tab order was Email →
+  Password → Log in → Register → Email, and on the tasks page New task → Log out → each task row → New
+  task. Every focused element matched `:focus-visible` and rendered a solid accent outline.
+- **Session-expiry redirect in the browser.** Answering `GET /api/tasks` with `401` after a real login
+  cleared the session, redirected to `/login`, and displayed `Your session has expired. Log in again.`
+  The 60-minute wait was still not performed; the `401` was injected at the network layer instead, and
+  this is stated so the difference is not lost.
+
+The journey around those checks was executed end to end: login with the documented demonstration
+account, list, create, view, edit, delete with confirmation (including a cancelled confirmation), and
+logout, with the final state confirmed afterwards through an authenticated API call. Afterwards, `GET
+/api/tasks` with no token returned `401` and navigating to `/tasks` redirected to `/login` without
+issuing any task request.
 
 ### Earlier evidence (documentation and specification work)
 
@@ -452,7 +473,8 @@ Observations from this work:
 
 Lessons from implementing and testing the API, and from reviewing generated code:
 
-- `[VERIFIED]` **A first-attempt pass is not a TDD cycle.** Four stories produced tests that passed immediately, either because the implementation was generated alongside them (US1 domain/application) or because the behaviour already existed from an earlier story (US2, US5, US7). Each time, the protecting behaviour was temporarily removed to observe the real failure. The habit is to distrust a green run on new tests and prove the test can fail.
+- `[VERIFIED]` **A first-attempt pass is not a TDD cycle.** Four stories produced tests that passed immediately, either because the implementation was generated alongside them (US1 domain/application) or because the behaviour already existed from an earlier story (US2, US5, US7). Each time, the protecting behaviour was temporarily removed to observe the failure. That proves the test can fail, but it is a mutation check, not evidence of test-first order; since `EV-0025` the two are labelled separately. The habit is to distrust a green run on new tests and prove the test can fail.
+- `[VERIFIED]` **A session is state, not just a token.** Logout cleared the React identity but not the in-memory JWT, so a later request still authenticated, and five screens each handled `401` differently. Publishing one invalidation event from a dependency-free module fixed both at once, and the regression test asserts on the outbound `Authorization` header instead of on internal state.
 - `[VERIFIED]` **The compiler is the cheapest architecture reviewer.** It rejected `Infrastructure → SharedWeb` (`CS0103`) and two hosts exposing a global `Program` to one test project (`CS0433`). Both were design defects that a review may have missed.
 - `[VERIFIED]` **Asserting declarations beats asserting assemblies.** The architecture test first read runtime assembly references, but the compiler omits an unused reference, so a deliberately added `Dapper` reference went unnoticed until code used it. Reading the `.csproj` files catches the declaration itself.
 - `[VERIFIED]` **Test isolation is a real defect class, not housekeeping.** Three suites passed alone and failed together because they shared one database; two `CREATE DATABASE` statements contended on the template lock. One database per suite, then a schema per test, plus a capped pool and a documented sequential command, made the full run deterministic.
@@ -461,7 +483,7 @@ Lessons from implementing and testing the API, and from reviewing generated code
 - `[VERIFIED]` **Generated frontend code tends to look finished while being inert.** The first `AuthProvider` could never authenticate and the first login page submitted empty credentials, yet both compiled, linted, and rendered. Driving the real UI in a browser was what exposed the difference between "renders" and "works".
 - `[VERIFIED]` **A shared validator can carry the wrong story's semantics.** `TaskValidator.Validate` treating an omitted status as `Pending` is right for creation and wrong for update, and it silently reset a status until an HTTP test caught it.
 - `[VERIFIED]` **Stub bodies must be wrong, not merely empty.** A stub that returned `200` with the value satisfied the success-path assertion, so that test could never fail; making the stub return `501` produced a genuine RED.
-- `[PENDING]` Lessons that require developer review of these records, and the two unverified manual checks (keyboard traversal, expired-token redirect).
+- `[PENDING]` Lessons that require developer review of these records. The keyboard-traversal and expired-session checks are no longer in this list: they were performed in a real browser during `EV-0025`, as section 8 records.
 
 ### Repository and build hygiene (follow-up, 2026-11-16)
 
@@ -524,10 +546,11 @@ pointing here, because rewriting them would misrepresent what was actually execu
 | `EV-0012` - US2 public and protected access (T038-T044) | [docs/evidence/genai/EV-0012-us2-access-boundary.md](docs/evidence/genai/EV-0012-us2-access-boundary.md) | `Captured` - RED observed by removing the protections |
 | `EV-0013` - US3 list and view tasks (T045-T057) | [docs/evidence/genai/EV-0013-us3-task-read.md](docs/evidence/genai/EV-0013-us3-task-read.md) | `Captured` - includes the cross-suite concurrency defect |
 | `EV-0014` - US4 create a task (T058-T069) | [docs/evidence/genai/EV-0014-us4-task-create.md](docs/evidence/genai/EV-0014-us4-task-create.md) | `Captured` |
-| `EV-0015` - US5 update a task (T070-T080) | [docs/evidence/genai/EV-0015-us5-task-update.md](docs/evidence/genai/EV-0015-us5-task-update.md) | `Captured` - required-status defect found by HTTP tests |
+| `EV-0015` - US5 update a task (T070-T080) | [docs/evidence/genai/EV-0015-us5-task-update.md](docs/evidence/genai/EV-0015-us5-task-update.md) | `Captured` - required-status defect found by HTTP tests; RED and mutation-check labels separated in `EV-0025` |
 | `EV-0016` - US6 delete a task (T081-T090) | [docs/evidence/genai/EV-0016-us6-task-delete.md](docs/evidence/genai/EV-0016-us6-task-delete.md) | `Captured` |
 | `EV-0017` - US7 seeded demonstration (T091-T096) | [docs/evidence/genai/EV-0017-us7-demonstration-environment.md](docs/evidence/genai/EV-0017-us7-demonstration-environment.md) | `Captured` - includes executed quickstart sections 3 and 8 |
-| `EV-0018` - verification and convergence (T097-T106) | [docs/evidence/genai/EV-0018-review-and-convergence.md](docs/evidence/genai/EV-0018-review-and-convergence.md) | `Captured` - two manual checks explicitly pending |
+| `EV-0018` - verification and convergence (T097-T106) | [docs/evidence/genai/EV-0018-review-and-convergence.md](docs/evidence/genai/EV-0018-review-and-convergence.md) | `Captured` - two manual checks were pending when written and were performed under `EV-0025` |
+| `EV-0025` - remediation of the second code review findings | [docs/evidence/genai/EV-0025-review-remediation.md](docs/evidence/genai/EV-0025-review-remediation.md) | `Captured` - RED and GREEN observed for every correction; journey executed in a browser; committed in `7e2f1da`; developer review `PENDING` |
 | `EV-0024` - backend folder restructure and observed Docker build context | [docs/evidence/genai/EV-0024-backend-folder-restructure.md](docs/evidence/genai/EV-0024-backend-folder-restructure.md) | `Captured` - build, 211 tests, and container run re-verified after the move |
 | Generative AI engineering standard | [docs/engineering/genai.md](docs/engineering/genai.md) | `Verified` - committed |
 | Engineering standards index and nine standards | [docs/engineering/README.md](docs/engineering/README.md) | Established and accepted as the project foundation on 2026-11-16; targeted corrections recorded in `EV-0007` |
@@ -539,7 +562,7 @@ pointing here, because rewriting them would misrepresent what was actually execu
 | Constitution | `.specify/memory/constitution.md` | **Ratified** - version 1.0.0, 2026-11-16; committed in `ac604af` |
 | Feature specification `001-task-manager` | [specs/001-task-manager/spec.md](specs/001-task-manager/spec.md) | Draft - developer review `PENDING` |
 | Assessment document | [docs/assessment/technical-exercise-v5.md](docs/assessment/technical-exercise-v5.md) | Unmodified |
-| Git history | `859b141` foundation, `b3b6195` standards and workflow, `0439fbb` commit references, `9906b6a` standards, `ba92121` TDD lifecycle, `fd309c7` evidence reference, `f59bc6b` governance separation, `0018be0` evidence reference, `ac604af` constitution v1.0.0; all present on `origin/main`. Implementation landed as `2f0844b` (backend), `9cd6b3a` (frontend), `9cdf91d` (gitignore hygiene), and `9dfae4d` (evidence and documentation) | `[VERIFIED]` |
+| Git history | `859b141` foundation, `b3b6195` standards and workflow, `0439fbb` commit references, `9906b6a` standards, `ba92121` TDD lifecycle, `fd309c7` evidence reference, `f59bc6b` governance separation, `0018be0` evidence reference, `ac604af` constitution v1.0.0; all present on `origin/main`. Implementation landed as `2f0844b` (backend), `9cd6b3a` (frontend), `9cdf91d` (gitignore hygiene), `9dfae4d` (evidence and documentation), and `a42d631` (implementation commit references); the review remediation landed as `7e2f1da` | `[VERIFIED]` |
 
 ### Coverage of the assessment's Generative AI questions
 
@@ -548,9 +571,9 @@ pointing here, because rewriting them would misrepresent what was actually execu
 | Write the prompt used to generate the API scaffold or implementation | Section 3; `EV-0010` to `EV-0017` | `[VERIFIED]` |
 | Show the output code or a representative sample | Section 4; original excerpts preserved in each record before correction | `[VERIFIED]` |
 | Describe how AI suggestions were validated | Section 5; per-activity validation tables | `[VERIFIED]` |
-| Describe how output was corrected or improved | Section 6; twelve code corrections and four process corrections with their triggering failures | `[VERIFIED]` |
+| Describe how output was corrected or improved | Section 6; sixteen code corrections and the process corrections, each with its triggering failure | `[VERIFIED]` |
 | Describe how edge cases, authentication, and validations were handled | Section 7, with the 13 handled and 4 deliberately unhandled cases | `[VERIFIED]` |
 | Demonstrate fluency with AI tools and prompt engineering | Sections 1, 5, 6, and 9; the prompt was a single command whose constraints came from ratified artifacts, and the review findings show where the output was rejected or reworked | `[VERIFIED]` |
-| Keyboard-only operation and focus visibility | Section 8 | `[PENDING]` - not performed |
-| Expired-token redirect observed in the browser | Section 8 | `[PENDING]` - covered by automated tests only |
+| Keyboard-only operation and focus visibility | Section 8 | `[VERIFIED]` - login and tasks pages traversed in the Chromium-based VS Code integrated browser; `EV-0025` |
+| Expired-token redirect observed in the browser | Section 8 | `[VERIFIED]` - `401` injected after a real login; `EV-0025` |
 | Developer review and approval of the evidence records | `docs/evidence/genai/` | `[PENDING]` |

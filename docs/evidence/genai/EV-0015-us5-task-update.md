@@ -1,5 +1,10 @@
 # EV-0015 - User Story 5: update a task (001-task-manager)
 
+> **Revision note (2026-11-16, after `EV-0025`).** The labels in this record were corrected to
+> distinguish the original test-first RED cycle from a mutation check performed after the behavior
+> already existed. No observed command output, date, or sequence of events was altered; only the
+> wording that described what kind of check each failure was. The activity is otherwise unchanged.
+>
 > **Revision note (2026-11-16, after `EV-0024`).** Paths in this record reflect the repository layout
 > at the time of the activity, when the backend lived at the root as `src/`, `tests/`, and `db/`. After
 > the `backend/` restructure recorded in [EV-0024](./EV-0024-backend-folder-restructure.md), those
@@ -55,9 +60,12 @@ public Task<bool> UpdateAsync(TaskItem task, CancellationToken cancellationToken
 ```
 
 The frontend edit mode was generated as part of the US4 form, so all four US5 frontend tests passed
-at the first run. That is not a RED checkpoint. Edit mode was temporarily disabled
+at the first run. No test-first RED cycle exists for that frontend behavior: the tests were written
+after the behavior already existed. Afterwards, edit mode was temporarily disabled
 (`const isEdit = false;` and the edit branch of `initialValues` unreachable), the four tests were
-observed failing, and the implementation was restored.
+observed failing, and the implementation was restored. That observed failure is a
+**post-implementation mutation check** - it demonstrates that the tests can fail - and it is not a
+RED checkpoint in the TDD sequence.
 
 The first `UpdateTaskUseCase` also reused `TaskValidator.Validate(input)`, which treats an omitted
 status as `Pending` because that is correct for creation. The HTTP suite caught the consequence: a
@@ -69,7 +77,7 @@ status as `Pending` because that is correct for creation. The HTTP suite caught 
 | --- | --- | --- |
 | Clean Architecture | The use case loads through the owner-scoped reader, applies a validated draft, and delegates persistence; the controller binds and maps only | `[VERIFIED]` |
 | SOLID | `TaskItem with { ... }` replaces editable values while carrying identity, owner, and creation time, so an update cannot move a task between users | `[VERIFIED]` |
-| TDD | RED observed: 13 application and 15 HTTP failures from stubs; the frontend RED was re-established by disabling edit mode (4 failures) | `[VERIFIED]` |
+| TDD | Backend: test-first RED observed as 13 application and 15 HTTP failures from stubs written before the implementation. Frontend: no test-first RED exists; a post-implementation mutation check produced 4 failures when edit mode was disabled | `[VERIFIED]` |
 | Security | The `UPDATE` statement uses `owner_id` only in the `WHERE` clause; a cross-user update returns `404` and leaves the row unchanged; a supplied `ownerId` cannot change ownership | `[VERIFIED]` |
 | Functional requirements | All six status transitions in both directions, every editable field, unchanged `id`/owner/`createdAt`, and `updatedAt` advancing are asserted | `[VERIFIED]` |
 
@@ -89,7 +97,7 @@ status as `Pending` because that is correct for creation. The HTTP suite caught 
 | Decision | Rationale | Approval |
 | --- | --- | --- |
 | `requireStatus` flag on the validator rather than a second validator | One rule set, one error vocabulary, two documented call sites | `[AI-PROPOSED]` |
-| Re-establish the frontend RED by disabling edit mode | The first run passed, which proves nothing about the tests | `[AI-PROPOSED]` |
+| Disable edit mode after the fact to prove the frontend tests can fail | The first run passed, which proves nothing about the tests; the failure observed this way is a mutation check, not a RED checkpoint | `[AI-PROPOSED]` |
 
 ## Corrections and improvements
 
@@ -97,16 +105,27 @@ status as `Pending` because that is correct for creation. The HTTP suite caught 
 | --- | --- | --- |
 | Added `requireStatus` to `TaskValidator.Validate` | A `PUT` without a status silently reset it | `contracts/task-api.md` states the status is required on update |
 | Repository update scoped by `id` and `owner_id` with an affected-row check | Cross-user and stale identifiers must be not-found, not success | Resource-level authorization in `security.md` 2.3 |
-| Disabled edit mode to observe the frontend RED, then restored it | The tests must demonstrably fail without the behavior | `testing-and-tdd.md` 2.2 |
+| Disabled edit mode after the frontend tests had already passed, then restored it | The tests must demonstrably fail without the behavior; recorded as a mutation check rather than a RED cycle | `testing-and-tdd.md` 2.2 |
 
 ## Commands and observed results
 
-### RED
+### RED (backend, test-first)
+
+The stubs in the "Original AI-generated output" section were written before the implementation, and
+these failures are the observed RED for the backend behavior.
 
 ```text
 dotnet test tests\unit\BallastLane.Application.Tests   -> Failed: 13, Passed: 31
 dotnet test tests\http\BallastLane.TaskApi.HttpTests   -> Failed: 15, Passed: 28
+```
 
+### Post-implementation mutation check (frontend, not a RED)
+
+The four US5 frontend tests passed before this step, because edit mode already existed from US4. The
+failure below was produced afterwards by disabling that behavior, so it is recorded as a mutation
+check and not as a RED checkpoint.
+
+```text
 cd frontend; npx vitest run tests/components/TaskFormEdit.test.tsx
 Test Files  1 failed (1)
      Tests  4 failed (4)
@@ -141,5 +160,7 @@ cd frontend; npm run lint   -> no findings
 
 ## Evidence status rationale
 
-Status is `Captured`. Developer review and a commit reference remain outstanding. The two RED
-re-establishments are recorded so the cycles are not mistaken for first-attempt passes.
+Status is `Captured`. Only the backend cycle in this record is a test-first RED. The frontend failure
+recorded under "Post-implementation mutation check" was produced after the behavior already existed,
+so it is not presented as a RED cycle; both are recorded so the frontend tests are not mistaken for an
+unverified first-attempt pass. Developer review and a commit reference remain outstanding.

@@ -49,7 +49,7 @@ generated code. The only generated code change was the React Router future flags
 | --- | --- | --- |
 | Clean Architecture | Every project reference, and which projects reference `Infrastructure` | `[VERIFIED]` |
 | SOLID | No aggregate/repository/mediator abstraction was introduced; each boundary has a consumer | `[VERIFIED]` |
-| TDD | Full suite executed; every story recorded its RED before its implementation | `[VERIFIED]` |
+| TDD | Full suite executed. The backend stories recorded a test-first RED; US1's domain and application types, US2, US5, and US7 produced first-attempt passes because the behavior already existed, and their failures were then observed by removing that behavior. Those later observations are mutation checks, not RED checkpoints; `EV-0015` was relabelled accordingly in `EV-0025` | `[VERIFIED]` |
 | Security | Cross-user access, ownership-field tampering, SQL-injection payload, credential secrecy, duplicate registration | `[VERIFIED]` |
 | Functional requirements | Quickstart sections 4 and 5 executed step by step; section 6 driven in a real browser | `[VERIFIED]` with two items recorded as not manually verified |
 
@@ -88,6 +88,22 @@ generated code. The only generated code change was the React Router future flags
   which is not the same thing.
 - `[PENDING]` **Expired-token redirect was not reproduced manually.** It is covered by an automated
   frontend test and by the `401` handling test, but waiting for a 60-minute token was not performed.
+
+`[VERIFIED]` **Follow-up verification (2026-11-16, during `EV-0025`, after the review remediation).**
+The two items above were exercised against the running application in the Chromium-based VS Code integrated browser. On the login page the
+Tab order was Email → Password → Log in → Register → Email, and on the tasks page New task → Log out →
+each task row → New task; every focused element matched `:focus-visible` and rendered a solid accent
+outline. The expired-session redirect was reproduced without waiting for the token lifetime by
+answering `GET /api/tasks` with `401` after a real login: the session was cleared, the application
+redirected to `/login`, and the expiry notice was displayed. The `[PENDING]` labels above are kept
+because the harness attempts described there did not happen; what changed is that the behavior has now
+been observed. Details and measurements are in
+[EV-0025](./EV-0025-review-remediation.md).
+
+`[VERIFIED]` **TDD labelling correction (2026-11-16, during `EV-0025`).** The TDD row above originally
+stated that every story recorded its RED before its implementation. That was inaccurate for the
+stories whose behavior already existed; the row now separates a test-first RED from a
+post-implementation mutation check, and `EV-0015` and `GENAI.md` were corrected the same way.
 - `[VERIFIED]` **T106 hygiene.** `.env` is ignored; `.env.example` is tracked; no tracked symlinks
   (`git ls-files -s` has no mode `120000`); no `C:\Users\` path in tracked Markdown; a scan of the
   working tree for the local demo password and signing-key patterns returned zero hits.

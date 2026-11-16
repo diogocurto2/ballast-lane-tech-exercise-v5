@@ -83,6 +83,7 @@ If sensitive information must be removed, say explicitly that the content was re
 | EV-0018 | Verification and convergence | 7 - Review | Captured | [EV-0018-review-and-convergence.md](./EV-0018-review-and-convergence.md) |
 | EV-0021 | Consolidated evidence for the REST API generation exercise | 8 - Conclude | Captured | [EV-0021-genai-api-exercise.md](./EV-0021-genai-api-exercise.md) |
 | EV-0024 | Backend folder restructure and confirmation of the Docker build context | 9 - Post-implementation follow-up | Captured | [EV-0024-backend-folder-restructure.md](./EV-0024-backend-folder-restructure.md) |
+| EV-0025 | Remediation of the second code review findings (session handling, login consistency, styling) | 10 - Post-review remediation | Captured | [EV-0025-review-remediation.md](./EV-0025-review-remediation.md) |
 
 The mandatory REST API generation exercise has been executed; its evidence is consolidated in
 `EV-0021` from the records above. Every record created during implementation now carries its commit
@@ -95,3 +96,9 @@ change. Records `EV-0010` to `EV-0018`, `EV-0020`, `EV-0022`, and `EV-0023` desc
 layout as it was at the time of their activity, when the backend lived at the root as `src/`,
 `tests/`, and `db/`; each carries a dated revision note pointing at `EV-0024` for the current paths.
 `EV-0021` needed no note because it does not cite those locations.
+
+`EV-0025` is a post-review remediation activity raised by the developer against commit `a42d631`. It
+changed frontend behavior (session invalidation, login consistency), the stylesheet, and the wording of
+`EV-0015`, `EV-0018`, and `GENAI.md` where a post-implementation mutation check had been described as a
+test-first RED cycle. The corrections to those earlier records are dated and preserve the observed
+output; no historical result was changed to match a later one.
