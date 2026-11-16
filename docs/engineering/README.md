@@ -13,7 +13,7 @@ All standards use **MUST** for mandatory rules, **SHOULD** for recommendations, 
 | Standard | Purpose |
 | --- | --- |
 | [genai.md](./genai.md) | Mandatory AI-assisted development workflow: evidence capture, provenance labels, lifecycle, and completion gate. |
-| [testing-and-tdd.md](./testing-and-tdd.md) | TDD cycle with observed RED/GREEN/REFACTOR evidence, required test levels, doubles versus real dependencies, and coverage by critical behavior. |
+| [testing-and-tdd.md](./testing-and-tdd.md) | TDD cycle with observed RED/GREEN/REFACTOR evidence, required test levels, doubles versus real dependencies, coverage by critical behavior, and the mandatory TDD enforcement lifecycle across all Spec Kit phases (section 3). |
 | [solid-principles.md](./solid-principles.md) | The five SOLID principles applied to controllers, use cases, entities, persistence adapters, and tests; plus the limit between design and unnecessary abstraction. |
 | [clean-architecture.md](./clean-architecture.md) | Layer responsibilities, allowed dependency directions, boundary ownership, DTO mapping, composition roots, and multi-host sharing. |
 | [coding-standards.md](./coding-standards.md) | C# and TypeScript conventions, async and cancellation, error propagation, DI, logging, warnings, comments, and commit hygiene. |
@@ -39,7 +39,7 @@ All standards use **MUST** for mandatory rules, **SHOULD** for recommendations, 
 | Standard | 1 Constitution | 2 Specify | 3 Plan | 4 Tasks | 5 Analyze | 6 Implement | 7 Review | 8 Conclude |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | genai.md | P | P | P | P | P | P | P | P |
-| testing-and-tdd.md | S | S | P | P | S | P | P | S |
+| testing-and-tdd.md | S | P | P | P | P | P | P | S |
 | solid-principles.md | S | S | P | S | S | P | P | - |
 | clean-architecture.md | S | S | P | S | P | P | P | S |
 | coding-standards.md | - | - | S | S | S | P | P | - |
@@ -52,9 +52,33 @@ All standards use **MUST** for mandatory rules, **SHOULD** for recommendations, 
 Notes:
 
 - Phase 1 establishes these standards and defers the constitution; `genai.md` is primary because it governs evidence for every phase.
-- Phase 5 (analyze) uses `clean-architecture.md` and `security.md` as concrete checks against the specification, plan, and tasks.
+- `testing-and-tdd.md` is primary from Phase 2 onward because TDD is enforced as a lifecycle, not only as an implementation practice. The specification must contain testable acceptance criteria, the plan must contain a test strategy, `tasks.md` must carry RED-first tasks with implementation depending on a RED checkpoint, and the pre-implementation analysis must reject missing or misordered test tasks. See [testing-and-tdd.md section 3](./testing-and-tdd.md#3-tdd-enforcement-across-spec-kit-phases).
+- Phase 5 (analyze) uses `testing-and-tdd.md`, `clean-architecture.md`, and `security.md` as concrete checks against the specification, plan, and tasks.
 - Phase 7 (review) uses `testing-and-tdd.md`, `coding-standards.md`, and `security.md` as the review rubric.
 - Phase 8 (conclude) uses `delivery-and-ci.md` for README, GENAI.md, and submission readiness.
+
+### TDD enforcement lifecycle
+
+Missing TDD tasks or incorrect task dependencies are constitutional violations that MUST be resolved before implementation begins. The lifecycle runs:
+
+```text
+Specification   testable acceptance criteria incl. failure scenarios and edge cases
+      |
+Plan            test strategy across layers, PostgreSQL integration, scenarios mapped
+      |         to acceptance criteria, tools/fixtures, test-first strategy
+      |
+Tasks           RED-first tasks; implementation depends on the RED checkpoint;
+      |         no test/implementation pair parallelizable; per-user-story test tasks
+      |
+Analyze         verify coverage is planned, tests precede implementation, RED is
+      |         explicit, no dependency allows implementing before RED is observed
+      |
+Implement       RED -> GREEN -> REFACTOR in order, with observed results recorded
+      |
+Review          confirm genuine test-first evidence; post-hoc tests are not TDD proof
+```
+
+The Spec Kit planning and task-generation templates and the pre-implementation Constitution Check MUST reflect this lifecycle once the constitution is ratified. Those edits are deferred to the constitution phase and are not made by the standards themselves.
 
 ## 5. Cross-references
 
@@ -87,7 +111,7 @@ The constitution will be created separately with `/speckit-constitution` after t
 | # | Proposed principle | Source standards |
 | --- | --- | --- |
 | I | Evidence-Based AI-Assisted Engineering (non-negotiable) | [genai.md](./genai.md), [GENAI.md](../../GENAI.md) |
-| II | Test-First Development (non-negotiable) | [testing-and-tdd.md](./testing-and-tdd.md) |
+| II | Test-First Development across all phases (non-negotiable) | [testing-and-tdd.md](./testing-and-tdd.md), including the phase enforcement lifecycle in section 3 |
 | III | Clean Architecture and Dependency Discipline | [clean-architecture.md](./clean-architecture.md), [solid-principles.md](./solid-principles.md) |
 | IV | Security and Data Protection by Default | [security.md](./security.md), [database-standards.md](./database-standards.md) |
 | V | Contract-First, Testable APIs | [api-standards.md](./api-standards.md) |

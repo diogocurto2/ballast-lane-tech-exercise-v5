@@ -12,8 +12,8 @@
 | Related task identifiers | `PENDING` - no Spec Kit task list exists. Work is identified by the six numbered items in the prompt below. |
 | AI tool | GitHub Copilot (VS Code, Copilot SDK) |
 | AI model | `PENDING` - the model identifier was not exposed in the session. |
-| Evidence status | `Captured` |
-| Commit references | `PENDING` - recorded after the commit exists; the developer instructed no commit before review. |
+| Evidence status | `Verified` |
+| Commit references | `9906b6a` - "docs: establish remaining engineering standards and submission requirements". Recorded after the commit was created, per the standard. |
 
 ## Actual prompt
 
@@ -386,15 +386,15 @@ Originally generated index row that used a non-ASCII section sign:
 
 | Decision | Rationale | Approval |
 | --- | --- | --- |
-| PostgreSQL as proposed persistence technology | Aligned with the job description; assessment prohibits EF/Dapper | `Pending` |
-| React and TypeScript as proposed frontend baseline | Assessment allows a framework of choice; this is the most familiar and testable option | `Pending` |
-| .NET version left undecided | Job description references 6/7/8; assessment mandates none; recorded as a planning decision per instruction | `Pending` |
-| Prohibit extra infrastructure (AWS, Redis, Kubernetes) | No functional need; instruction forbids without justification | `Pending` |
-| Add "Proportional Simplicity" as proposed principle VIII | Prevents best-practice drift toward unjustified complexity | `Pending` |
-| Leave `genai.md` on its existing structure | It was established and approved earlier; rewriting it was out of scope | `Pending` |
-| Defer project structure, schema, contracts, API paths | Explicitly deferred to the Spec Kit planning phase | `Pending` |
+| PostgreSQL as proposed persistence technology | Aligned with the job description; assessment prohibits EF/Dapper | `Approved` - committed in `9906b6a` at developer instruction |
+| React and TypeScript as proposed frontend baseline | Assessment allows a framework of choice; this is the most familiar and testable option | `Approved` - committed in `9906b6a` at developer instruction |
+| .NET version left undecided | Job description references 6/7/8; assessment mandates none; recorded as a planning decision per instruction | `Approved` - committed in `9906b6a` at developer instruction |
+| Prohibit extra infrastructure (AWS, Redis, Kubernetes) | No functional need; instruction forbids without justification | `Approved` - committed in `9906b6a` at developer instruction |
+| Add "Proportional Simplicity" as proposed principle VIII | Prevents best-practice drift toward unjustified complexity | `Approved` - committed in `9906b6a`; final wording awaits the constitution phase |
+| Leave `genai.md` on its existing structure | It was established and approved earlier; rewriting it was out of scope | `Approved` - committed in `9906b6a` at developer instruction |
+| Defer project structure, schema, contracts, API paths | Explicitly deferred to the Spec Kit planning phase | `Approved` - committed in `9906b6a` at developer instruction |
 
-No developer approval was recorded for this activity. The developer instruction was to avoid committing before review.
+Approval basis, stated precisely: the developer directed the commit on `2026-11-16` and the artifacts are published in `9906b6a`. That is approval to accept and publish these documents. It is not a record of each internal wording decision being separately debated, and it does not ratify the proposed constitutional mapping - that belongs to the constitution phase.
 
 ## Corrections and improvements
 
@@ -500,10 +500,10 @@ The first structural validation run, recorded because it produced the two defect
 - Implementation files: `Not Applicable` - documentation only
 - Test files: `Not Applicable` - no test project exists
 - Task identifiers: `PENDING` - no Spec Kit task list exists
-- Commits: `PENDING` - developer instructed no commit before review
+- Commits: `9906b6a`
 
 ## Evidence status rationale
 
-Status is `Captured`: the prompt, context, originally generated excerpts, the two detected defects with their corrections, and the executed validation results are recorded.
+Status is `Verified`: the prompt, context, originally generated excerpts, the two detected defects with their corrections, and the executed validation results are recorded; the developer directed the commit on `2026-11-16` and the artifacts are published in `9906b6a`.
 
-It is not `Reviewed` or `Verified` because the developer has not yet reviewed these standards, no approval has been granted, and the developer explicitly instructed not to commit before review.
+Approval covers inclusion and publication of these documents. The proposed constitutional mapping remains a proposal until the constitution phase ratifies it.

@@ -62,7 +62,85 @@ It integrates with the Generative AI evidence workflow in [genai.md](./genai.md)
 - Documentation-only and infrastructure-only tasks MAY mark TDD as `Not Applicable`, with a one-line justification in the evidence record.
 - `Not Applicable` for TDD does not exempt the task from validation. Documentation tasks still require link, consistency, and content checks; infrastructure tasks still require build, configuration, or health-check verification.
 
-## 3. Practical examples
+## 3. TDD Enforcement Across Spec Kit Phases
+
+TDD is not limited to implementation. It MUST govern specification, planning, task generation, analysis, implementation, and review.
+
+### 3.1 Specification
+
+Every functional requirement and business behavior MUST have testable acceptance criteria, including relevant failure scenarios and edge cases.
+
+### 3.2 Planning
+
+The implementation plan MUST include:
+
+- A test strategy covering Domain, Application, Infrastructure, API endpoints, and frontend behavior.
+- Unit and integration test approaches.
+- Real PostgreSQL integration testing where persistence behavior is involved.
+- Test scenarios mapped to acceptance criteria.
+- Required test tools, environments, fixtures, and dependencies.
+- A test-first implementation strategy.
+
+Planning MUST establish how each behavior will be tested before implementation.
+
+### 3.3 Task generation
+
+The `tasks.md` artifact MUST explicitly represent TDD execution.
+
+For each independently testable behavior or coherent group of related behaviors, generate dependency-ordered tasks for:
+
+1. Writing the relevant tests.
+2. Executing the tests and observing the expected RED result.
+3. Implementing the minimum required behavior.
+4. Executing the tests and observing GREEN.
+5. Refactoring when necessary and rerunning the tests.
+6. Recording actual TDD and GenAI evidence.
+
+Implementation tasks MUST depend on the corresponding RED checkpoint.
+
+A test task and its corresponding implementation task MUST NOT be marked as parallelizable.
+
+Do not defer all testing to a final project-wide testing phase.
+
+Each user story MUST include its own relevant test-first tasks.
+
+### 3.4 Analysis
+
+Before implementation, verify that:
+
+- Every functional requirement has corresponding test coverage planned.
+- Test-writing tasks precede their corresponding implementation tasks.
+- RED checkpoints are explicit.
+- No task dependencies allow implementation before the expected failing tests have been observed.
+- All critical security and authorization behaviors have tests planned.
+
+Missing TDD tasks or incorrect task dependencies constitute constitutional violations that MUST be resolved before implementation begins.
+
+### 3.5 Implementation
+
+Execute RED, GREEN, and REFACTOR in the defined order.
+
+Do not mark a behavior complete without actual test execution and observed results.
+
+An unrelated build failure, configuration failure, or unavailable dependency is not valid evidence of an expected behavioral RED.
+
+Preserve test evidence through the existing genai-evidence workflow.
+
+### 3.6 Review and convergence
+
+Verify that the implemented behavior satisfies the specification and that the recorded evidence demonstrates genuine test-first development.
+
+Tests written only after implementation MUST NOT be presented as evidence of TDD.
+
+Documentation-only and non-behavioral infrastructure tasks MAY be marked `Not Applicable` with justification and appropriate alternative validation.
+
+### 3.7 Spec Kit integration
+
+When the project constitution is ratified, these requirements MUST be reflected in the active Spec Kit planning and task-generation templates and in the pre-implementation Constitution Check.
+
+The Spec Kit templates and the constitution are **not** modified by this standard. Those changes belong to the constitution phase.
+
+## 4. Practical examples
 
 **RED, observed as a behavior failure**
 
@@ -87,7 +165,7 @@ This is a build failure. Fix the compilation, then capture the real behavior fai
 
 **HTTP integration test** - use `WebApplicationFactory` to host the API in-process, call the endpoint with an authenticated and an unauthenticated client, and assert status codes and response bodies for both.
 
-## 4. Prohibited practices and anti-patterns
+## 5. Prohibited practices and anti-patterns
 
 - Writing implementation first and tests afterwards, then presenting it as TDD.
 - Tests that assert nothing, or that assert only that no exception was thrown.
@@ -98,7 +176,7 @@ This is a build failure. Fix the compilation, then capture the real behavior fai
 - Chasing a coverage percentage by testing trivial accessors.
 - Claiming RED without observed failing output.
 
-## 5. Verification and review criteria
+## 6. Verification and review criteria
 
 | Check | Question |
 | --- | --- |
@@ -110,10 +188,13 @@ This is a build failure. Fix the compilation, then capture the real behavior fai
 | Regression | Does every bug fix include a failing-then-passing regression test? |
 | Critical coverage | Is every critical behavior covered by at least one meaningful test? |
 | Evidence | Is TDD evidence recorded in the activity's existing record rather than a new one? |
+| Phase enforcement | Does each phase satisfy its obligation in section 3: testable acceptance criteria in the specification, a test strategy in the plan, RED-first tasks in `tasks.md`, and dependency checks in the analysis? |
+| Task dependencies | Does every implementation task depend on a RED checkpoint, and is no test/implementation pair marked parallelizable? |
 
-## 6. References
+## 7. References
 
 - Generative AI evidence standard: [genai.md](./genai.md)
+- Engineering standards index and phase applicability: [README.md](./README.md)
 - Security test requirements: [security.md](./security.md)
 - Database integration testing: [database-standards.md](./database-standards.md)
 - API contract testing: [api-standards.md](./api-standards.md)
