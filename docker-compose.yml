@@ -1,0 +1,67 @@
+name: ballastlane-task-manager
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: ballastlane-postgres
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD must be set in .env}
+      POSTGRES_DB: taskmanager
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./backend/db/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d taskmanager"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  migrator:
+    build:
+      context: .
+      dockerfile: backend/src/Migrator/Dockerfile
+    environment:
+      ConnectionStrings__Database: ${ConnectionStrings__Database:?ConnectionStrings__Database must be set in .env}
+      Migrations__Path: db/migrations
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  user-api:
+    build:
+      context: .
+      dockerfile: backend/src/UserApi/Dockerfile
+    environment:
+      ConnectionStrings__Database: ${ConnectionStrings__Database:?ConnectionStrings__Database must be set in .env}
+      Jwt__SigningKey: ${Jwt__SigningKey:?Jwt__SigningKey must be set in .env}
+      FrontendOrigin: ${FrontendOrigin:-http://localhost:5173}
+      ASPNETCORE_URLS: http://+:8080
+    ports:
+      - "5081:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrator:
+        condition: service_completed_successfully
+
+  task-api:
+    build:
+      context: .
+      dockerfile: backend/src/TaskApi/Dockerfile
+    environment:
+      ConnectionStrings__Database: ${ConnectionStrings__Database:?ConnectionStrings__Database must be set in .env}
+      Jwt__SigningKey: ${Jwt__SigningKey:?Jwt__SigningKey must be set in .env}
+      FrontendOrigin: ${FrontendOrigin:-http://localhost:5173}
+      ASPNETCORE_URLS: http://+:8080
+    ports:
+      - "5082:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrator:
+        condition: service_completed_successfully
+
+volumes:
+  postgres-data:

@@ -1,0 +1,48 @@
+# Build context for the three .NET images (migrator, user-api, task-api). They copy
+# Directory.Build.props, backend/src and backend/db/migrations only, so everything else is context
+# waste.
+
+# Version control and local tooling state
+.git/
+.gitignore
+.specify/
+.github/
+.vs/
+.vscode/
+.idea/
+
+# Secrets and local configuration - never sent to the daemon
+.env
+.env.*
+!.env.example
+
+# Backend build output
+**/bin/
+**/obj/
+artifacts/
+publish/
+*.user
+*.suo
+*.log
+*.binlog
+
+# Frontend: not part of any image, and the largest part of the context
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# Test output and coverage
+**/TestResults/
+**/coverage/
+*.trx
+
+# Documentation and evidence are not needed to compile
+docs/
+specs/
+GENAI.md
+README.md
+
+# Local Docker and OS noise
+docker-compose.override.yml
+**/.DS_Store
+**/Thumbs.db

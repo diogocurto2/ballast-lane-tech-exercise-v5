@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>BallastLane.UserApi</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Application\BallastLane.Application.csproj" />
+    <ProjectReference Include="..\Domain\BallastLane.Domain.csproj" />
+    <ProjectReference Include="..\Infrastructure\BallastLane.Infrastructure.csproj" />
+    <ProjectReference Include="..\SharedWeb\BallastLane.SharedWeb.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="11.0.1" />
+  </ItemGroup>
+
+</Project>
