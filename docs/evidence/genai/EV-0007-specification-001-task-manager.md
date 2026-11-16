@@ -13,7 +13,7 @@
 | AI tool | GitHub Copilot (VS Code, Copilot SDK) |
 | AI model | `PENDING` - the model identifier was not exposed in the session |
 | Evidence status | `Captured` |
-| Commit references | `PENDING` - the developer instructed no commit or push before review |
+| Commit references | `3e8d0c9` - `docs: correct governance enforcement and specify 001-task-manager` |
 
 ## Actual prompt
 
@@ -479,14 +479,14 @@ list, confirming neither was modified.
 - Implementation files: `Not Applicable` - no application code was created
 - Test files: `Not Applicable` - no test project exists
 - Task identifiers: `PENDING` - tasks.md does not exist yet
-- Commits: `PENDING` - the developer instructed no commit or push before review
+- Commits: `3e8d0c9` - `docs: correct governance enforcement and specify 001-task-manager`
 
 ## Evidence status rationale
 
 Status is `Captured`: the verbatim instruction, the context supplied, the pre-correction wording of
-every governance change, the three specification defects, and the executed validation results are
-recorded.
+every governance change, the four specification defects, and the executed validation results are
+recorded, and the work is committed in `3e8d0c9`.
 
 It is not `Reviewed` or `Verified` because the developer has not yet reviewed the specification, the
-`PDC` defaults, or the governance corrections, and the instruction prohibits committing before that
-review.
+`PDC` defaults, or the governance corrections. The commit was instructed by the developer; an
+instruction to commit is not the same fact as a review verdict, so the two are tracked separately.
