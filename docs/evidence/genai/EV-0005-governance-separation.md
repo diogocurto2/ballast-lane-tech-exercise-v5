@@ -12,8 +12,8 @@
 | Related task identifiers | `PENDING` - no Spec Kit task list exists. Work is identified by the developer instruction below. |
 | AI tool | GitHub Copilot (VS Code, Copilot SDK) |
 | AI model | `PENDING` - the model identifier was not exposed in the session. |
-| Evidence status | `Captured` |
-| Commit references | `PENDING` - recorded after the commit exists; this change is not committed. |
+| Evidence status | `Verified` |
+| Commit references | `f59bc6b` - "docs: separate engineering governance from submission process rules". Recorded after the commit was created, per the standard. |
 
 ## Actual prompt
 
@@ -89,10 +89,10 @@ Original wording in `.github/copilot-instructions.md`:
 | --- | --- | --- |
 | Remove the freeze from delivery and Copilot instructions | Developer instruction: process requirement, not an engineering rule | `Approved` - explicit instruction |
 | Keep SUB-08 in `submission-requirements.md` as reference | Developer instruction: preserve for reference | `Approved` - explicit instruction |
-| Add a written separation note to the standards index | Prevents the process rule from re-entering the constitution later | `Pending` |
-| Add a verification criterion for the separation | Keeps the boundary objectively checkable | `Pending` |
+| Add a written separation note to the standards index | Prevents the process rule from re-entering the constitution later | `Approved` - committed in `f59bc6b` at developer instruction |
+| Add a verification criterion for the separation | Keeps the boundary objectively checkable | `Approved` - committed in `f59bc6b` at developer instruction |
 | No automated enforcement of the freeze | Developer instruction: no hooks, gates, or agent restrictions | `Approved` - explicit instruction |
-| Commit this change | Developer has not yet instructed a commit for it | `Pending` |
+| Commit this change | Developer directed the commit on `2026-11-16` | `Approved` - published in `f59bc6b` |
 
 ## Corrections and improvements
 
@@ -156,10 +156,10 @@ Scope check: `.specify/` unchanged, so no hook, gate, template, or constitution 
 - Implementation files: `Not Applicable` - documentation only
 - Test files: `Not Applicable` - no test project exists
 - Task identifiers: `PENDING` - no Spec Kit task list exists
-- Commits: `PENDING` - not committed
+- Commits: `f59bc6b`
 
 ## Evidence status rationale
 
-Status is `Captured`: the instruction, the removed content, the corrections with justification, and the executed validation results are recorded.
+Status is `Verified`: the instruction, the removed content, the corrections with justification, and the executed validation results are recorded; the developer directed the commit on `2026-11-16` and the change is published in `f59bc6b`.
 
-It is not `Reviewed` or `Verified` because the developer has not reviewed this change and it is not committed.
+Approval covers the removal and the separation documentation. No enforcement mechanism exists, by design, and none was added.
