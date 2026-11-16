@@ -78,7 +78,7 @@ You **MUST** consider the user input before proceeding (if not empty).
    - Phase 1: Setup tasks (project initialization)
    - Phase 2: Foundational tasks (blocking prerequisites for all user stories)
    - Phase 3+: One phase per user story (in priority order from spec.md)
-   - Each phase includes: story goal, independent test criteria, tests (if requested), implementation tasks
+   - Each phase includes: story goal, independent test criteria, mandatory RED-first test tasks, implementation tasks
    - Final Phase: Polish & cross-cutting concerns
    - All tasks must follow the strict checklist format (see Task Generation Rules below)
    - Clear file paths for each task
@@ -150,13 +150,19 @@ independently testable behavior:
 5. Refactor if needed and rerun.
 6. Record TDD and GenAI evidence.
 
-Each implementation task MUST depend on its RED checkpoint task. A test task and its corresponding
-implementation task MUST NOT both be marked `[P]` and MUST NOT be scheduled in parallel. Do not
-defer all testing to a final project-wide phase. Each user story MUST carry its own test-first
-tasks.
+Each implementation task MUST depend on its planned RED checkpoint task. In tasks.md a RED
+checkpoint is a planned dependency; the actual behavioral failure is observed during
+implementation, before the production behavior it covers is written. A test task and its
+corresponding implementation task MUST NOT both be marked `[P]` and MUST NOT be scheduled in
+parallel. Do not defer all testing to a final project-wide phase. Each user story MUST carry its
+own test-first tasks.
 
-Only documentation-only and non-behavioral infrastructure tasks MAY mark TDD `Not Applicable`, with
-a written justification and a substitute validation task.
+Foundational tasks that change runtime behavior - authentication and authorization, migrations,
+persistence, error handling, and seed behavior - MUST be RED-first as well; they are not eligible
+for `Not Applicable`.
+
+Only non-behavioral scaffolding and configuration tasks MAY mark TDD `Not Applicable`, with a
+written justification and a substitute validation task.
 
 See `.specify/memory/constitution.md` Principle III and
 `docs/engineering/testing-and-tdd.md` section 3.
@@ -201,12 +207,12 @@ Every task MUST strictly follow this format:
      - Models needed for that story
      - Services needed for that story
      - Interfaces/UI needed for that story
-     - If tests requested: Tests specific to that story
+     - Test-first tasks specific to that story (mandatory)
    - Mark story dependencies (most stories should be independent)
 
 2. **From Contracts**:
    - Map each interface contract → to the user story it serves
-   - If tests requested: Each interface contract → contract test task [P] before implementation in that story's phase
+   - Each interface contract → contract test task [P] before implementation in that story's phase
 
 3. **From Data Model**:
    - Map each entity to the user story(ies) that need it
@@ -224,7 +230,7 @@ Every task MUST strictly follow this format:
 - **Phase 1**: Setup (project initialization)
 - **Phase 2**: Foundational (blocking prerequisites - MUST complete before user stories)
 - **Phase 3+**: User Stories in priority order (P1, P2, P3...)
-  - Within each story: Tests (if requested) → Models → Services → Endpoints → Integration
+  - Within each story: RED-first tests → Models → Services → Endpoints → Integration
   - Each phase should be a complete, independently testable increment
 - **Final Phase**: Polish & Cross-Cutting Concerns
 

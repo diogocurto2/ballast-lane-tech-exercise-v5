@@ -78,7 +78,9 @@ Implement       RED -> GREEN -> REFACTOR in order, with observed results recorde
 Review          confirm genuine test-first evidence; post-hoc tests are not TDD proof
 ```
 
-The Spec Kit planning and task-generation templates and the pre-implementation Constitution Check MUST reflect this lifecycle once the constitution is ratified. Those edits are deferred to the constitution phase and are not made by the standards themselves.
+The Spec Kit planning and task-generation templates and the pre-implementation Constitution Check MUST reflect this lifecycle. They do: the project overrides in `.specify/templates/overrides/` enforce it in the plan, tasks, and spec templates, and the `speckit-analyze` and `speckit-implement` skills enforce the planned-versus-observed RED distinction. An earlier revision deferred these edits to the constitution phase; that phase is complete and the edits exist.
+
+Analysis validates the **planned** test ordering, that is, that every implementation task declares a RED checkpoint ahead of it. The actual behavioral failure is **observed** during implementation, before the production behavior is written. An environmental, configuration, or compilation failure is not valid behavioral RED evidence.
 
 ## 5. Cross-references
 
@@ -161,8 +163,10 @@ Run these checks after any change to the standards:
 
 | Item | Status |
 | --- | --- |
-| Engineering standards | Established in this task; pending developer review |
-| Constitution | `PENDING` - unratified template at `.specify/memory/constitution.md` |
-| Feature specification, plan, tasks | `PENDING` - not created |
+| Engineering standards | Established; accepted by the developer as the project foundation on 2026-11-16, subject to the targeted corrections recorded in [EV-0007](../evidence/genai/EV-0007-specification-001-task-manager.md) |
+| Constitution | **Ratified** - version 1.0.0, 2026-11-16, at `.specify/memory/constitution.md`; committed in `ac604af` |
+| Spec Kit enforcement overrides | Active - plan, tasks, and spec templates in `.specify/templates/overrides/`; committed in `ac604af` |
+| Feature specification (001-task-manager) | Draft - `specs/001-task-manager/spec.md`; developer review `PENDING` |
+| Implementation plan, tasks | `PENDING` - not created; the next lifecycle phases |
 | Application code, tests, schema | `PENDING` - not created |
 | REST API GenAI exercise | `PENDING` - required by the assessment and not yet performed |

@@ -12,8 +12,8 @@
 | Related task identifiers | `PENDING` - no Spec Kit task list exists. Work is identified by the developer instruction below. |
 | AI tool | GitHub Copilot (VS Code, Copilot SDK) |
 | AI model | `PENDING` - the model identifier was not exposed in the session. |
-| Evidence status | `Captured` |
-| Commit references | `PENDING` - the developer instructed no commit before review. |
+| Evidence status | `Reviewed` |
+| Commit references | `ac604af` - `docs: ratify constitution v1.0.0 and enforce it in Spec Kit`, present on `origin/main` |
 
 ## Actual prompt
 
@@ -370,19 +370,60 @@ steps numbered `8`. Renumbered to `8, 9, 10`.
 - `[VERIFIED]` Prohibited technologies are now stated solution-wide in the constitution, the database standard, and the Copilot instructions. The Copilot instruction previously limited them to "for data access", which was the exact inconsistency named in the instruction.
 - `[VERIFIED]` No application code, project file, or test project was created. No symbolic link was introduced.
 - `[AI-PROPOSED]` Six principles rather than the eight drafted earlier in the engineering index. Proportional simplicity and readable code were folded into Principles II, III, and V to keep the constitution concise, since the developer specified six.
-- `[PENDING]` Developer review and commit of the constitution and integration changes.
+- `[PENDING]` Developer review and commit of the constitution and integration changes. **Resolved 2026-11-16** - see the review section below: the changes were committed as `ac604af` and reviewed by the developer.
 - `[PENDING]` Whether Copilot discovers and invokes the `genai-evidence` skill automatically. Not observed, and not claimed anywhere.
+
+## Review of 2026-11-16 (recorded after the commit)
+
+The developer reviewed the ratified constitution and the engineering standards as committed in
+`ac604af` and accepted them as the project foundation. That review produced seven targeted
+governance corrections, which are applied and recorded in `EV-0007`. This section separates what
+the **reviewer observed** from what the **developer approved**, because they are not the same fact.
+
+### Reviewer findings
+
+- `[VERIFIED]` The tasks template override required RED-first ordering for user-story work but left
+  the foundational phase (authentication, authorization, migrations, persistence, error handling,
+  seed behavior) as plain implementation tasks. Behavioral work could therefore be implemented
+  without a preceding RED checkpoint.
+- `[VERIFIED]` Residual conditional-test wording survived in the effective workflows: the
+  `speckit-tasks` skill still said "tests (if requested)" in three places, and `speckit-implement`
+  still said "If you need to write tests".
+- `[VERIFIED]` `speckit-implement` had no precondition requiring a completed `/speckit-analyze` run,
+  so implementation could begin with no analysis of the specification, plan, or tasks.
+- `[VERIFIED]` Analyze and Implement both referred to an "observed RED checkpoint", conflating the
+  planned dependency in tasks.md with the behavioral failure observed during implementation.
+- `[VERIFIED]` The plan template override listed Domain and Application unit tests plus real
+  PostgreSQL and HTTP integration tests, but omitted unit tests for Infrastructure/data-access
+  components and API controllers, which the constitution's Principle III requires.
+- `[VERIFIED]` The Analyze skill's read-only rule did not state that its report may be preserved
+  through the GenAI evidence workflow, leaving report preservation ambiguous.
+- `[VERIFIED]` Constitution status was stale in four places: `docs/engineering/README.md` sections
+  4 and 9, `docs/assessment/submission-requirements.md` section 4, `docs/engineering/genai.md`
+  sections 2 and 3, and the `GENAI.md` supporting-evidence table still called the constitution the
+  unratified template.
+
+### Developer approval
+
+`[DEVELOPER DECISION]` The developer's review statement, recorded verbatim: "The constitution and
+engineering standards have been reviewed and accepted as the project foundation, subject to the
+targeted corrections below." The seven corrections above are developer-directed findings, not
+reviewer-invented scope: each names a specific defect and the correction to apply.
+
+This approves the constitution and standards **as the foundation**. It does not approve the
+product-level specification that follows, does not approve a commit of the correction work, and
+does not imply approval of anything not named in the review.
 
 ## Developer decisions and approval
 
 | Decision | Rationale | Approval |
 | --- | --- | --- |
-| Six principles, version 1.0.0, ratified `2026-11-16` | Developer instruction; actual date of this ratification | `Approved` - explicit instruction |
+| Six principles, version 1.0.0, ratified `2026-11-16` | Developer instruction; actual date of this ratification | `Approved` - explicit instruction, and accepted in the 2026-11-16 review |
 | Omit the post-submission freeze from the constitution | Developer answered the clarification with "omit", preserving the `f59bc6b` separation | `Approved` - explicit response |
-| Use `.specify/templates/overrides/` rather than editing installed templates | Supported mechanism; avoids manifest hash drift on templates | `Pending` |
-| Edit five tracked skill files | No override mechanism exists for skills; the skills are the instruction source that must change | `Pending` |
-| Fold proportional simplicity and readable code into Principles II, III, V rather than standalone principles | Developer specified exactly six principles | `Pending` |
-| Commit these changes | Developer has not yet instructed a commit | `Pending` |
+| Use `.specify/templates/overrides/` rather than editing installed templates | Supported mechanism; avoids manifest hash drift on templates | `Approved` - the developer's 2026-11-16 corrections target those override files, which presupposes their retention; committed in `ac604af` |
+| Edit five tracked skill files | No override mechanism exists for skills; the skills are the instruction source that must change | `Approved` - the developer's 2026-11-16 corrections target the `speckit-tasks`, `speckit-analyze`, and `speckit-implement` skills; committed in `ac604af` |
+| Fold proportional simplicity and readable code into Principles II, III, V rather than standalone principles | Developer specified exactly six principles | `Approved` - constitution accepted as the foundation in the 2026-11-16 review |
+| Commit these changes | Developer has not yet instructed a commit | `Approved` - committed in `ac604af`, present on `origin/main` |
 
 ## Corrections and improvements
 
@@ -396,6 +437,8 @@ steps numbered `8`. Renumbered to `8, 9, 10`.
 | Database standard wording widened and de-narrowed | Same inconsistency in the standard | Keeps the constitution and standards in agreement |
 | Engineering index section 6 rewritten from "proposed mapping" to ratified mapping | The constitution now exists and is ratified | An index that calls a ratified mapping "proposed" is factually stale |
 | Copilot instructions status updated to ratified | Was "still the unratified template" | Stale status contradicts observed repository facts |
+| 2026-11-16: seven targeted governance corrections applied to the overrides and skills | Developer review found the gaps listed above | Recorded in `EV-0007` with before/after excerpts |
+| 2026-11-16: constitution status synchronized in the engineering index, submission requirements, and the GenAI standard | The ratified, committed constitution was still described as an unratified template | Stale status contradicts observed repository facts |
 
 ## Commands and observed results
 
@@ -473,12 +516,15 @@ tracked symbolic links                                      -> none
 - Implementation files: `Not Applicable` - documentation and configuration only
 - Test files: `Not Applicable` - no test project exists
 - Task identifiers: `PENDING` - no Spec Kit task list exists
-- Commits: `PENDING` - developer instructed no commit before review
+- Commits: `ac604af` - ratified constitution and Spec Kit enforcement integration on `origin/main`
 
 ## Evidence status rationale
 
-Status is `Captured`: the instruction, the clarification and its answer, the three detected defects
-with their corrections, and the executed validation results are recorded.
+Status is `Reviewed`: the instruction, the clarification and its answer, the three detected defects
+with their corrections, the executed validation results, and the developer's 2026-11-16 review with
+its seven targeted findings are all recorded, and the work is committed in `ac604af`.
 
-It is not `Reviewed` or `Verified` because the developer has not reviewed the constitution or the
-integration changes, and the instruction prohibits committing before that review.
+It is not `Verified` because the seven governance corrections that the review produced are applied
+and validated under a separate record (`EV-0007`) and have not themselves been reviewed or
+committed. Advancing this record to `Verified` requires that follow-up work to be reviewed and its
+commit reference recorded.

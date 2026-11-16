@@ -44,7 +44,7 @@ amend the constitution.
 |---|---|---|
 | I. Assessment-first | Every requirement maps to an assessment obligation; pre-implementation `/speckit-analyze` scheduled | |
 | II. Clean Architecture and SOLID | Dependency-direction matrix completed below; layer responsibilities named; abstractions justified | |
-| III. TDD | Test strategy completed below; RED-first task ordering stated; no test/implementation pair parallelized | |
+| III. TDD | Test strategy completed below, including unit tests for data access and controllers; RED-first task ordering stated and validated here as *planned* checkpoints (observed RED results are recorded during implementation); no test/implementation pair parallelized | |
 | IV. Secure APIs and persistence | Authn/authz boundaries; resource-level authorization; parameterized SQL; constraints; no prohibited libraries | |
 | V. Full-stack delivery | Responsive UI approach; seeded demo data; reproducible setup; README and `GENAI.md` obligations | |
 | VI. GenAI evidence | Evidence capture points listed for every activity type | |
@@ -90,9 +90,15 @@ Complete this before implementation. It drives `/speckit-tasks`.
 |---|---|---|---|---|
 | Domain | Unit | | | |
 | Application | Unit | | | |
+| Infrastructure (data access) | Unit | | | |
 | Infrastructure | Integration | Real PostgreSQL required | | |
+| API controllers | Unit | | | |
 | API endpoints | HTTP integration | In-process test host | | |
 | Frontend | Component and user flow | | | |
+
+Unit tests are mandatory for Infrastructure/data-access components and API controllers, in addition
+to Domain and Application unit tests, real PostgreSQL integration tests, and HTTP integration
+tests (constitution Principle III).
 
 Also record:
 

@@ -40,14 +40,21 @@ this order:
 
 Rules that MUST hold in the generated list:
 
-- The implementation task MUST depend on the RED checkpoint task.
+- The implementation task MUST depend on its planned RED checkpoint task.
 - A test task and its corresponding implementation task MUST NOT both carry `[P]`, and MUST NOT be
   scheduled in parallel.
 - Evidence capture MUST appear in the same activity as the work, not collected at the end.
 - Each user story MUST carry its own test-first tasks.
 
-Documentation-only and non-behavioral infrastructure tasks MAY be marked `Not Applicable` for TDD
-with a written justification and an alternative validation task.
+Foundational tasks that change runtime behavior - authentication and authorization, database
+migrations, persistence, error handling, and seed behavior - MUST follow the same RED-first
+pattern: their tests are generated first and their planned RED checkpoint precedes implementation.
+In tasks.md a RED checkpoint is a planned dependency; the actual behavioral failure is observed
+during implementation, before the production behavior it covers is written.
+
+Only non-behavioral scaffolding and configuration tasks MAY be marked `Not Applicable` for TDD,
+with a written justification and an alternative validation task. A task that changes runtime
+behavior is never eligible for `Not Applicable`.
 
 ## Path Conventions
 
@@ -78,15 +85,25 @@ with a written justification and an alternative validation task.
 
 **CRITICAL**: No user story work begins until this phase completes.
 
-- [ ] T006 Create versioned SQL migrations for the schema in plan.md
-- [ ] T007 Implement connection handling and migration runner
-- [ ] T008 Implement authentication and authorization wiring
-- [ ] T009 Implement error handling and ProblemDetails mapping
-- [ ] T010 Implement structured logging with sensitive-data exclusion
-- [ ] T011 Implement idempotent seed for demonstration users and records
-- [ ] T012 Write architecture verification test asserting dependency direction
+Foundational tasks in this phase follow the mandatory RED-first pattern. Tasks that do not change
+runtime behavior (for example, logging configuration) MAY be marked `Not Applicable` for TDD with a
+written justification and a substitute validation task.
 
-**Checkpoint**: Foundation ready.
+- [ ] T006 [P] Write migration tests asserting schema, constraints, and idempotent re-run in tests/integration/[migrations].cs
+- [ ] T007 [P] Write tests for connection handling and the migration runner in tests/integration/[connection].cs
+- [ ] T008 [P] Write tests for authentication and authorization wiring in tests/http/[auth-wiring].cs
+- [ ] T009 [P] Write tests for error handling and ProblemDetails mapping in tests/http/[errors].cs
+- [ ] T010 [P] Write tests for idempotent seed behavior in tests/integration/[seed].cs
+- [ ] T011 Run foundational tests and record the observed RED failures (depends on T006, T007, T008, T009, T010)
+- [ ] T012 Implement versioned SQL migrations and the migration runner in src/Infrastructure/[file].cs (depends on T011 RED)
+- [ ] T013 Implement authentication and authorization wiring in src/Api/[file].cs (depends on T011 RED)
+- [ ] T014 Implement error handling and ProblemDetails mapping in src/Api/[file].cs (depends on T011 RED)
+- [ ] T015 Implement structured logging with sensitive-data exclusion in src/Api/[file].cs (non-behavioral configuration; TDD Not Applicable with written justification and substitute validation)
+- [ ] T016 Implement the idempotent seed for demonstration users and records in src/Infrastructure/[file].cs (depends on T011 RED)
+- [ ] T017 Write architecture verification test asserting dependency direction in tests/unit/[architecture].cs
+- [ ] T018 Rerun foundational tests and record observed GREEN (depends on T012, T013, T014, T015, T016, T017)
+
+**Checkpoint**: Foundation ready. Every foundational runtime behavior has an observed RED result recorded before its implementation.
 
 ---
 

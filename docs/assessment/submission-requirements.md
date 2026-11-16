@@ -41,10 +41,11 @@ These follow from the requirements above. Engineering deliverables are owned by 
 | Unit, integration, and frontend tests | `PENDING` - no test project exists |
 | `README.md` submission content | `PENDING` - currently a placeholder |
 | `GENAI.md` REST API exercise answers | `PENDING` - required and explicitly not yet answered |
-| Engineering standards | Established in this task; see [docs/engineering/README.md](../engineering/README.md) |
-| Constitution | `PENDING` - `.specify/memory/constitution.md` is still the unratified template |
+| Engineering standards | Established; accepted by the developer as the project foundation on 2026-11-16 |
+| Constitution | **Ratified** - version 1.0.0, 2026-11-16, at `.specify/memory/constitution.md`; committed in `ac604af` |
+| Feature specification `001-task-manager` | Draft - `specs/001-task-manager/spec.md`; implementation plan and tasks `PENDING` |
 
-Nothing in this table is presented as complete.
+Nothing in this table is presented as complete except where an observed, committed fact is stated.
 
 ## 5. Verification before submission
 

@@ -33,7 +33,7 @@ This standard turns those requirements into a repeatable workflow with auditable
 - **Evidence records** are stored as Markdown under `docs/evidence/genai/`, one record per meaningful activity or related group of tasks.
 - **GENAI.md** at the repository root is the consolidated assessment response. It summarizes verified evidence from the records.
 
-**Current state of the Spec Kit artifacts:** the constitution file exists at `.specify/memory/constitution.md` but is still the unratified template. No feature specification, implementation plan, or task list exists yet, and no application code has been generated.
+**Current state of the Spec Kit artifacts:** the constitution at `.specify/memory/constitution.md` is **ratified** at version 1.0.0 (2026-11-16) and committed in `ac604af`. The plan, tasks, and spec templates are overridden in `.specify/templates/overrides/` to enforce it. The first feature specification, `001-task-manager`, is drafted under `specs/001-task-manager/`; no implementation plan, task list, or application code exists yet.
 
 ## 3. Mandatory workflow
 
@@ -46,7 +46,7 @@ Each phase produces artifacts and evidence. A phase is complete only when its ev
 - Ratify the project constitution and maintain the engineering standards that govern the work, including this document.
 - Treat the constitution as the source of non-negotiable principles for every later phase.
 
-**Evidence:** prompt, ratified text or standards change, review findings. While the constitution remains an unratified template, that state is recorded as `PENDING` rather than described as adopted.
+**Evidence:** prompt, ratified text or standards change, review findings. The constitution is ratified; a record of a standards or governance change must distinguish reviewer findings from the developer's approval rather than presenting review as approval.
 
 ### Phase 2 - Specify and clarify
 

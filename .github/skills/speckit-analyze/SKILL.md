@@ -58,7 +58,7 @@ Identify inconsistencies, duplications, ambiguities, and underspecified items ac
 
 ## Operating Constraints
 
-**STRICTLY READ-ONLY**: Do **not** modify any files. Output a structured analysis report. Offer an optional remediation plan (user must explicitly approve before any follow-up editing commands would be invoked manually).
+**STRICTLY READ-ONLY**: Do **not** modify any files. Output a structured analysis report. Offer an optional remediation plan (user must explicitly approve before any follow-up editing commands would be invoked manually). This applies to the specification, plan, tasks, constitution, and application code. The one permitted output artifact is the report itself; it MAY be preserved through the GenAI evidence workflow (constitution Principle VI), writing only to `docs/evidence/genai/`.
 
 **Constitution Authority**: The project constitution (`.specify/memory/constitution.md`) is **non-negotiable** within this analysis scope. Constitution conflicts are automatically CRITICAL and require adjustment of the spec, plan, or tasks—not dilution, reinterpretation, or silent ignoring of the principle. If a principle itself needs to change, that must occur in a separate, explicit constitution update outside `/speckit-analyze`.
 
@@ -67,13 +67,20 @@ task is executed. It may be repeated after implementation, but the pre-implement
 mandatory. Treat each of the following as a BLOCKING finding, reported as CRITICAL:
 
 - a functional requirement or behavior with no corresponding test task planned;
-- an implementation task that does not depend on an observed RED checkpoint;
+- an implementation task that does not depend on its planned RED checkpoint;
 - a test task and its implementation task that are marked parallelizable, or ordered so
   implementation can precede the RED observation;
 - a user story with no test-first tasks of its own;
 - testing deferred entirely to a final project-wide phase;
 - a critical security or authorization behavior without planned tests;
 - TDD marked `Not Applicable` for a behavior change without justification.
+
+This analysis validates the **planned** test ordering before implementation: it confirms the task
+list declares a RED checkpoint ahead of every implementation task that depends on it. It does not
+execute tests. **Observed** RED results are recorded during implementation by `/speckit-implement`,
+which must watch each behavioral failure occur before writing the production behavior. An
+environmental, configuration, or compilation failure observed there is not valid behavioral RED
+evidence.
 
 A blocking finding MUST NOT be silently deferred. Report it, and the workflow MUST NOT proceed to
 implementation until it is resolved or the constitution is amended.

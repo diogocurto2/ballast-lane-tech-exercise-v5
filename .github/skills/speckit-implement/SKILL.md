@@ -52,6 +52,15 @@ You **MUST** consider the user input before proceeding (if not empty).
     After emitting the block above you MUST actually invoke the hook and wait for it to finish before continuing. Run it the same way you would run the command yourself in this agent/session (the invocation may differ from the literal `{command}` id shown above, e.g. a skills-mode agent runs it as `/skill:speckit-...` or `$speckit-...`). Emitting the block alone does not run the hook.
 - If no hooks are registered or `.specify/extensions.yml` does not exist, skip silently
 
+## Precondition (blocking)
+
+Implementation MUST NOT begin until `/speckit-analyze` has been executed against the current
+specification, plan, and tasks, and its most recent report contains no unresolved blocking
+findings. If no analysis has been run against the current artifacts, or a blocking finding is
+unresolved, halt before Outline step 1 and direct the user to run `/speckit-analyze` and resolve
+the findings. Analysis may be repeated after implementation, but the pre-implementation run is
+mandatory (constitution Principle I).
+
 ## Outline
 
 1. Run `.specify/scripts/powershell/check-prerequisites.ps1 -Json -RequireTasks -IncludeTasks` from repo root and parse FEATURE_DIR and AVAILABLE_DOCS list. All paths must be absolute. For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot").
@@ -153,9 +162,11 @@ You **MUST** consider the user input before proceeding (if not empty).
    - **Phase-by-phase execution**: Complete each phase before moving to the next
    - **Respect dependencies**: Run sequential tasks in order, parallel tasks [P] can run together
    - **Follow TDD approach**: Execute test tasks before their corresponding implementation tasks.
-     Do not start an implementation task until its RED checkpoint has actually failed and the
-     failure has been observed. An environmental, configuration, or compilation failure is not
-     valid behavioral RED evidence; fix it and re-observe.
+     tasks.md declares *planned* RED checkpoints; this command must *observe* each actual
+     behavioral failure before writing the production behavior that checkpoint covers. Do not
+     start an implementation task until its RED checkpoint has actually failed and the failure has
+     been observed. An environmental, configuration, or compilation failure is not valid
+     behavioral RED evidence; fix it and re-observe.
    - **Record TDD results**: capture the actual RED and GREEN command output in the activity's
      GenAI evidence record
    - **File-based coordination**: Tasks affecting the same files must run sequentially
@@ -175,10 +186,13 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 8. Implementation execution rules:
    - **Setup first**: Initialize project structure, dependencies, configuration
-   - **Tests before code**: If you need to write tests for contracts, entities, and integration scenarios
+   - **Tests before code**: Tests are mandatory, not conditional. Write each test task before its
+     implementation task, exactly as ordered in tasks.md, and observe the RED failure before
+     implementing.
    - **Core development**: Implement models, services, CLI commands, endpoints
    - **Integration work**: Database connections, middleware, logging, external services
-   - **Polish and validation**: Unit tests, performance optimization, documentation
+   - **Polish and validation**: Performance optimization, documentation, and final verification
+     sweeps; any new runtime behavior introduced here still requires its own RED-first cycle
 
 9. Progress tracking and error handling:
    - Report progress after each completed task
