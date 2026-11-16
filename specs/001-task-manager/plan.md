@@ -24,14 +24,15 @@ stories: authentication (US1), the public/protected access boundary (US2), read 
 
 ## Technical Context
 
-**Language/Version**: C# 12 on **.NET 8** (`net8.0`, SDK 8.0.428); TypeScript 5.6 with React 18.3
-on Node 25.9.0 (the build tooling requires Node 20 or newer).
+**Language/Version**: C# 14 on **.NET 10** (`net10.0`, SDK 10.0.404, LTS); TypeScript 5.6 with React
+18.3 on Node 25.9.0 (the build tooling requires Node 20 or newer).
 
-**Primary Dependencies**: ASP.NET Core 8 (`Microsoft.AspNetCore.Mvc`), `Npgsql` 8.x,
-`Microsoft.AspNetCore.Authentication.JwtBearer` 8.x, `Microsoft.Extensions.Identity.Core` 8.x
-(`PasswordHasher<T>`), `Swashbuckle.AspNetCore` 6.x (OpenAPI), `Microsoft.AspNetCore.Mvc.Testing`
-8.x (HTTP integration tests), `xunit` 2.x, Vite 5.4, React Router 6, Vitest 2 + React Testing
-Library 16.
+**Primary Dependencies**: ASP.NET Core 10 (`Microsoft.AspNetCore.Mvc`), `Npgsql`,
+`Microsoft.AspNetCore.Authentication.JwtBearer`, `Microsoft.Extensions.Identity.Core`
+(`PasswordHasher<T>`), `Swashbuckle.AspNetCore` (OpenAPI), `Microsoft.AspNetCore.Mvc.Testing`
+(HTTP integration tests), and `xunit`; each pinned to its current stable release at implementation
+time and recorded in the evidence record. Frontend: Vite 5.4, React Router 6, Vitest 2 + React
+Testing Library 16.
 
 **Storage**: PostgreSQL 16 in a container. Access is Npgsql + ADO.NET only. The schema is defined
 by ordered SQL migrations under `db/migrations/`; seeding is a separate idempotent step.
@@ -194,9 +195,10 @@ Also recorded:
   `401`.
 - **Passwords**: `PasswordHasher<User>` from `Microsoft.Extensions.Identity.Core`, reached through an
   Application-owned `IPasswordHasher` boundary so Application stays framework-neutral. The unique
-  salt comes from the component, and verification uses its constant-time comparison. Parameters
-  recorded here as the security standard requires: the .NET 8 default v3 PBKDF2-HMAC-SHA512 at
-  210,000 iterations.
+  salt comes from the component, and verification uses its constant-time comparison. The component's
+  default v3 format (PBKDF2-HMAC-SHA512) is used; the effective iteration count is read from the
+  configured options and recorded in the implementation evidence record, as the security standard
+  requires the parameters to be documented.
 - **Authorization**: every endpoint is explicitly `[AllowAnonymous]` or covered by a
   protected-by-default policy. Ownership is enforced in the **Application use case**: each task use
   case receives an `AuthenticatedUser` value object built from validated claims and passes its

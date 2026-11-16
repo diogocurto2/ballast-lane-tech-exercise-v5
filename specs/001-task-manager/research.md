@@ -16,19 +16,18 @@ are `[AI-PROPOSED]` until the developer approves them.
 
 ## R1 - .NET version
 
-- **Decision**: .NET 8 (`net8.0`), SDK 8.0.428.
-- **Rationale**: the assessment mandates no version; the target job description references .NET 6,
-  7, and 8, so 8 is the closest match to the panel's stack while still being a modern LTS line.
-  Every required API (JWT bearer, `PasswordHasher<T>`, `WebApplicationFactory`, minimal hosting,
-  OpenAPI) is generally available. The SDK is installed locally, so the build is verifiable now.
+- **Decision**: .NET 10 (`net10.0`, C# 14), SDK 10.0.404.
+- **Rationale**: the assessment mandates no version. .NET 10 is the current LTS line, is installed
+  locally so the build is verifiable now, and is supported for the life of this deliverable. Every
+  required API (JWT bearer, `PasswordHasher<T>`, `WebApplicationFactory`, minimal hosting, OpenAPI)
+  is available on it. `[DEVELOPER DECISION]` On 2026-11-16 the developer selected .NET 10 over the
+  original .NET 8 proposal, after the analysis recorded that .NET 8 had passed end-of-support.
 - **Alternatives considered**:
-  - **.NET 10** (installed, current LTS): better long-term support, but further from the assessment's
-    stated stack and adds no capability this feature needs.
+  - **.NET 8**: the original proposal, because the target job description references .NET 6, 7, and
+    8. Rejected on review: the line passed its end-of-support date shortly before this plan, so a new
+    deliverable should not be built on an unsupported runtime.
   - **.NET 9** (installed): standard-term support that has already ended, so it is the worst of both
     options.
-  - Recorded trade-off: .NET 8 passed its end-of-support date shortly before this plan. That is
-    acceptable for a self-contained assessment deliverable whose target is the assessment's own
-    stack; it would not be acceptable for a production system.
 
 ## R2 - One API host or two
 
@@ -141,10 +140,10 @@ are `[AI-PROPOSED]` until the developer approves them.
 
 - **Decision**: `Swashbuckle.AspNetCore` 6.x with a Swagger UI endpoint enabled in Development and a
   generated document per host.
-- **Rationale**: `api-standards.md` requires generated, not hand-maintained, OpenAPI. On .NET 8
-  Swashbuckle is the mature option that also serves UI for the demonstration.
+- **Rationale**: `api-standards.md` requires generated, not hand-maintained, OpenAPI. Swashbuckle
+  remains supported on .NET 10 and also serves UI for the demonstration.
 - **Alternatives considered**: `Microsoft.AspNetCore.OpenApi` provides document generation only and
-  has no built-in UI; NSwag is larger than needed.
+  has no built-in UI, so the demonstration would need an extra viewer; NSwag is larger than needed.
 
 ## R11 - Due date representation
 
@@ -204,6 +203,7 @@ are `[AI-PROPOSED]` until the developer approves them.
 
 - The eight `PDC` decisions adopted by the plan remain `[AI-PROPOSED]` until developer confirmation.
   None blocks implementation; each is recorded in `plan.md` under "Adopted Specification Decisions".
-- The .NET 8 end-of-support trade-off in R1 is recorded for the developer to accept or override. If
-  the developer prefers a supported runtime, .NET 10 is installed and the plan's design is unchanged
-  apart from the target framework moniker and the OpenAPI package choice.
+- `[DEVELOPER DECISION]` The runtime target is settled: .NET 10 LTS, decided on 2026-11-16 after the
+  analysis phase recorded that .NET 8 had passed end-of-support. R1 and the plan's Technical Context
+  are updated accordingly; package versions stay unpinned here and are pinned to their current stable
+  releases at implementation time, recorded in the evidence record rather than invented in prose.
