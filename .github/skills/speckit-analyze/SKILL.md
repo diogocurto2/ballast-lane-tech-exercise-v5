@@ -62,6 +62,25 @@ Identify inconsistencies, duplications, ambiguities, and underspecified items ac
 
 **Constitution Authority**: The project constitution (`.specify/memory/constitution.md`) is **non-negotiable** within this analysis scope. Constitution conflicts are automatically CRITICAL and require adjustment of the spec, plan, or tasks—not dilution, reinterpretation, or silent ignoring of the principle. If a principle itself needs to change, that must occur in a separate, explicit constitution update outside `/speckit-analyze`.
 
+**Pre-implementation gate (mandatory)**: This analysis MUST be completed before any implementation
+task is executed. It may be repeated after implementation, but the pre-implementation run is
+mandatory. Treat each of the following as a BLOCKING finding, reported as CRITICAL:
+
+- a functional requirement or behavior with no corresponding test task planned;
+- an implementation task that does not depend on an observed RED checkpoint;
+- a test task and its implementation task that are marked parallelizable, or ordered so
+  implementation can precede the RED observation;
+- a user story with no test-first tasks of its own;
+- testing deferred entirely to a final project-wide phase;
+- a critical security or authorization behavior without planned tests;
+- TDD marked `Not Applicable` for a behavior change without justification.
+
+A blocking finding MUST NOT be silently deferred. Report it, and the workflow MUST NOT proceed to
+implementation until it is resolved or the constitution is amended.
+
+See `.specify/memory/constitution.md` Principle III and
+`docs/engineering/testing-and-tdd.md` section 3.
+
 ## Execution Steps
 
 ### 1. Initialize Analysis Context

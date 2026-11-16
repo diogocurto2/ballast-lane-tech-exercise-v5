@@ -90,6 +90,15 @@ When the codebase already satisfies everything, the command MUST leave `tasks.md
 produces a corresponding remediation task. If the constitution is an unfilled template,
 skip constitution checks gracefully rather than failing.
 
+Convergence MUST also verify, as the highest severity when absent or contradicted:
+
+- recorded RED and GREEN evidence for every implemented behavior, and that tests were not written
+  only after implementation (post-hoc tests are not TDD evidence);
+- architecture boundary compliance, checked against project references rather than assertion;
+- security behaviors: unauthorized, cross-user, and validation cases;
+- GenAI evidence records for the activity, with no fabricated approvals or commit references;
+- that `README.md` and `GENAI.md` claims match observed implementation.
+
 ## Execution Steps
 
 ### 1. Initialize Convergence Context

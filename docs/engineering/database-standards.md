@@ -15,7 +15,7 @@ It does not define the schema. Tables, columns, and migration files MUST be esta
 ### 2.1 Access mechanism
 
 - Data access MUST use **Npgsql with ADO.NET** (`NpgsqlConnection`, `NpgsqlCommand`, `NpgsqlDataReader`).
-- Entity Framework, EF Core, Dapper, MediatR, and Mediator MUST NOT be used in any form, including transitively for data access.
+- Entity Framework, EF Core, Dapper, MediatR, and Mediator MUST NOT be used anywhere in the solution, including as transitive dependencies, for any purpose. The prohibition is solution-wide, not limited to data access.
 - Data access MUST live in the infrastructure layer behind an application-owned boundary; see [clean-architecture.md](./clean-architecture.md).
 
 ### 2.2 SQL construction

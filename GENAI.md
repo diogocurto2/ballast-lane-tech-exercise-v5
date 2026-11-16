@@ -12,7 +12,8 @@ Provenance labels used throughout: `[AI-PROPOSED]`, `[DEVELOPER DECISION]`, `[VE
 
 - **Primary AI coding tool:** GitHub Copilot in VS Code.
 - **Specification-driven development:** GitHub Spec Kit 1.4.0, installed and configured in this repository with the Copilot integration, PowerShell scripts, and sequential feature numbering. See `.specify/init-options.json` and `.specify/integration.json`.
-- **Constitution state:** `.specify/memory/constitution.md` exists but is still the original template and has not been ratified. No feature specification, implementation plan, or task list exists yet.
+- **Constitution state:** `.specify/memory/constitution.md` is **ratified** at version 1.0.0 (2026-11-16) with six non-negotiable principles. Spec Kit 1.4.0 is installed and configured with the Copilot integration. No feature specification, implementation plan, or task list exists yet.
+- **Spec Kit enforcement:** project overrides in `.specify/templates/overrides/` replace the plan, tasks, and spec templates so the Constitution Check, dependency analysis, test strategy, and mandatory RED-first task ordering are enforced by the effective templates rather than by convention.
 - **Evidence standard:** [docs/engineering/genai.md](docs/engineering/genai.md) defines the mandatory workflow, evidence capture rules, proportionality rules by activity type, provenance labels, evidence lifecycle, and completion gate.
 - **Engineering standards:** [docs/engineering/README.md](docs/engineering/README.md) indexes the testing/TDD, SOLID, Clean Architecture, coding, API, security, database, frontend, and delivery standards, plus their applicability per Spec Kit phase and a proposed constitutional mapping.
 - **Evidence skill:** [.github/skills/genai-evidence/SKILL.md](.github/skills/genai-evidence/SKILL.md) defines the three checkpoints before, during, and before completion of each meaningful activity.
@@ -23,6 +24,8 @@ Provenance labels used throughout: `[AI-PROPOSED]`, `[DEVELOPER DECISION]`, `[VE
 `[AI-PROPOSED]` The approach is evidence-based rather than narration-based: each meaningful activity produces a record containing the actual prompt, the original AI output, the relevant validation commands and observed results, and the developer's review decisions. Evidence is scaled to the activity type so the workflow stays practical for a small assessment. The rationale is that the assessment evaluates critical thinking about AI output, which cannot be demonstrated by asserting quality after the fact.
 
 `[VERIFIED]` The workflow documents were created and validated on `2026-11-14`, reviewed by the developer, and corrected against six specific findings; see section 8, `EV-0001`, and `EV-0002`.
+
+`[VERIFIED]` The constitution was ratified on `2026-11-16` at version 1.0.0 with six non-negotiable principles, and the Spec Kit plan, tasks, and spec templates are overridden to enforce it. See `EV-0006`.
 
 `[PENDING]` Whether Copilot discovers and automatically invokes the `genai-evidence` skill has not been verified. The skill files exist and their frontmatter is structurally valid, but discovery and invocation in a session have not been observed and are not claimed.
 
@@ -137,6 +140,22 @@ Recording intentions here would misrepresent them as results, so nothing is clai
 
 `[VERIFIED]` These are actual observed results from this session. No application test was executed, because no application exists.
 
+### Constitution ratification and Spec Kit integration (`EV-0006`)
+
+| Command or check | Observed result |
+| --- | --- |
+| Extension hook check | `.specify/extensions.yml` absent; no hooks registered or executed |
+| Constitution template resolution | `resolve-template.ps1 constitution-template -Json` succeeded and returned the unratified scaffold |
+| Override resolution after creation | `plan-template override_active=True chars=6595`; `tasks-template override_active=True chars=7879`; `spec-template override_active=True chars=3836` |
+| Constitution content | No placeholders remaining; six principles present; version 1.0.0, ratified 2026-11-16; no non-ASCII; no post-submission freeze in the body |
+| Link and anchor scan | 242 links, 0 broken files, 0 broken anchors, after correcting 23 root-relative links |
+| Skill enforcement markers | `speckit-tasks` contains "Tests are MANDATORY" and no longer contains "Tests are OPTIONAL"; analyze, implement, converge, and plan edits present |
+| Installed templates | `git status --porcelain -- .specify/templates/*.md` empty; the overrides are additive |
+| Scope | No application code, no project files, no tracked symbolic links |
+| Defects found and corrected | 23 broken constitution links; one inline-code-wrapped markdown link; duplicate step numbering in the implement skill |
+
+`[VERIFIED]` These are actual observed results from this session.
+
 ### API implementation
 
 `[PENDING]` No build or test command has been executed for application code, because no solution, project, or test project exists. This section will record the actual `dotnet build` and `dotnet test` commands, their observed output, failures encountered, and how each failure was resolved.
@@ -173,6 +192,7 @@ Observations from this work:
 | `EV-0003` - engineering standards and submission requirements | [docs/evidence/genai/EV-0003-engineering-standards.md](docs/evidence/genai/EV-0003-engineering-standards.md) | `Verified` - committed in `9906b6a` |
 | `EV-0004` - TDD enforcement lifecycle across Spec Kit phases | [docs/evidence/genai/EV-0004-tdd-enforcement-lifecycle.md](docs/evidence/genai/EV-0004-tdd-enforcement-lifecycle.md) | `Verified` - committed in `ba92121` |
 | `EV-0005` - separation of engineering governance and submission process rules | [docs/evidence/genai/EV-0005-governance-separation.md](docs/evidence/genai/EV-0005-governance-separation.md) | `Verified` - committed in `f59bc6b` |
+| `EV-0006` - constitution ratification and Spec Kit integration | [docs/evidence/genai/EV-0006-constitution-ratification.md](docs/evidence/genai/EV-0006-constitution-ratification.md) | `Captured` - review and commit `PENDING` |
 | Generative AI engineering standard | [docs/engineering/genai.md](docs/engineering/genai.md) | `Verified` - committed |
 | Engineering standards index and nine standards | [docs/engineering/README.md](docs/engineering/README.md) | Established; developer review `PENDING` |
 | Submission requirements | [docs/assessment/submission-requirements.md](docs/assessment/submission-requirements.md) | Recorded; developer review `PENDING` |

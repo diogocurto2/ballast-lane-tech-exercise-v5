@@ -60,11 +60,17 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 3. **Execute plan workflow**: Follow the structure in IMPL_PLAN template to:
    - Fill Technical Context (mark unknowns as "NEEDS CLARIFICATION")
-   - Fill Constitution Check section from constitution
+   - Fill Constitution Check section from constitution: all six principles, the Clean Architecture
+     dependency-direction matrix, the SOLID verification table, the test strategy, the security and
+     persistence design, and the GenAI evidence capture points
+   - Read the applicable engineering standards from `docs/engineering/README.md` before designing
    - Evaluate gates (ERROR if violations unjustified)
    - Phase 0: Generate research.md (resolve all NEEDS CLARIFICATION)
    - Phase 1: Generate data-model.md, contracts/, quickstart.md
    - Re-evaluate Constitution Check post-design
+
+   A `MUST` violation is blocking. Do not downgrade it, reinterpret the principle, or record it as
+   accepted without a developer-approved constitution amendment.
 
 ## Mandatory Post-Execution Hooks
 

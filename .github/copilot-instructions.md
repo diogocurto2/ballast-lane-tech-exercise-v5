@@ -17,11 +17,14 @@ This repository is the solution to the Ballast Lane Senior .NET technical assess
   - Database: [database-standards.md](../docs/engineering/database-standards.md)
   - Frontend: [frontend-standards.md](../docs/engineering/frontend-standards.md)
   - Delivery and CI: [delivery-and-ci.md](../docs/engineering/delivery-and-ci.md)
-- Read the project constitution and, when present, the active specification, plan, and tasks under `specs/` before implementation work.
+- Read the project constitution (`.specify/memory/constitution.md`) and, when present, the active
+  specification, plan, and tasks under `specs/` before implementation work. The constitution is
+  non-negotiable; a `MUST` violation is a blocking finding.
 
 ## Prohibited technologies
 
-- Entity Framework, EF Core, Dapper, MediatR, and Mediator MUST NOT be used for data access.
+- Entity Framework, EF Core, Dapper, MediatR, and Mediator MUST NOT be used anywhere in the solution, including as transitive dependencies for any purpose. This is not limited to data access.
+- Data access MUST use Npgsql with ADO.NET directly.
 - Do not add AWS, Redis, Kubernetes, or other infrastructure without a functional need recorded in the plan.
 
 ## Evidence obligations
@@ -46,6 +49,10 @@ This repository is the solution to the Ballast Lane Senior .NET technical assess
 
 ## Status
 
-Spec Kit 1.4.0 is installed and configured with the Copilot integration. The constitution at `.specify/memory/constitution.md` is still the unratified template; no specification, plan, or task list exists. Engineering standards are established and await developer review.
+Spec Kit 1.4.0 is installed and configured with the Copilot integration. The project constitution
+is **ratified** at `.specify/memory/constitution.md` (version 1.0.0, 2026-11-16) with six
+non-negotiable principles. No feature specification, plan, or task list exists yet. Engineering
+standards are established and implement the constitution.
 
-The REST API generation exercise and its evidence are pending. Only the documentation and configuration work recorded in [GENAI.md](../GENAI.md) has been performed so far.
+The REST API generation exercise and its evidence are pending. Only the documentation and
+configuration work recorded in [GENAI.md](../GENAI.md) has been performed so far.

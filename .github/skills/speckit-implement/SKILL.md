@@ -152,18 +152,35 @@ You **MUST** consider the user input before proceeding (if not empty).
 6. Execute implementation following the task plan:
    - **Phase-by-phase execution**: Complete each phase before moving to the next
    - **Respect dependencies**: Run sequential tasks in order, parallel tasks [P] can run together
-   - **Follow TDD approach**: Execute test tasks before their corresponding implementation tasks
+   - **Follow TDD approach**: Execute test tasks before their corresponding implementation tasks.
+     Do not start an implementation task until its RED checkpoint has actually failed and the
+     failure has been observed. An environmental, configuration, or compilation failure is not
+     valid behavioral RED evidence; fix it and re-observe.
+   - **Record TDD results**: capture the actual RED and GREEN command output in the activity's
+     GenAI evidence record
    - **File-based coordination**: Tasks affecting the same files must run sequentially
    - **Validation checkpoints**: Verify each phase completion before proceeding
 
-7. Implementation execution rules:
+7. GenAI evidence obligations (constitution Principle VI):
+   - Read `docs/engineering/genai.md` and the engineering standards relevant to the task before
+     implementing it
+   - Apply the `genai-evidence` skill checkpoints: before execution, during execution, and before
+     task completion
+   - Preserve representative original AI-generated code **before** applying corrections
+   - Update the activity's evidence record under `docs/evidence/genai/`; do not create a separate
+     record per task
+   - Do **not** mark a task complete without observed validation and its recorded evidence.
+     Missing mandatory evidence is a completion blocker.
+   - Never fabricate prompts, output, test results, approvals, or commit references
+
+8. Implementation execution rules:
    - **Setup first**: Initialize project structure, dependencies, configuration
    - **Tests before code**: If you need to write tests for contracts, entities, and integration scenarios
    - **Core development**: Implement models, services, CLI commands, endpoints
    - **Integration work**: Database connections, middleware, logging, external services
    - **Polish and validation**: Unit tests, performance optimization, documentation
 
-8. Progress tracking and error handling:
+9. Progress tracking and error handling:
    - Report progress after each completed task
    - Halt execution if any non-parallel task fails
    - For parallel tasks [P], continue with successful tasks, report failed ones
@@ -171,7 +188,7 @@ You **MUST** consider the user input before proceeding (if not empty).
    - Suggest next steps if implementation cannot proceed
    - **IMPORTANT** For completed tasks, make sure to mark the task off as [X] in the tasks file.
 
-9. Completion validation:
+10. Completion validation:
    - Verify all required tasks are completed
    - Check that implemented features match the original specification
    - Validate that tests pass and coverage meets requirements

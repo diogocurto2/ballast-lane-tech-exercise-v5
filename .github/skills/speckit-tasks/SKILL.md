@@ -139,7 +139,27 @@ The tasks.md should be immediately executable - each task must be specific enoug
 
 **CRITICAL**: Tasks MUST be organized by user story to enable independent implementation and testing.
 
-**Tests are OPTIONAL**: Only generate test tasks if explicitly requested in the feature specification or if user requests TDD approach.
+**Tests are MANDATORY**: Generate test tasks for every new or changed runtime behavior, whether or
+not the specification requests them. Generate RED-first, dependency-ordered tasks for each
+independently testable behavior:
+
+1. Write the relevant tests.
+2. Run them and observe the expected RED failure.
+3. Implement the minimum required behavior.
+4. Run them and observe GREEN.
+5. Refactor if needed and rerun.
+6. Record TDD and GenAI evidence.
+
+Each implementation task MUST depend on its RED checkpoint task. A test task and its corresponding
+implementation task MUST NOT both be marked `[P]` and MUST NOT be scheduled in parallel. Do not
+defer all testing to a final project-wide phase. Each user story MUST carry its own test-first
+tasks.
+
+Only documentation-only and non-behavioral infrastructure tasks MAY mark TDD `Not Applicable`, with
+a written justification and a substitute validation task.
+
+See `.specify/memory/constitution.md` Principle III and
+`docs/engineering/testing-and-tdd.md` section 3.
 
 ### Checklist Format (REQUIRED)
 

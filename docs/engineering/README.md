@@ -104,29 +104,33 @@ security.md ──┬── database-standards.md (parameterized SQL, credential
 delivery-and-ci.md ── testing-and-tdd.md, frontend-standards.md, submission-requirements.md
 ```
 
-## 6. Proposed mapping to constitutional principles
+## 6. Constitutional principles and their source standards
 
-The constitution will be created separately with `/speckit-constitution` after these standards are reviewed. This is a **proposal**, not a ratified mapping.
+The constitution is **ratified**: [.specify/memory/constitution.md](../../.specify/memory/constitution.md),
+version 1.0.0, ratified 2026-11-16. It establishes six non-negotiable principles. The standards
+implement those principles and MUST NOT contradict them; where a standard is silent, the
+constitution governs.
 
-| # | Proposed principle | Source standards |
+| # | Constitutional principle | Source standards |
 | --- | --- | --- |
-| I | Evidence-Based AI-Assisted Engineering (non-negotiable) | [genai.md](./genai.md), [GENAI.md](../../GENAI.md) |
-| II | Test-First Development across all phases (non-negotiable) | [testing-and-tdd.md](./testing-and-tdd.md), including the phase enforcement lifecycle in section 3 |
-| III | Clean Architecture and Dependency Discipline | [clean-architecture.md](./clean-architecture.md), [solid-principles.md](./solid-principles.md) |
-| IV | Security and Data Protection by Default | [security.md](./security.md), [database-standards.md](./database-standards.md) |
-| V | Contract-First, Testable APIs | [api-standards.md](./api-standards.md) |
-| VI | Readable, Consistent Code | [coding-standards.md](./coding-standards.md), [frontend-standards.md](./frontend-standards.md) |
-| VII | Reproducibility and Delivery Readiness | [delivery-and-ci.md](./delivery-and-ci.md), [submission-requirements.md](../assessment/submission-requirements.md) |
-| VIII | Proportional Simplicity (no unjustified complexity) | [solid-principles.md](./solid-principles.md) section 6, [delivery-and-ci.md](./delivery-and-ci.md) section 3, [clean-architecture.md](./clean-architecture.md) section 13 |
+| I | Assessment-First and Specification-Driven Development | [genai.md](./genai.md), [testing-and-tdd.md](./testing-and-tdd.md) section 3, [assessment](../assessment/technical-exercise-v5.md) |
+| II | Clean Architecture and SOLID | [clean-architecture.md](./clean-architecture.md), [solid-principles.md](./solid-principles.md), [coding-standards.md](./coding-standards.md) |
+| III | Test-Driven Development (Non-Negotiable) | [testing-and-tdd.md](./testing-and-tdd.md) section 3, [genai.md](./genai.md) |
+| IV | Secure REST APIs and Persistence | [api-standards.md](./api-standards.md), [security.md](./security.md), [database-standards.md](./database-standards.md) |
+| V | Full-Stack Quality and Reproducible Delivery | [frontend-standards.md](./frontend-standards.md), [delivery-and-ci.md](./delivery-and-ci.md), [submission-requirements.md](../assessment/submission-requirements.md) |
+| VI | Evidence-Based Generative AI Engineering | [genai.md](./genai.md), [.github/skills/genai-evidence/SKILL.md](../../.github/skills/genai-evidence/SKILL.md), [GENAI.md](../../GENAI.md) |
 
-Principle VIII exists because several standards deliberately forbid abstraction and infrastructure that a small assessment does not need. Making this explicit prevents "best practice" drift toward unnecessary enterprise complexity.
+Earlier drafts proposed separate principles for proportional simplicity and readable code. Those are
+now obligations inside Principles II, III, and V rather than standalone principles, so the
+constitution stays concise: no abstraction without a recorded seam (II), no scope expansion without
+a functional need (V), and consistent conventions enforced through the coding standards (II).
 
 ### Separation of engineering governance and submission process
 
 The constitution governs **software engineering**: principles, architecture, testing, quality, security, and AI-assisted development. Assessment and submission **process** requirements are external obligations and are not constitutional principles.
 
 - The submission deadline and the instruction to stop modifying the project after submission are process requirements owned by the developer. They are recorded for reference in [submission-requirements.md](../assessment/submission-requirements.md) and MUST NOT be ratified as engineering principles.
-- The constitution phase MUST NOT add a post-submission code freeze or any equivalent development restriction.
+- The constitution MUST NOT contain a post-submission code freeze or any equivalent development restriction. It does not: Principle V records only the engineering-reviewable submission constraints and refers process obligations to the submission requirements document.
 - The developer is responsible for submission timing and for complying with the recruiter's instructions. No hook, gate, workflow check, or agent restriction is added to enforce them.
 - Engineering deliverables that support submission, such as tests, README content, and GENAI.md, remain engineering concerns and are covered by the standards above.
 
