@@ -13,7 +13,7 @@
 | AI tool | GitHub Copilot (VS Code, Copilot SDK) |
 | AI model | `PENDING` - the model identifier was not exposed in the session |
 | Evidence status | `Captured` |
-| Commit references | `PENDING` - the developer instructed no commit for this activity |
+| Commit references | `d9f3828` - `fix(spec): close the four blocking analysis findings and retarget .NET 10` |
 
 ## Actual prompt
 
@@ -253,7 +253,7 @@ T001 (no [P]) -> T002..T006 [P] -> T007 [P] which validates "T001 to T006"
 - Implementation files: `Not Applicable` - none exist, and none were created
 - Test files: `Not Applicable` - none exist
 - Task identifiers: `T001` to `T106`, analyzed only
-- Commits: `PENDING` - the developer instructed no commit for this activity
+- Commits: `d9f3828` - `fix(spec): close the four blocking analysis findings and retarget .NET 10`
 
 ## Evidence status rationale
 
