@@ -13,7 +13,7 @@
 | AI tool | GitHub Copilot (VS Code, Copilot SDK) |
 | AI model | `PENDING` - the model identifier was not exposed in the session |
 | Evidence status | `Captured` |
-| Commit references | `PENDING` - no commit was requested for this activity |
+| Commit references | `4ca023d` - `feat(spec): plan and RED-first task list for 001-task-manager` |
 
 ## Actual prompt
 
@@ -194,7 +194,7 @@ requiring a directory separator; both tasks do name root-level files.
 - Implementation files: `Not Applicable` - no application code was created
 - Test files: `Not Applicable` - no test project exists
 - Task identifiers: `T001` to `T106`, generated and validated, none executed
-- Commits: `PENDING` - no commit was requested for this activity
+- Commits: `4ca023d` - `feat(spec): plan and RED-first task list for 001-task-manager`
 
 ## Evidence status rationale
 
