@@ -66,61 +66,111 @@ assembly, and `Infrastructure` is referenced only by the three composition roots
 | Requirement | Version used |
 | --- | --- |
 | .NET SDK | 10.0.404 (`net10.0`, LTS) |
-| Node.js | 25.9.0 (20 or newer works) |
+| Node.js and npm | 25.9.0 / 11.12.1 (Node 20 or newer works) |
 | Docker + Compose | 28.3.3 / Compose v2 |
+
+Commands are given for both shells wherever they differ: **Bash** (macOS, Linux, WSL, Git Bash) and
+**Windows PowerShell**. Run them from the repository root unless a step says otherwise.
 
 ## Setup
 
-1. Copy the example configuration and fill in the values:
+### 1. Create your local configuration
 
-   ```bash
-   cp .env.example .env
-   ```
+Bash:
 
-   | Variable | Purpose |
-   | --- | --- |
-   | `POSTGRES_PASSWORD` | Password for the local PostgreSQL container |
-   | `ConnectionStrings__Database` | Runtime connection string; use `Host=postgres` inside Compose |
-   | `ConnectionStrings__TestDatabase` | Test connection string; use `Host=localhost` from the host |
-   | `Jwt__SigningKey` | HMAC-SHA256 key for bearer tokens (at least 32 bytes) |
-   | `FrontendOrigin` | Origin allowed by CORS (defaults to the Vite dev server) |
+```bash
+cp .env.example .env
+```
 
-   `.env` is git-ignored. Never commit real credentials.
+Windows PowerShell:
 
-2. Start the database and apply migrations plus the demonstration seed:
+```powershell
+Copy-Item .env.example .env
+```
 
-   ```bash
-   docker compose up -d postgres
-   docker compose run --rm migrator --seed
-   ```
+Then replace every placeholder in `.env`:
 
-3. Start the APIs:
+| Variable | Purpose |
+| --- | --- |
+| `POSTGRES_PASSWORD` | Password for the local PostgreSQL container |
+| `ConnectionStrings__Database` | Runtime connection string; use `Host=postgres` inside Compose |
+| `ConnectionStrings__TestDatabase` | Test connection string; use `Host=localhost` and the same password as `POSTGRES_PASSWORD` (see [Tests](#tests)) |
+| `Jwt__SigningKey` | HMAC-SHA256 key for bearer tokens (at least 32 bytes) |
+| `FrontendOrigin` | Origin allowed by CORS (defaults to the Vite dev server) |
 
-   ```bash
-   docker compose up -d user-api task-api
-   ```
+`.env` is git-ignored. Never commit real credentials.
 
-   - User API: `http://localhost:5081` (Swagger at `/swagger`)
-   - Task API: `http://localhost:5082` (Swagger at `/swagger`)
+### 2. Start PostgreSQL, apply the migrations, and seed the demonstration data
 
-4. Start the frontend:
+```bash
+docker compose up -d postgres
+docker compose run --rm migrator --seed
+```
 
-   ```bash
-   cd frontend
-   npm ci
-   npm run dev
-   ```
+Both commands are identical in PowerShell. The first waits for the container health check; the second
+applies the ordered migration files under `backend/db/migrations` and then seeds the two
+demonstration accounts. Re-running the seed never duplicates data and never fails.
 
-   The app serves on `http://localhost:5173` and redirects an anonymous visitor to the login page.
+### 3. Start the API hosts
+
+```bash
+docker compose up -d user-api task-api
+```
+
+- User API: `http://localhost:5081`
+- Task API: `http://localhost:5082`
+- OpenAPI documents: `http://localhost:5081/swagger` and `http://localhost:5082/swagger`
+
+The compose file runs both hosts with `ASPNETCORE_ENVIRONMENT=Production`, which is the posture a
+deployed environment has, and opts into Swagger explicitly with `Swagger__Enabled=true`. Swagger is
+never implicit: a non-Development host serves the document only when that variable is `true`,
+because it describes every route and is not itself protected. When you run a host with `dotnet run`
+it starts in Development and serves the same document with no configuration.
+
+### 4. Start the frontend
+
+```bash
+cd frontend
+npm ci
+npm run dev
+```
+
+Identical in PowerShell. `npm ci` installs exactly the locked versions from `package-lock.json`. The
+app serves on `http://localhost:5173` and redirects an anonymous visitor to the login page. It calls
+the two API hosts on the ports above by default; set `VITE_USER_API_URL` and `VITE_TASK_API_URL` to
+move them.
 
 ### Running the APIs from the host instead of containers
 
+Useful when you want a debugger or hot reload. The hosts then run in `Development`, so Swagger is
+served at `/swagger` with no configuration. Point the runtime connection string at the published
+container port and reuse the container password, then override the listening ports so the host runs
+answer on the same ports as the containers:
+
+Bash:
+
 ```bash
-# from the repository root, with ConnectionStrings__Database pointing at localhost
+export ConnectionStrings__Database='Host=localhost;Port=5432;Database=taskmanager;Username=postgres;Password=<POSTGRES_PASSWORD>'
+export Jwt__SigningKey='<the Jwt__SigningKey value from .env>'
+
 dotnet run --project backend/src/Migrator -- --seed
-dotnet run --project backend/src/UserApi
-dotnet run --project backend/src/TaskApi
+dotnet run --project backend/src/UserApi --urls http://localhost:5081
+dotnet run --project backend/src/TaskApi --urls http://localhost:5082
 ```
+
+Windows PowerShell:
+
+```powershell
+$env:ConnectionStrings__Database = 'Host=localhost;Port=5432;Database=taskmanager;Username=postgres;Password=<POSTGRES_PASSWORD>'
+$env:Jwt__SigningKey = '<the Jwt__SigningKey value from .env>'
+
+dotnet run --project backend/src/Migrator -- --seed
+dotnet run --project backend/src/UserApi --urls http://localhost:5081
+dotnet run --project backend/src/TaskApi --urls http://localhost:5082
+```
+
+Run the migrator first: both hosts assume the schema exists. Without `--urls`, each project uses the
+port in its `Properties/launchSettings.json` (`5255` for User API, `5244` for Task API).
 
 ## Demonstration credentials
 
@@ -164,38 +214,66 @@ Error status convention: `400` shape validation, `401` authentication, `404` mis
 
 ## Tests
 
+Both suites need PostgreSQL: the integration and HTTP tests run against the real container and
+**fail** when it is unreachable rather than skipping. Start it first, then export the test connection
+string. The four database-backed suites run inside `taskmanager_test` and give themselves a suffixed
+database each (`taskmanager_test_userapi`, `_taskapi`, `_migrations`, `_postgres`), so the value is
+the base database and the container creates all of them on first start.
+
+Bash:
+
 ```bash
-# backend: unit, real-PostgreSQL integration, and HTTP integration
+docker compose up -d postgres
+export ConnectionStrings__TestDatabase='Host=localhost;Port=5432;Database=taskmanager_test;Username=postgres;Password=<POSTGRES_PASSWORD>'
+
 dotnet test -m:1
 
-# frontend: lint, type check, production build, component tests
-cd frontend && npm run lint && npm run build && npm test
+cd frontend && npm ci && npm run lint && npm run build && npm test
 ```
 
-`-m:1` runs one test project at a time. Each suite already owns its own database, but on a
+Windows PowerShell:
+
+```powershell
+docker compose up -d postgres
+$env:ConnectionStrings__TestDatabase = 'Host=localhost;Port=5432;Database=taskmanager_test;Username=postgres;Password=<POSTGRES_PASSWORD>'
+
+dotnet test -m:1
+
+Set-Location frontend
+npm ci
+npm run lint
+npm run build
+npm test
+```
+
+If `ConnectionStrings__TestDatabase` is not set, the suites fall back to a `Password=postgres`
+connection string, which only works when the container was created with that password. A wrong
+password or a missing container fails the run; nothing is skipped.
+
+`dotnet test -m:1` runs one test project at a time. Each suite already owns its own database, but on a
 resource-constrained container host the HTTP and PostgreSQL suites can exhaust the Docker Desktop
 connection forwarding when several run at once, which surfaces as a spurious connect timeout. The
 sequential form is deterministic; add `-m:2` or drop the flag on a machine with headroom.
 
-Integration and HTTP tests require the PostgreSQL container and **fail** when it is missing rather
-than skipping:
-
-```bash
-docker compose up -d postgres
-```
+On a clean checkout the same commands install everything they need: `dotnet test` restores and builds
+the solution, and `npm ci` installs the locked frontend dependencies. No separate restore step and no
+global tool is required.
 
 | Suite | Level | What it covers |
 | --- | --- | --- |
 | `backend/tests/unit/BallastLane.Domain.Tests` | unit | Email and task rules, statuses, identifiers |
 | `backend/tests/unit/BallastLane.Application.Tests` | unit | Registration, login, task CRUD outcomes, ownership, validation |
 | `backend/tests/unit/BallastLane.Infrastructure.UnitTests` | unit | Migration ordering, connection factory, SQL shape and row mapping |
-| `backend/tests/unit/BallastLane.Api.UnitTests` | unit | Outcome → status mapping, token validation parameters |
+| `backend/tests/unit/BallastLane.Api.UnitTests` | unit | Outcome → status mapping, token validation parameters, OpenAPI exposure rule |
 | `backend/tests/unit/BallastLane.Architecture.Tests` | unit | Dependency direction, prohibited libraries |
 | `backend/tests/integration/BallastLane.PostgreSql.Tests` | integration | Real SQL, constraints, ordering, cancellation |
 | `backend/tests/integration/BallastLane.Migrations.Tests` | integration | Schema from an empty schema, seed idempotency, demonstration dataset |
-| `backend/tests/http/BallastLane.UserApi.HttpTests` | HTTP | Registration, login, token failures, access boundary |
-| `backend/tests/http/BallastLane.TaskApi.HttpTests` | HTTP | CRUD, ownership isolation, validation, injection payloads |
-| `frontend/tests` | component and flow | Form validation, auth state, list states, delete confirmation, dialog keyboard operation, session expiry and logout token clearing |
+| `backend/tests/http/BallastLane.UserApi.HttpTests` | HTTP | Registration, login, token failures, access boundary, served OpenAPI document |
+| `backend/tests/http/BallastLane.TaskApi.HttpTests` | HTTP | CRUD, ownership isolation, validation, injection payloads, served OpenAPI document |
+| `frontend/tests` | component and flow | Form validation, auth state, list states, delete confirmation, dialog keyboard operation, session expiry and logout token clearing, stale-token isolation |
+
+Every one of these suites passes on a clean checkout; the observed results of the last full run are
+recorded in [docs/evidence/genai/EV-0026-delivery-readiness-corrections.md](docs/evidence/genai/EV-0026-delivery-readiness-corrections.md).
 
 ## Engineering rationale
 
@@ -230,6 +308,11 @@ docker compose up -d postgres
 - No pagination, filtering, or search beyond listing one's own tasks.
 - Concurrency between two simultaneous edits is not resolved (last write wins).
 - The demonstration credentials are public by design and valid only locally.
+- `npm audit` reports two moderate advisories in `react-router-dom` 6.30 (an open redirect through a
+  backslash in `Link`/`useNavigate`, and an SSR hydration issue). The fix requires the React Router 7
+  major upgrade, which is out of scope here. This client renders in the browser only, never uses SSR,
+  and every navigation target is a literal route or an API-supplied task identifier, so neither
+  advisory describes a reachable path in this application.
 - Responsiveness, keyboard operation, and a clean browser console are verified manually through
   [specs/001-task-manager/quickstart.md](./specs/001-task-manager/quickstart.md) section 6; a headless
   suite cannot assert them.

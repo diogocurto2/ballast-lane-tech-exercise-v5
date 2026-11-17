@@ -189,6 +189,8 @@ prompted it:
 | `logout` clears the in-memory token, and one `401` on an authenticated request invalidates the session for every screen | Review findings 1 and 3: the new regression tests failed with `expected 'token-value' to be null` and produced no session notice | `EV-0025` |
 | `login` clears the session and returns a failure when `/api/users/me` does not resolve | Review finding 2: the probe recorded `success` where `failure:0`, `failure:401`, and `failure:500` were expected | `EV-0025` |
 | Stylesheet rewritten with tokens, light/dark palettes, and responsive rules; the dialog gains initial focus and Escape-to-cancel | Review finding 5: `styles.css` held 22 lines and no component used its only layout class | `EV-0025` |
+| Session invalidation now requires the rejected token to still be the active one | Delivery-readiness finding: a delayed `401` for a replaced token cleared the session that had replaced it; the new test failed by rendering the login page | `EV-0026` |
+| Swagger exposure rule moved to `SharedWeb` and gated on Development or `Swagger__Enabled=true`; the compose file sets the flag and `ASPNETCORE_ENVIRONMENT=Production` explicitly | The README's `/swagger` address on both containerised hosts returned nothing, because the compose file set no environment and the hosts gated Swagger on Development alone | `EV-0026` |
 
 `[VERIFIED]` Corrections to the *process*, not the code, are recorded with the same prominence:
 
@@ -266,32 +268,38 @@ A `400` body carries an `errors` object keyed by the same field names the fronte
 ## 8. Testing and Verification Results
 
 `[VERIFIED]` Final full-suite result, executed from the repository root against a running PostgreSQL
-container:
+container, and repeated in a fresh tree containing exactly what a commit of this work would contain:
 
 ```text
-dotnet build BallastLane.sln        -> Build succeeded. 0 Warning(s) 0 Error(s)
-dotnet test BallastLane.sln -m:1    -> 211 passed, 0 failed, 0 skipped (nine assemblies)
+dotnet test BallastLane.sln -m:1    -> 219 passed, 0 failed, 0 skipped (nine assemblies)
+                                       no error and no warning in the build output
 
-BallastLane.Domain.Tests             31
-BallastLane.Application.Tests        44
-BallastLane.Infrastructure.UnitTests 18
-BallastLane.Api.UnitTests            18
-BallastLane.Architecture.Tests        9
-BallastLane.PostgreSql.Tests          7
-BallastLane.TaskApi.HttpTests        53
+BallastLane.UserApi.HttpTests        24   (+2: served OpenAPI document, opt-in host)
+BallastLane.TaskApi.HttpTests        54   (+1: served OpenAPI document)
 BallastLane.Migrations.Tests          9
-BallastLane.UserApi.HttpTests        22
+BallastLane.PostgreSql.Tests          7
+BallastLane.Api.UnitTests            23   (+5: OpenAPI exposure rule)
+BallastLane.Application.Tests        44
+BallastLane.Architecture.Tests        9
+BallastLane.Domain.Tests             31
+BallastLane.Infrastructure.UnitTests 18
 
 cd frontend
 npm run lint      -> no findings
-npx tsc --noEmit  -> exit 0
-npm run build     -> built in 1.81s
-npx vitest run    -> 10 files, 40 tests passed
+npm run build     -> tsc --noEmit and vite build succeeded
+npx vitest run    -> 10 files, 41 tests passed
 ```
 
-The frontend suite grew from 27 to 40 tests in `EV-0025`: six full-application session tests, three
-dialog keyboard tests, and four authentication-context regression tests. Superseded earlier figures
-remain described in `EV-0018` rather than being rewritten here.
+The same commands, run in a fresh tree with no `.env`, no build output, no `node_modules`, and no
+existing containers or volumes, produced the same totals and followed `README.md` literally, including
+`Copy-Item .env.example .env`, `docker compose build`, `migrator --seed`, and the exported
+`ConnectionStrings__TestDatabase`. The journey was driven in the browser against that fresh stack:
+login, list, create, delete with confirmation, logout, and a console with no messages (`EV-0026`).
+
+The frontend suite grew from 27 to 40 tests in `EV-0025` (six full-application session tests, three
+dialog keyboard tests, and four authentication-context regression tests) and to 41 in `EV-0026` (the
+delayed-401 isolation test). The backend suite grew from 211 to 219 in `EV-0026`. Superseded earlier
+figures remain described in `EV-0018` and `EV-0025` rather than being rewritten here.
 
 `[VERIFIED]` Quickstart sections 4 and 5 were executed request by request against the running
 containers and every documented expectation was observed, including the `409` duplicate, the
@@ -527,6 +535,22 @@ historical artifacts (`tasks.md` and the pre-move evidence records) were left in
 pointing here, because rewriting them would misrepresent what was actually executed and observed. See
 `EV-0024`.
 
+### Delivery readiness (follow-up, 2026-11-16)
+
+`[VERIFIED]` A final read-through found three documentation defects that no test could have caught,
+because they described the environment rather than the code: the README advertised `/swagger` on both
+containerised hosts although the compose file never set an environment (so the default Production
+hosts served nothing), the quickstart expected `docker compose up --build` to seed data although only
+`--seed` writes it, and both guides assumed a Bash shell and a `Password=postgres` test connection. A
+fresh tree built from exactly what a commit would contain was used to execute the rewritten
+instructions literally, which is the only check that can validate a setup guide.
+
+`[VERIFIED]` The session defect was the more interesting one: a guard that asked *whether* a request
+carried a credential, instead of *whether that credential was still the current one*, meant a slow
+`401` from an old token silently logged the user out of a session created after it. The regression test
+had to model an overlap in time — a manually issued request answered after a second sign-in — before
+the defect would appear; the previous harness could only answer immediately.
+
 ## 10. Supporting Evidence
 
 | Evidence | Location | Status |
@@ -551,18 +575,19 @@ pointing here, because rewriting them would misrepresent what was actually execu
 | `EV-0017` - US7 seeded demonstration (T091-T096) | [docs/evidence/genai/EV-0017-us7-demonstration-environment.md](docs/evidence/genai/EV-0017-us7-demonstration-environment.md) | `Captured` - includes executed quickstart sections 3 and 8 |
 | `EV-0018` - verification and convergence (T097-T106) | [docs/evidence/genai/EV-0018-review-and-convergence.md](docs/evidence/genai/EV-0018-review-and-convergence.md) | `Captured` - two manual checks were pending when written and were performed under `EV-0025` |
 | `EV-0025` - remediation of the second code review findings | [docs/evidence/genai/EV-0025-review-remediation.md](docs/evidence/genai/EV-0025-review-remediation.md) | `Captured` - RED and GREEN observed for every correction; journey executed in a browser; committed in `7e2f1da`; developer review `PENDING` |
+| `EV-0026` - final delivery-readiness corrections | [docs/evidence/genai/EV-0026-delivery-readiness-corrections.md](docs/evidence/genai/EV-0026-delivery-readiness-corrections.md) | `Reviewed` - RED and GREEN for the session and OpenAPI corrections; fresh-checkout setup, 219 backend tests, 41 frontend tests, and the browser journey observed; code committed in `0d6c2b9` and `02747ee`, decisions approved 2026-11-17 |
 | `EV-0024` - backend folder restructure and observed Docker build context | [docs/evidence/genai/EV-0024-backend-folder-restructure.md](docs/evidence/genai/EV-0024-backend-folder-restructure.md) | `Captured` - build, 211 tests, and container run re-verified after the move |
 | Generative AI engineering standard | [docs/engineering/genai.md](docs/engineering/genai.md) | `Verified` - committed |
 | Engineering standards index and nine standards | [docs/engineering/README.md](docs/engineering/README.md) | Established and accepted as the project foundation on 2026-11-16; targeted corrections recorded in `EV-0007` |
-| Submission requirements | [docs/assessment/submission-requirements.md](docs/assessment/submission-requirements.md) | Recorded and accepted; constitution status synchronized 2026-11-16 |
+| Submission requirements | [docs/assessment/submission-requirements.md](docs/assessment/submission-requirements.md) | Recorded and accepted; requirement sections unchanged, status summary refreshed 2026-11-16 in `EV-0026` |
 | Evidence skill | [.github/skills/genai-evidence/SKILL.md](.github/skills/genai-evidence/SKILL.md) | `Verified` - committed; discovery and invocation unverified |
 | Evidence index and template | [docs/evidence/genai/README.md](docs/evidence/genai/README.md), [template.md](docs/evidence/genai/template.md) | `Verified` - committed |
 | Repository Copilot instructions | [.github/copilot-instructions.md](.github/copilot-instructions.md) | Updated with the standards index; review `PENDING` |
 | Spec Kit installation | `.specify/init-options.json`, `.specify/integration.json` | Installed and configured, version 1.4.0, Copilot integration |
 | Constitution | `.specify/memory/constitution.md` | **Ratified** - version 1.0.0, 2026-11-16; committed in `ac604af` |
-| Feature specification `001-task-manager` | [specs/001-task-manager/spec.md](specs/001-task-manager/spec.md) | Draft - developer review `PENDING` |
+| Feature specification `001-task-manager` | [specs/001-task-manager/spec.md](specs/001-task-manager/spec.md) | Implemented - specification, plan, tasks, and contracts delivered; story-level RED and GREEN evidence in `EV-0010` to `EV-0017` |
 | Assessment document | [docs/assessment/technical-exercise-v5.md](docs/assessment/technical-exercise-v5.md) | Unmodified |
-| Git history | `859b141` foundation, `b3b6195` standards and workflow, `0439fbb` commit references, `9906b6a` standards, `ba92121` TDD lifecycle, `fd309c7` evidence reference, `f59bc6b` governance separation, `0018be0` evidence reference, `ac604af` constitution v1.0.0; all present on `origin/main`. Implementation landed as `2f0844b` (backend), `9cd6b3a` (frontend), `9cdf91d` (gitignore hygiene), `9dfae4d` (evidence and documentation), and `a42d631` (implementation commit references); the review remediation landed as `7e2f1da` | `[VERIFIED]` |
+| Git history | `859b141` foundation, `b3b6195` standards and workflow, `0439fbb` commit references, `9906b6a` standards, `ba92121` TDD lifecycle, `fd309c7` evidence reference, `f59bc6b` governance separation, `0018be0` evidence reference, `ac604af` constitution v1.0.0; all present on `origin/main`. Implementation landed as `2f0844b` (backend), `9cd6b3a` (frontend), `9cdf91d` (gitignore hygiene), `9dfae4d` (evidence and documentation), and `a42d631` (implementation commit references); the review remediation landed as `7e2f1da`, and the delivery-readiness corrections as `0d6c2b9` (session guard) and `02747ee` (OpenAPI exposure), with the documentation change following them | `[VERIFIED]` |
 
 ### Coverage of the assessment's Generative AI questions
 

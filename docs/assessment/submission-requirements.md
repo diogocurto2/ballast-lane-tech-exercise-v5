@@ -33,19 +33,27 @@ These follow from the requirements above. Engineering deliverables are owned by 
 - **SUB-07** - the deadline constrains scope. Engineering standards must remain practical for a small assessment; see the simplicity rules in [docs/engineering/README.md](../engineering/README.md).
 - **SUB-08** - a **process obligation**, not an engineering rule. The repository is not modified after submission until notified. The developer owns timing and compliance. It is recorded here for reference only: it MUST NOT appear in the project constitution, in the engineering standards, or as an automated gate, hook, or agent restriction.
 
-## 4. Status at the time of writing
+## 4. Status
+
+Updated on 2026-11-16 after the delivery-readiness verification recorded in
+[EV-0026](../evidence/genai/EV-0026-delivery-readiness-corrections.md). The requirements in sections
+2 and 3 above are unchanged; only this status summary is maintained.
 
 | Item | Status |
 | --- | --- |
-| Backend, API, data layer, frontend | `PENDING` - not implemented |
-| Unit, integration, and frontend tests | `PENDING` - no test project exists |
-| `README.md` submission content | `PENDING` - currently a placeholder |
-| `GENAI.md` REST API exercise answers | `PENDING` - required and explicitly not yet answered |
+| Backend, API, data layer, frontend | **Implemented** - two ASP.NET Core hosts over PostgreSQL through Npgsql with ADO.NET, a separate migration console, and a React + TypeScript client; committed in `2f0844b` (backend) and `9cd6b3a` (frontend) |
+| Unit, integration, and HTTP tests | **Implemented and passing** - nine backend suites totalling 219 tests and the frontend component and flow suite at 41 tests; the four database-backed suites run against the real PostgreSQL container and none is skipped for a missing database |
+| `README.md` submission content | **Complete** - clean-clone setup for Bash and Windows PowerShell, PostgreSQL test configuration, user story, API surface, tests, engineering rationale, and known limitations (SUB-03) |
+| `GENAI.md` REST API exercise answers | **Answered** - every Generative AI question in the assessment is addressed in `GENAI.md`, backed by the records in [docs/evidence/genai/](../evidence/genai/README.md) (SUB-04, SUB-05) |
 | Engineering standards | Established; accepted by the developer as the project foundation on 2026-11-16 |
 | Constitution | **Ratified** - version 1.0.0, 2026-11-16, at `.specify/memory/constitution.md`; committed in `ac604af` |
-| Feature specification `001-task-manager` | Draft - `specs/001-task-manager/spec.md`; implementation plan and tasks `PENDING` |
+| Feature specification `001-task-manager` | **Implemented** - specification, plan, tasks, contracts, and quickstart under `specs/001-task-manager/`, with RED and GREEN results per user story in `EV-0010` to `EV-0017` |
+| Manual browser checks | Performed on the login, list, create, edit, delete, and logout journey, keyboard operation, focus visibility, a narrow viewport, and the session-expiry redirect; recorded in `EV-0018`, `EV-0025`, and `EV-0026` |
+| Submission itself (SUB-01, SUB-02, SUB-07, SUB-08) | Owned by the developer; not recorded here, and no claim is made about it |
 
-Nothing in this table is presented as complete except where an observed, committed fact is stated.
+Nothing in this table is presented as complete except where an observed fact supports it. The test
+counts are the observed results of the run recorded in `EV-0026`; they are a snapshot, not a durable
+guarantee.
 
 ## 5. Verification before submission
 

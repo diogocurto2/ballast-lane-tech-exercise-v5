@@ -84,6 +84,7 @@ If sensitive information must be removed, say explicitly that the content was re
 | EV-0021 | Consolidated evidence for the REST API generation exercise | 8 - Conclude | Captured | [EV-0021-genai-api-exercise.md](./EV-0021-genai-api-exercise.md) |
 | EV-0024 | Backend folder restructure and confirmation of the Docker build context | 9 - Post-implementation follow-up | Captured | [EV-0024-backend-folder-restructure.md](./EV-0024-backend-folder-restructure.md) |
 | EV-0025 | Remediation of the second code review findings (session handling, login consistency, styling) | 10 - Post-review remediation | Captured | [EV-0025-review-remediation.md](./EV-0025-review-remediation.md) |
+| EV-0026 | Final delivery-readiness corrections (README and quickstart guides, OpenAPI exposure, stale-token session isolation, submission status) | 11 - Final delivery readiness | Reviewed | [EV-0026-delivery-readiness-corrections.md](./EV-0026-delivery-readiness-corrections.md) |
 
 The mandatory REST API generation exercise has been executed; its evidence is consolidated in
 `EV-0021` from the records above. Every record created during implementation now carries its commit
@@ -102,3 +103,10 @@ changed frontend behavior (session invalidation, login consistency), the stylesh
 `EV-0015`, `EV-0018`, and `GENAI.md` where a post-implementation mutation check had been described as a
 test-first RED cycle. The corrections to those earlier records are dated and preserve the observed
 output; no historical result was changed to match a later one.
+
+`EV-0026` covers the final delivery-readiness pass. Besides the session and OpenAPI corrections, it
+rewrote the setup and test guidance in `README.md` and `quickstart.md`, refreshed the status summary in
+`docs/assessment/submission-requirements.md` without touching the recorded requirements, and verified
+the whole repository from a fresh tree built from exactly what a commit of the work would contain. Its
+code landed in `0d6c2b9` and `02747ee`; the developer reviewed the diff and instructed the commit on
+2026-11-17, which is the basis recorded for the approved decisions.

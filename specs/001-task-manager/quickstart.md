@@ -8,26 +8,49 @@ bodies, no migration SQL, and no test-suite source. Those belong to `tasks.md` a
 implementation phase. Behavior detail lives in [data-model.md](./data-model.md) and
 [contracts/](./contracts/).
 
+> **Synchronized with the delivered implementation (2026-11-16).** The commands, versions, and
+> expected outcomes below match the .NET 10 solution as built. Where a shell difference matters, both
+> the Bash and the Windows PowerShell form are given.
+
 ## Prerequisites
 
 | Requirement | Version | Verified locally |
 |---|---|---|
-| .NET SDK | 8.0.x | `8.0.428` |
-| Node.js | 20 or newer | `v25.9.0` |
+| .NET SDK | 10.0.404 (`net10.0`) | `10.0.404` |
+| Node.js and npm | 20 or newer | `v25.9.0` / `11.12.1` |
 | Docker + Compose | any current | `28.3.3` / `v2.39.2` |
 
 ## 1. Configure and start the backend
 
+Bash:
+
 ```bash
-cp .env.example .env          # then fill in the placeholders
-docker compose up --build     # postgres, migrator, user-api, task-api
+cp .env.example .env                        # then fill in every placeholder
+docker compose up -d postgres               # waits for the health check
+docker compose run --rm migrator --seed     # applies migrations, then seeds the demo data
+docker compose up -d user-api task-api
 ```
+
+Windows PowerShell:
+
+```powershell
+Copy-Item .env.example .env
+docker compose up -d postgres
+docker compose run --rm migrator --seed
+docker compose up -d user-api task-api
+```
+
+`docker compose up` alone does not seed: the demonstration accounts are written only by the
+`--seed` run, which is idempotent and safe to repeat.
 
 Expected outcome:
 
-- `postgres` becomes healthy; the migrator exits `0` after applying migrations and the seed.
+- `postgres` becomes healthy; `docker compose run --rm migrator --seed` exits `0` after applying
+  every migration under `backend/db/migrations` and writing the demonstration dataset.
 - `user-api` responds on `http://localhost:5081`, `task-api` on `http://localhost:5082`.
-- OpenAPI is reachable at `http://localhost:5081/swagger` and `http://localhost:5082/swagger`.
+- OpenAPI is reachable at `http://localhost:5081/swagger` and `http://localhost:5082/swagger`. The
+  compose file runs the hosts as `Production` and opts into Swagger with `Swagger__Enabled=true`;
+  without that opt-in a non-Development host does not serve the document.
 
 ## 2. Start the frontend
 
@@ -37,8 +60,8 @@ npm ci
 npm run dev
 ```
 
-Expected outcome: the app serves on `http://localhost:5173` and redirects an anonymous visitor to the
-login page.
+Identical in PowerShell. Expected outcome: the app serves on `http://localhost:5173` and redirects an
+anonymous visitor to the login page.
 
 ## 3. Verify the seeded demonstration (US7, FR-012, NFR-004, SC-006)
 
@@ -115,17 +138,43 @@ Then, with a valid token for account B:
 
 ## 7. Run the automated tests
 
+Both suites need a running PostgreSQL container and the test connection string. The four
+database-backed suites run inside `taskmanager_test` and each takes a suffixed database
+(`taskmanager_test_userapi`, `_taskapi`, `_migrations`, `_postgres`), which the container creates on
+first start.
+
+Bash:
+
 ```bash
+docker compose up -d postgres
+export ConnectionStrings__TestDatabase='Host=localhost;Port=5432;Database=taskmanager_test;Username=postgres;Password=<POSTGRES_PASSWORD>'
+
 # One test project at a time: the HTTP and PostgreSQL suites share a container, and running them
 # concurrently on a resource-constrained host can produce a spurious connect timeout.
-dotnet test -m:1                              # unit, integration, and HTTP tests
-cd frontend && npm run lint && npm run build && npm test
+dotnet test -m:1
+cd frontend && npm ci && npm run lint && npm run build && npm test
+```
+
+Windows PowerShell:
+
+```powershell
+docker compose up -d postgres
+$env:ConnectionStrings__TestDatabase = 'Host=localhost;Port=5432;Database=taskmanager_test;Username=postgres;Password=<POSTGRES_PASSWORD>'
+
+dotnet test -m:1
+Set-Location frontend
+npm ci
+npm run lint
+npm run build
+npm test
 ```
 
 Expected outcome:
 
 - Every test passes. Integration and HTTP tests run against the real PostgreSQL container; none is
-  skipped for a missing database.
+  skipped for a missing database. Without `ConnectionStrings__TestDatabase` the suites fall back to a
+  `Password=postgres` connection string, which only works when the container was created with that
+  password.
 - The backend build reports no warnings, and the frontend lint and strict type check pass.
 
 If PostgreSQL is not running, start it first:
@@ -137,10 +186,10 @@ docker compose up -d postgres
 ## 8. Verify a clean-checkout run (NFR-004, SC-006, SC-007)
 
 1. Clone the repository to a fresh directory with no prior containers or volumes.
-2. Follow sections 1 and 2.
+2. Follow sections 1 and 2, including the `migrator --seed` run.
 3. Log in with the demonstration credentials and confirm seeded tasks are present.
-4. Stop the stack with `docker compose down` (keeping the volume), start it again, and confirm the
-   same users and tasks are still present.
+4. Stop the stack with `docker compose down` (keeping the named volume), start it again with
+   `docker compose up -d user-api task-api`, and confirm the same users and tasks are still present.
 
 ## Traceability of this guide
 
