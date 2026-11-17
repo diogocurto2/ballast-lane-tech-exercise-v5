@@ -17,7 +17,7 @@
 | AI tool | GitHub Copilot (VS Code, Copilot SDK) |
 | AI model | Not exposed in this session |
 | Evidence status | `Reviewed` |
-| Commit references | `0d6c2b9` - `fix(web): keep a stale 401 from ending the current session` - the frontend guard and its regression test. `02747ee` - `fix(api): serve Swagger in Development or on explicit opt-in` - the shared rule, both hosts, the compose configuration, the four backend test files, and the two contracts. The documentation change belongs to this record's own commit and is not self-referenced. All references recorded after the commits were created. |
+| Commit references | `0d6c2b9` - `fix(web): keep a stale 401 from ending the current session` - the frontend guard and its regression test. `02747ee` - `fix(api): serve Swagger in Development or on explicit opt-in` - the shared rule, both hosts, the compose configuration, the four backend test files, and the two contracts. `df7c374` - `docs: make the setup guide reliable and record delivery readiness` - the README, quickstart, contract status, and this record as first written. Every reference was recorded only after that commit existed. |
 
 ## Actual prompt
 
@@ -532,14 +532,13 @@ instructions literally and observed the documented outcomes.
   `docs/assessment/submission-requirements.md`, `GENAI.md`
 - Task identifiers: `T028`, `T034`, `T040`, `T097` to `T106`
 - Commits: `0d6c2b9` (frontend guard and test), `02747ee` (OpenAPI exposure rule, hosts, compose,
-  tests, contracts); the documentation and this record are in the commit that follows them
+  tests, contracts), `df7c374` (documentation and this record as first written)
 
 ## Evidence status rationale
 
 `Reviewed`: the prompt, the pre-correction excerpts, the RED and GREEN observations, the review
 findings, and the fresh-checkout results were captured while the work happened, and the developer
-reviewed the diff and instructed the commit on 2026-11-17. It is not `Verified` because this record's
-own commit is not self-referenced, the record text itself has not been reviewed, and two non-blocking
-findings remain open: the outdated status paragraph in `.github/copilot-instructions.md` and the
-deferred React Router major upgrade.
+reviewed the diff and instructed the commit on 2026-11-17. It is not `Verified` because the record text
+itself has not been reviewed and two non-blocking findings remain open: the outdated status paragraph in
+`.github/copilot-instructions.md` and the deferred React Router major upgrade.
 
