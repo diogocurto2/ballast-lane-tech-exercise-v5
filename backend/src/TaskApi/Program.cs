@@ -61,7 +61,7 @@ app.UseExceptionHandler(errorApp => errorApp.Run(async context =>
     }));
 }));
 
-if (app.Environment.IsDevelopment())
+if (SwaggerSetup.IsEnabled(app.Environment.EnvironmentName, app.Configuration))
 {
     app.UseSwagger();
     app.UseSwaggerUI();

@@ -138,6 +138,7 @@ wildcard origin, and no credentials are used because the token travels in the `A
 
 ## OpenAPI
 
-Served at `/swagger/v1/swagger.json` and `/swagger` (UI) in Development, generated from the
+Served at `/swagger/v1/swagger.json` and `/swagger` (UI) in Development, and in any other
+environment only when that environment sets `Swagger__Enabled=true` explicitly, generated from the
 implementation, with the bearer security scheme declared so protected endpoints are documented as
 protected.

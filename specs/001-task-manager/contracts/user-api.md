@@ -114,5 +114,7 @@ Public. Demonstrates a non-authorized endpoint as the assessment requires.
 
 ## OpenAPI
 
-Served at `/swagger/v1/swagger.json` and `/swagger` (UI) in Development. Generated from the
-implementation; no hand-maintained document.
+Served at `/swagger/v1/swagger.json` and `/swagger` (UI) in Development, and in any other
+environment only when that environment sets `Swagger__Enabled=true` explicitly (the local
+container stack does; a deployed environment does not). Generated from the implementation; no
+hand-maintained document.

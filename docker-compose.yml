@@ -34,9 +34,13 @@ services:
       context: .
       dockerfile: backend/src/UserApi/Dockerfile
     environment:
+      ASPNETCORE_ENVIRONMENT: Production
       ConnectionStrings__Database: ${ConnectionStrings__Database:?ConnectionStrings__Database must be set in .env}
       Jwt__SigningKey: ${Jwt__SigningKey:?Jwt__SigningKey must be set in .env}
       FrontendOrigin: ${FrontendOrigin:-http://localhost:5173}
+      # Swagger is served only in Development or on explicit opt-in. This stack is a local
+      # demonstration published on loopback ports, so it opts in; a deployed environment must not.
+      Swagger__Enabled: "true"
       ASPNETCORE_URLS: http://+:8080
     ports:
       - "5081:8080"
@@ -51,9 +55,13 @@ services:
       context: .
       dockerfile: backend/src/TaskApi/Dockerfile
     environment:
+      ASPNETCORE_ENVIRONMENT: Production
       ConnectionStrings__Database: ${ConnectionStrings__Database:?ConnectionStrings__Database must be set in .env}
       Jwt__SigningKey: ${Jwt__SigningKey:?Jwt__SigningKey must be set in .env}
       FrontendOrigin: ${FrontendOrigin:-http://localhost:5173}
+      # Swagger is served only in Development or on explicit opt-in. This stack is a local
+      # demonstration published on loopback ports, so it opts in; a deployed environment must not.
+      Swagger__Enabled: "true"
       ASPNETCORE_URLS: http://+:8080
     ports:
       - "5082:8080"
