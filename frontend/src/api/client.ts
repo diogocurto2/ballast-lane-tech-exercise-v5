@@ -1,4 +1,4 @@
-import { invalidateSession } from "./authToken";
+import { getAccessToken, invalidateSession } from "./authToken";
 import type { ApiFailure, ApiResult } from "./types";
 
 const USER_API_BASE_URL = import.meta.env.VITE_USER_API_URL ?? "http://localhost:5081";
@@ -92,8 +92,10 @@ async function request<T>(baseUrl: string, path: string, options: RequestOptions
     const failure = await toFailure(response);
 
     // One place decides that an authenticated credential is no longer usable, so every consumer
-    // observes the same session end instead of each screen inventing its own redirect.
-    if (failure.status === 401 && options.accessToken) {
+    // observes the same session end instead of each screen inventing its own redirect. Only the
+    // credential still in use may end the session: a slow answer for a token that has since been
+    // replaced says nothing about the session that replaced it.
+    if (failure.status === 401 && options.accessToken === getAccessToken()) {
       invalidateSession();
     }
 

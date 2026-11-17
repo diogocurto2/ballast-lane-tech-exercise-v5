@@ -22,7 +22,7 @@ const task: TaskItem = {
   updatedAt: "2026-11-16T09:30:00Z",
 };
 
-type Responder = () => Response;
+type Responder = () => Response | Promise<Response>;
 type RecordedCall = { method: string; path: string; authorization: string | null };
 
 function json(status: number, body?: unknown): Response {
@@ -61,10 +61,20 @@ function installFetch(routes: Record<string, Responder[]>): RecordedCall[] {
       throw new Error(`Unexpected request: ${method} ${path}`);
     }
 
-    return responders.length > 1 ? responders.shift()!() : responders[0]();
+    return await (responders.length > 1 ? responders.shift()!() : responders[0]());
   });
 
   return calls;
+}
+
+/** An answer the test settles explicitly, so a slow request can overlap a later sign-in. */
+function deferredResponse() {
+  let release!: (response: Response) => void;
+  const promise = new Promise<Response>((resolve) => {
+    release = resolve;
+  });
+
+  return { promise, release };
 }
 
 const signInRoutes: Record<string, Responder[]> = {
@@ -121,6 +131,31 @@ describe("session handling", () => {
     expect(listCalls).toHaveLength(2);
     expect(listCalls[0].authorization).toBe("Bearer issued-token");
     expect(listCalls[1].authorization).toBeNull();
+  });
+
+  it("keeps the newer session when a delayed 401 answers the previous token", async () => {
+    const stale = deferredResponse();
+    installFetch({
+      ...signInRoutes,
+      // The manual call below consumes the deferred answer; the signed-in list request reads the task.
+      "GET /api/tasks": [() => stale.promise, () => json(200, [task])],
+    });
+
+    setAccessToken("previous-token");
+    const staleRequest = tasksApi.list();
+
+    render(<App />);
+    await signIn();
+
+    await screen.findByRole("heading", { name: /your tasks/i });
+    expect(getAccessToken()).toBe("issued-token");
+
+    stale.release(unauthorized());
+    await staleRequest;
+
+    expect(await screen.findByRole("heading", { name: /your tasks/i })).toBeInTheDocument();
+    expect(screen.queryByText(/session has expired/i)).not.toBeInTheDocument();
+    expect(getAccessToken()).toBe("issued-token");
   });
 
   it("ends the session when the task list reports 401", async () => {
